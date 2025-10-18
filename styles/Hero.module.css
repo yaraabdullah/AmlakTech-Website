@@ -42,11 +42,11 @@
   display: flex;
   gap: var(--spacing-lg);
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .primaryBtn {
-  background: var(--color-background-primary);
+  background: var(--color-primary);
   color: var(--color-text-white);
   border: none;
   padding: var(--spacing-lg) var(--spacing-2xl);

@@ -50,6 +50,14 @@ export default function FeaturesSection() {
   return (
     <section id="features" className={styles.featuresSection}>
       <div className={styles.container}>
+        {/* Section Header */}
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>مميزات منصة أملاك تك</h2>
+          <p className={styles.sectionSubtitle}>
+            منصة متكاملة تجمع بين التقنيه المتطورة والذكاء الاصطناعي لتوفير تجربة فريدة في إدارة العقارات
+          </p>
+        </div>
+
         {/* Features Cards */}
         <div className={styles.featuresGrid}>
           {features.map((feature, index) => (
