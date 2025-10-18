@@ -1,132 +1,110 @@
 .hero {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 8rem 0 4rem;
   min-height: 100vh;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
+  margin-top: 120px; /* Account for header and notification bar */
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  position: relative;
+  z-index: 2;
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-}
-
-.highlight {
-  color: #667eea;
-  position: relative;
-}
-
-.highlight::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  border-radius: 2px;
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-white);
+  margin-bottom: var(--spacing-lg);
+  line-height: var(--line-height-tight);
 }
 
 .subtitle {
-  font-size: 1.3rem;
-  color: #4a5568;
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
+  font-size: var(--font-size-xl);
+  color: var(--color-text-white);
+  margin-bottom: var(--spacing-2xl);
+  line-height: var(--line-height-relaxed);
+  opacity: 0.9;
 }
 
 .buttons {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-lg);
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .primaryBtn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-white);
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-family-primary);
 }
 
 .primaryBtn:hover {
+  background: var(--color-secondary);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  box-shadow: var(--shadow-xl);
 }
 
 .secondaryBtn {
   background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  color: var(--color-text-white);
+  border: 2px solid var(--color-text-white);
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
 }
 
 .secondaryBtn:hover {
-  background: #667eea;
-  color: white;
+  background: var(--color-text-white);
+  color: var(--color-primary);
   transform: translateY(-2px);
 }
 
-.image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.placeholder {
-  width: 400px;
-  height: 300px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 500;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-}
-
-.wave {
+.backgroundImage {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  overflow: hidden;
+  height: 100%;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%2367b7dc;stop-opacity:1" /><stop offset="100%" style="stop-color:%234a90e2;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23sky)"/><rect x="0" y="400" width="1200" height="400" fill="%23e8f4f8"/><rect x="50" y="350" width="80" height="450" fill="%234a90e2"/><rect x="150" y="300" width="100" height="500" fill="%2367b7dc"/><rect x="280" y="280" width="90" height="520" fill="%235ba3d4"/><rect x="400" y="320" width="120" height="480" fill="%234a90e2"/><rect x="550" y="250" width="110" height="550" fill="%2367b7dc"/><rect x="700" y="300" width="100" height="500" fill="%235ba3d4"/><rect x="830" y="280" width="120" height="520" fill="%234a90e2"/><rect x="980" y="320" width="90" height="480" fill="%2367b7dc"/><rect x="1100" y="350" width="80" height="450" fill="%235ba3d4"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
 }
 
-.wave svg {
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  fill: white;
+  background: var(--color-background-hero-overlay);
+  z-index: 1;
 }
 
 @media (max-width: 768px) {

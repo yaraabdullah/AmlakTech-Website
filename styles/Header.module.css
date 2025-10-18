@@ -1,13 +1,14 @@
 .header {
-  background: var(--primary-color);
-  color: white;
-  padding: var(--spacing-sm) 0;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-md) 0;
   position: fixed;
-  top: 0;
+  top: 40px; /* Account for notification bar */
   left: 0;
   right: 0;
   z-index: 1000;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .container {
@@ -21,15 +22,15 @@
 
 .logo h1 {
   margin: 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: white;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .logo span {
-  font-size: 0.9rem;
-  opacity: 0.8;
-  margin-right: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-right: var(--spacing-xs);
 }
 
 .navList {
@@ -41,29 +42,56 @@
 }
 
 .navList a {
-  color: white;
-  font-weight: 500;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
   transition: color 0.3s ease;
   position: relative;
 }
 
 .navList a:hover {
-  color: #ffd700;
+  color: var(--color-primary);
 }
 
-.navList a::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  right: 0;
-  width: 0;
-  height: 2px;
-  background: #ffd700;
-  transition: width 0.3s ease;
+.authButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
 }
 
-.navList a:hover::after {
-  width: 100%;
+.loginBtn {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.loginBtn:hover {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+}
+
+.signupBtn {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.signupBtn:hover {
+  background: var(--color-secondary);
+  transform: translateY(-1px);
 }
 
 .menuToggle {
@@ -78,7 +106,7 @@
 .menuToggle span {
   width: 25px;
   height: 3px;
-  background: white;
+  background: var(--color-text-primary);
   margin: 3px 0;
   transition: 0.3s;
   border-radius: 2px;
@@ -94,7 +122,8 @@
     top: 100%;
     right: 0;
     left: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border);
     transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;

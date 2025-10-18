@@ -1,0 +1,19 @@
+.notificationBar {
+  background: var(--color-background-dark);
+  color: var(--color-text-white);
+  padding: var(--spacing-sm) 0;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.text {
+  margin: 0;
+  line-height: var(--line-height-normal);
+}

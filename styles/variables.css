@@ -1,20 +1,25 @@
 :root {
   /* Design System Variables - Customize these to match your Figma design exactly */
   
-  /* Colors */
+  /* Colors - Matching Figma Design */
   --color-primary: #2563eb;
   --color-secondary: #1e40af;
-  --color-accent: #f59e0b;
+  --color-accent: #3b82f6;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-text-primary: #1f2937;
   --color-text-secondary: #6b7280;
   --color-text-light: #9ca3af;
+  --color-text-white: #ffffff;
   --color-background-primary: #ffffff;
-  --color-background-secondary: #f9fafb;
-  --color-background-tertiary: #f3f4f6;
-  --color-border: #e5e7eb;
+  --color-background-secondary: #f8fafc;
+  --color-background-tertiary: #f1f5f9;
+  --color-background-dark: #1e293b;
+  --color-background-hero-overlay: rgba(37, 99, 235, 0.8);
+  --color-border: #e2e8f0;
+  --color-blue-light: #dbeafe;
+  --color-blue-medium: #3b82f6;
   
   /* Typography */
   --font-family-primary: 'Cairo', sans-serif;

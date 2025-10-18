@@ -1,9 +1,12 @@
 import Head from 'next/head'
+import NotificationBar from '../components/NotificationBar'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
-import Services from '../components/Services'
-import About from '../components/About'
-import Contact from '../components/Contact'
+import StatsSection from '../components/StatsSection'
+import FeaturesSection from '../components/FeaturesSection'
+import AISection from '../components/AISection'
+import TestimonialsSection from '../components/TestimonialsSection'
+import PricingSection from '../components/PricingSection'
 import Footer from '../components/Footer'
 
 export default function Home() {
@@ -11,7 +14,7 @@ export default function Home() {
     <>
       <Head>
         <title>أملاك تك - AmlakTech</title>
-        <meta name="description" content="أملاك تك - حلول تقنية متطورة للعقارات" />
+        <meta name="description" content="منصة ذكية لإدارة العقارات والخدمات العقارية باستخدام الذكاء الاصطناعي" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="language" content="ar" />
         <meta name="direction" content="rtl" />
@@ -21,11 +24,14 @@ export default function Home() {
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </Head>
       <div dir="rtl" lang="ar">
+        <NotificationBar />
         <Header />
         <Hero />
-        <Services />
-        <About />
-        <Contact />
+        <StatsSection />
+        <FeaturesSection />
+        <AISection />
+        <TestimonialsSection />
+        <PricingSection />
         <Footer />
       </div>
     </>

@@ -9,17 +9,23 @@ export default function Header() {
       <div className={styles.container}>
         <div className={styles.logo}>
           <h1>أملاك تك</h1>
-          <span>AmlakTech</span>
+          <span>Amlak Tech</span>
         </div>
         
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
           <ul className={styles.navList}>
-            <li><a href="#home">الرئيسية</a></li>
-            <li><a href="#services">خدماتنا</a></li>
-            <li><a href="#about">من نحن</a></li>
-            <li><a href="#contact">اتصل بنا</a></li>
+            <li><a href="#features">المميزات</a></li>
+            <li><a href="#solutions">الحلول</a></li>
+            <li><a href="#pricing">الأسعار</a></li>
+            <li><a href="#testimonials">آراء العملاء</a></li>
+            <li><a href="#contact">تواصل معنا</a></li>
           </ul>
         </nav>
+
+        <div className={styles.authButtons}>
+          <button className={styles.loginBtn}>تسجيل الدخول</button>
+          <button className={styles.signupBtn}>ابدأ مجاناً</button>
+        </div>
 
         <button 
           className={styles.menuToggle}
