@@ -1,0 +1,203 @@
+.pricingSection {
+  padding: var(--spacing-4xl) 0;
+  background: var(--color-background-primary);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--spacing-4xl);
+}
+
+.title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.packagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+}
+
+.packageCard {
+  background: var(--color-background-primary);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-2xl);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.packageCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+.packageCard.popular {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.popularBadge {
+  position: absolute;
+  top: -12px;
+  right: var(--spacing-lg);
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.packageHeader {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.packageName {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.packagePrice {
+  margin-bottom: var(--spacing-md);
+}
+
+.price {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.currency {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-right: var(--spacing-xs);
+}
+
+.period {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-right: var(--spacing-xs);
+}
+
+.packageDescription {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.packageFeatures {
+  margin-bottom: var(--spacing-xl);
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.checkIcon {
+  width: 20px;
+  height: 20px;
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.featureText {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.packageButton {
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.packageButton.primary {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+}
+
+.packageButton.primary:hover {
+  background: var(--color-secondary);
+  transform: translateY(-2px);
+}
+
+.packageButton.secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.packageButton.secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .pricingSection {
+    padding: var(--spacing-2xl) 0;
+  }
+  
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .packagesGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .packageCard {
+    padding: var(--spacing-lg);
+  }
+  
+  .price {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .currency {
+    font-size: var(--font-size-xl);
+  }
+}
