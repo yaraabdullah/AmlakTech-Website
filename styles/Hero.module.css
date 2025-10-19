@@ -24,10 +24,12 @@
 
 .title {
   font-size: var(--font-size-5xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-white);
   margin-bottom: var(--spacing-lg);
   line-height: var(--line-height-tight);
+  font-family: var(--font-family-primary);
+  text-shadow: var(--shadow-sm);
 }
 
 .subtitle {
@@ -36,6 +38,7 @@
   margin-bottom: var(--spacing-2xl);
   line-height: var(--line-height-relaxed);
   opacity: 0.9;
+  font-family: var(--font-family-primary);
 }
 
 .buttons {
