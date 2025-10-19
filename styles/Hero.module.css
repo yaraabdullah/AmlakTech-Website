@@ -49,8 +49,8 @@
 }
 
 .primaryBtn {
-  background: var(--color-primary);
-  color: var(--color-text-white);
+  background: var(--color-background-primary);
+  color: var(--color-primary);
   border: none;
   padding: var(--spacing-lg) var(--spacing-2xl);
   border-radius: var(--border-radius-lg);
