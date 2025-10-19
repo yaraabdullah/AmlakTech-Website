@@ -43,7 +43,7 @@
 
 .navList a {
   color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-light);
   transition: color 0.3s ease;
   position: relative;
   font-family: var(--font-family-primary);
