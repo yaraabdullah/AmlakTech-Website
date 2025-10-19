@@ -1,6 +1,6 @@
 .featuresSection {
   padding: var(--spacing-4xl) 0;
-  background: var(--color-background-primary);
+  background: var(--color-background-tertiary);
 }
 
 .container {
@@ -39,7 +39,7 @@
 }
 
 .featureCard {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-primary);
   padding: var(--spacing-2xl);
   border-radius: var(--border-radius-xl);
   text-align: center;
@@ -97,7 +97,7 @@
 }
 
 .profileCard {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-primary);
   padding: var(--spacing-2xl);
   border-radius: var(--border-radius-xl);
   text-align: center;
