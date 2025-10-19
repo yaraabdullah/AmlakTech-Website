@@ -22,11 +22,7 @@ a {
   box-sizing: border-box;
 }
 
-/* Arabic font optimization */
-@font-face {
-  font-family: 'Cairo';
-  font-display: swap;
-}
+/* Inter font is loaded via Next.js font optimization in _app.tsx */
 
 /* RTL specific styles */
 [dir="rtl"] {
