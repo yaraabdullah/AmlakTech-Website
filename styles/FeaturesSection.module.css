@@ -52,8 +52,18 @@
 }
 
 .featureIcon {
-  font-size: var(--font-size-4xl);
   margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featureIcon img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+.fallbackIcon {
+  font-size: var(--font-size-4xl);
   color: var(--color-primary);
 }
 
