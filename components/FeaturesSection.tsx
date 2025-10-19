@@ -35,19 +35,6 @@ export default function FeaturesSection() {
     }
   ]
 
-  const userProfiles = [
-    {
-      image: "👨‍💼",
-      title: "لملاك العقارات",
-      description: "سلطان، مالك 5 عقارات استثمارية"
-    },
-    {
-      image: "👩‍💼",
-      title: "للمستأجرين",
-      description: "منى تبحث عن شقة مناسبة للإيجار"
-    }
-  ]
-
   return (
     <section id="features" className={styles.featuresSection}>
       <div className={styles.container}>
@@ -86,25 +73,6 @@ export default function FeaturesSection() {
               </div>
               <h3 className={styles.featureTitle}>{feature.title}</h3>
               <p className={styles.featureDescription}>{feature.description}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Custom Solutions Section */}
-        <div className={styles.solutionsSection}>
-          <h2 className={styles.solutionsTitle}>حلول مخصصة لجميع المستخدمين</h2>
-          <p className={styles.solutionsDescription}>
-            توفر منصة أملاك تك حلولاً متكاملة تناسب احتياجات جميع الأطراف في السوق العقاري
-          </p>
-        </div>
-
-        {/* User Profiles */}
-        <div className={styles.profilesGrid}>
-          {userProfiles.map((profile, index) => (
-            <div key={index} className={styles.profileCard}>
-              <div className={styles.profileImage}>{profile.image}</div>
-              <h3 className={styles.profileTitle}>{profile.title}</h3>
-              <p className={styles.profileDescription}>{profile.description}</p>
             </div>
           ))}
         </div>

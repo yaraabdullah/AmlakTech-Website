@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Hero from '../components/Hero'
 import StatsSection from '../components/StatsSection'
 import FeaturesSection from '../components/FeaturesSection'
+import CustomSolutionsSection from '../components/CustomSolutionsSection'
 import AISection from '../components/AISection'
 import TestimonialsSection from '../components/TestimonialsSection'
 import PricingSection from '../components/PricingSection'
@@ -29,6 +30,7 @@ export default function Home() {
         <Hero />
         <StatsSection />
         <FeaturesSection />
+        <CustomSolutionsSection />
         <AISection />
         <TestimonialsSection />
         <PricingSection />
