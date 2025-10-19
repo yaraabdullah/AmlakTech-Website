@@ -16,4 +16,5 @@
 .text {
   margin: 0;
   line-height: var(--line-height-normal);
+  font-family: var(--font-family-primary);
 }
