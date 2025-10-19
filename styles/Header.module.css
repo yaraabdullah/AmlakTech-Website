@@ -23,14 +23,17 @@
 .logo h1 {
   margin: 0;
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-primary);
+  font-family: var(--font-family-primary);
 }
 
 .logo span {
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
   color: var(--color-primary);
   margin-right: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .navList {
