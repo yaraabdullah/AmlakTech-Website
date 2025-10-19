@@ -39,18 +39,16 @@
 }
 
 .featureCard {
-  background: var(--color-background-primary);
+  background: var(--color-background-tertiary);
   padding: var(--spacing-2xl);
   border-radius: var(--border-radius-xl);
   text-align: center;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--color-border);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  transition: transform 0.3s ease;
 }
 
 .featureCard:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
 }
 
 .featureIcon {
@@ -99,17 +97,16 @@
 }
 
 .profileCard {
-  background: var(--color-background-primary);
+  background: var(--color-background-tertiary);
   padding: var(--spacing-2xl);
   border-radius: var(--border-radius-xl);
   text-align: center;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--color-border);
+  border: none;
   transition: transform 0.3s ease;
 }
 
 .profileCard:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 }
 
 .profileImage {
