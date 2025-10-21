@@ -3,7 +3,7 @@ import styles from '../styles/CustomSolutionsSection.module.css'
 export default function CustomSolutionsSection() {
   const userProfiles = [
     {
-      image: "/images/customer.svg",
+      image: "/icons/customer.svg",
       title: "للمستأجرين",
       description: "منى تبحث عن شقة مناسبة للإيجار",
       features: [
@@ -14,7 +14,7 @@ export default function CustomSolutionsSection() {
       ]
     },
     {
-      image: "/images/customer.svg",
+      image: "/icons/customer.svg",
       title: "لملاك العقارات",
       description: "سلطان، مالك 5 عقارات استثمارية",
       features: [
@@ -25,7 +25,7 @@ export default function CustomSolutionsSection() {
       ]
     },
     {
-      image: "/images/customer.svg",
+      image: "/icons/customer.svg",
       title: "لمدير عقارات",
       description: "عبدالعزيز، مدير عقارات منظم",
       features: [
@@ -36,7 +36,7 @@ export default function CustomSolutionsSection() {
       ]
     },
     {
-      image: "/images/customer.svg",
+      image: "/icons/customer.svg",
       title: "لمزودي الخدمات",
       description: "راكان، فني صيانة متخصص",
       features: [
