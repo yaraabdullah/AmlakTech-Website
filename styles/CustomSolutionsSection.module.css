@@ -112,7 +112,7 @@
 }
 
 .checkmark {
-  color: var(--color-blue-light);
+  color: var(--color-primary);
   font-weight: bold;
   margin-left: var(--spacing-sm);
   margin-top: 2px;
