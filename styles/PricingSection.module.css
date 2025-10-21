@@ -143,6 +143,7 @@
 .featureText {
   font-size: var(--font-size-base);
   color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
 }
 
 .packageButton {
