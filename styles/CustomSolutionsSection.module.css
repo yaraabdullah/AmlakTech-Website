@@ -134,7 +134,7 @@
 }
 
 .discoverButton:hover {
-  background: var(--color-blue-light);
+  background: var(--color-primary);
 }
 
 @media (max-width: 768px) {

@@ -3,7 +3,7 @@ import styles from '../styles/CustomSolutionsSection.module.css'
 export default function CustomSolutionsSection() {
   const userProfiles = [
     {
-      image: "/images/tenant-profile.jpg",
+      image: "/images/customer.svg",
       title: "للمستأجرين",
       description: "منى تبحث عن شقة مناسبة للإيجار",
       features: [
@@ -14,7 +14,7 @@ export default function CustomSolutionsSection() {
       ]
     },
     {
-      image: "/images/property-owner-profile.jpg",
+      image: "/images/customer.svg",
       title: "لملاك العقارات",
       description: "سلطان، مالك 5 عقارات استثمارية",
       features: [
@@ -25,9 +25,9 @@ export default function CustomSolutionsSection() {
       ]
     },
     {
-      image: "/images/property-manager-profile.jpg",
+      image: "/images/customer.svg",
       title: "لمدير عقارات",
-      description: "عبد العزيز مدير عقارات منظم",
+      description: "عبدالعزيز، مدير عقارات منظم",
       features: [
         "إدارة متكاملة لجميع العقارات من منصة واحدة",
         "تحصيل الإيجارات تلقائياً وإدارة المتأخرات",
@@ -36,7 +36,7 @@ export default function CustomSolutionsSection() {
       ]
     },
     {
-      image: "/images/service-provider-profile.jpg",
+      image: "/images/customer.svg",
       title: "لمزودي الخدمات",
       description: "راكان، فني صيانة متخصص",
       features: [
