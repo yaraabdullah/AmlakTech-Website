@@ -120,13 +120,13 @@
 }
 
 .discoverButton {
-  background: #3b82f6;
+  background: var(--color-primary);
   color: white;
   border: none;
   padding: var(--spacing-md) var(--spacing-xl);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-normal);
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-family: var(--font-family-primary);
