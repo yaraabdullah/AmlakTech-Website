@@ -37,7 +37,23 @@ export default function AISection() {
             <div className={styles.featuresList}>
               {aiFeatures.map((feature, index) => (
                 <div key={index} className={styles.featureItem}>
-                  <div className={styles.featureIcon}>{feature.icon}</div>
+                  <div className={styles.featureIcon}>
+                    <img 
+                      src={feature.icon} 
+                      alt={feature.title}
+                      className={styles.iconImage}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (nextElement) {
+                          nextElement.style.display = 'block';
+                        }
+                      }}
+                    />
+                    <div className={styles.iconPlaceholder}>
+                      {index === 0 ? "📊" : index === 1 ? "💰" : index === 2 ? "⚙️" : "💡"}
+                    </div>
+                  </div>
                   <div className={styles.featureContent}>
                     <h3 className={styles.featureTitle}>{feature.title}</h3>
                     <p className={styles.featureDescription}>{feature.description}</p>
