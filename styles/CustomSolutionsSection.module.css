@@ -38,7 +38,7 @@
 }
 
 .profileCard {
-  background: #f8fafc;
+  background: var(--color-blue-light);
   padding: var(--spacing-2xl);
   border-radius: var(--border-radius-xl);
   text-align: center;
