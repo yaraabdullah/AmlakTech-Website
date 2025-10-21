@@ -112,7 +112,7 @@
 }
 
 .checkmark {
-  color: #3b82f6;
+  color: var(--color-blue-light);
   font-weight: bold;
   margin-left: var(--spacing-sm);
   margin-top: 2px;
@@ -134,7 +134,7 @@
 }
 
 .discoverButton:hover {
-  background: #2563eb;
+  background: var(--color-blue-light);
 }
 
 @media (max-width: 768px) {
