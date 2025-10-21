@@ -11,14 +11,14 @@
 
 /* CTA Section */
 .ctaSection {
-  background: var(--color-primary);
+  background: var(--color-background-dark);
   padding: var(--spacing-4xl) 0;
   text-align: center;
 }
 
 .ctaTitle {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-white);
   margin-bottom: var(--spacing-lg);
   font-family: var(--font-family-primary);
