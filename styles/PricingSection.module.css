@@ -16,17 +16,19 @@
 
 .title {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
 }
 
 .subtitle {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
+  font-family: var(--font-family-primary);
 }
 
 .packagesGrid {
@@ -64,6 +66,7 @@
   border-radius: var(--border-radius-lg);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-primary);
 }
 
 .packageHeader {
@@ -73,9 +76,10 @@
 
 .packageName {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
 }
 
 .packagePrice {
@@ -86,6 +90,7 @@
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
+  font-family: var(--font-family-primary);
 }
 
 .currency {
@@ -93,18 +98,21 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   margin-right: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .period {
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
   margin-right: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .packageDescription {
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
   margin: 0;
+  font-family: var(--font-family-primary);
 }
 
 .packageFeatures {
