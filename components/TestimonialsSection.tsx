@@ -39,7 +39,23 @@ export default function TestimonialsSection() {
           {testimonials.map((testimonial, index) => (
             <div key={index} className={styles.testimonialCard}>
               <div className={styles.testimonialHeader}>
-                <div className={styles.avatar}>{testimonial.avatar}</div>
+                <div className={styles.avatar}>
+                  <img 
+                    src={testimonial.avatar} 
+                    alt={testimonial.name}
+                    className={styles.avatarImage}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (nextElement) {
+                        nextElement.style.display = 'block';
+                      }
+                    }}
+                  />
+                  <div className={styles.avatarPlaceholder}>
+                    👤
+                  </div>
+                </div>
                 <div className={styles.userInfo}>
                   <h3 className={styles.userName}>{testimonial.name}</h3>
                   <p className={styles.userRole}>{testimonial.role}</p>
