@@ -16,17 +16,19 @@
 
 .title {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
 }
 
 .subtitle {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
+  font-family: var(--font-family-primary);
 }
 
 .testimonialsGrid {
@@ -77,12 +79,14 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .userRole {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin: 0;
+  font-family: var(--font-family-primary);
 }
 
 .rating {
@@ -101,6 +105,7 @@
   line-height: var(--line-height-relaxed);
   margin: 0;
   font-style: italic;
+  font-family: var(--font-family-primary);
 }
 
 @media (max-width: 768px) {
