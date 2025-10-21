@@ -9,6 +9,7 @@
   padding: 0 var(--spacing-lg);
 }
 
+/* CTA Section */
 .ctaSection {
   background: var(--color-primary);
   padding: var(--spacing-4xl) 0;
@@ -20,6 +21,7 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text-white);
   margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
 }
 
 .ctaSubtitle {
@@ -27,6 +29,7 @@
   color: var(--color-text-white);
   margin-bottom: var(--spacing-2xl);
   opacity: 0.9;
+  font-family: var(--font-family-primary);
 }
 
 .ctaContent {
@@ -59,13 +62,19 @@
   color: var(--color-text-white);
   opacity: 0.8;
   margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+/* Main Footer Section */
+.mainFooter {
+  background: var(--color-background-dark);
+  padding: var(--spacing-4xl) 0;
 }
 
 .footerContent {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
   gap: var(--spacing-2xl);
-  padding: var(--spacing-4xl) 0;
 }
 
 .footerColumn {
@@ -73,11 +82,37 @@
   flex-direction: column;
 }
 
+.brandTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-blue-light);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
+}
+
 .columnTitle {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-white);
   margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
+}
+
+.brandSubtitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-blue-light);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.brandDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-white);
+  opacity: 0.9;
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
 }
 
 .footerLinks {
@@ -94,25 +129,12 @@
   opacity: 0.8;
   transition: opacity 0.3s ease;
   font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
+  text-decoration: none;
 }
 
 .footerLinks a:hover {
   opacity: 1;
-}
-
-.brandSubtitle {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-white);
-  margin-bottom: var(--spacing-sm);
-}
-
-.brandDescription {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-white);
-  opacity: 0.8;
-  line-height: var(--line-height-relaxed);
-  margin-bottom: var(--spacing-lg);
 }
 
 .socialLinks {
@@ -120,19 +142,25 @@
   gap: var(--spacing-md);
 }
 
-.socialLinks a {
-  display: inline-block;
-  font-size: var(--font-size-lg);
-  transition: transform 0.3s ease;
+.socialIcon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
 }
 
-.socialLinks a:hover {
-  transform: scale(1.2);
+.socialLinks a:hover .socialIcon {
+  opacity: 1;
+}
+
+/* Bottom Footer Section */
+.bottomFooter {
+  background: var(--color-background-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-lg) 0;
 }
 
 .bottomBar {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: var(--spacing-lg) 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -144,6 +172,7 @@
   margin: 0;
   font-size: var(--font-size-sm);
   opacity: 0.8;
+  font-family: var(--font-family-primary);
 }
 
 .legalLinks {
@@ -157,6 +186,8 @@
   opacity: 0.8;
   font-size: var(--font-size-sm);
   transition: opacity 0.3s ease;
+  font-family: var(--font-family-primary);
+  text-decoration: none;
 }
 
 .legalLinks a:hover {
@@ -181,14 +212,26 @@
     font-size: var(--font-size-base);
   }
   
-  .footerContent {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
+  .mainFooter {
     padding: var(--spacing-2xl) 0;
+  }
+  
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
   }
   
   .bottomBar {
     flex-direction: column;
     text-align: center;
+    gap: var(--spacing-md);
+  }
+  
+  .legalLinks {
+    order: 1;
+  }
+  
+  .copyright {
+    order: 2;
   }
 }
