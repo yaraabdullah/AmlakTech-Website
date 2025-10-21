@@ -155,7 +155,7 @@
 
 /* Bottom Footer Section */
 .bottomFooter {
-  background: var(--color-background-dark);
+  background: #0F172A;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--spacing-lg) 0;
 }
