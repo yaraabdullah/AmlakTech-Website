@@ -29,6 +29,9 @@
   max-width: 600px;
   margin-right: 0;
   margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .imageContent {
