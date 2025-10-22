@@ -17,10 +17,71 @@
 }
 
 .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4xl);
+  align-items: center;
+  width: 100%;
+}
+
+.textContent {
   text-align: right;
-  max-width: 800px;
+  max-width: 600px;
   margin-right: 0;
   margin-left: auto;
+}
+
+.imageContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-xl);
+  object-fit: cover;
+}
+
+.imageFallback {
+  display: none;
+  width: 100%;
+  height: 300px;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: var(--border-radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-xl);
+}
+
+.placeholderContent {
+  text-align: center;
+}
+
+.placeholderIcon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.placeholderText {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+  margin: 0;
 }
 
 .title {
@@ -94,7 +155,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%2367b7dc;stop-opacity:1" /><stop offset="100%" style="stop-color:%234a90e2;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23sky)"/><rect x="0" y="400" width="1200" height="400" fill="%23e8f4f8"/><rect x="50" y="350" width="80" height="450" fill="%234a90e2"/><rect x="150" y="300" width="100" height="500" fill="%2367b7dc"/><rect x="280" y="280" width="90" height="520" fill="%235ba3d4"/><rect x="400" y="320" width="120" height="480" fill="%234a90e2"/><rect x="550" y="250" width="110" height="550" fill="%2367b7dc"/><rect x="700" y="300" width="100" height="500" fill="%235ba3d4"/><rect x="830" y="280" width="120" height="520" fill="%234a90e2"/><rect x="980" y="320" width="90" height="480" fill="%2367b7dc"/><rect x="1100" y="350" width="80" height="450" fill="%235ba3d4"/></svg>');
+  background-image: url('/icons/Riyadh.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -118,8 +179,14 @@
   
   .content {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    text-align: right;
+    gap: var(--spacing-2xl);
+    text-align: center;
+  }
+  
+  .textContent {
+    text-align: center;
+    max-width: 100%;
+    margin: 0 auto;
   }
   
   .title {
@@ -131,12 +198,15 @@
   }
   
   .buttons {
-    justify-content: flex-end;
+    justify-content: center;
+  }
+  
+  .imageContainer {
+    max-width: 100%;
   }
   
   .placeholder {
-    width: 300px;
-    height: 200px;
+    height: 250px;
   }
   
   .container {
