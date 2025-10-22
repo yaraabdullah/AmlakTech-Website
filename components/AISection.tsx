@@ -64,37 +64,51 @@ export default function AISection() {
           </div>
           
           <div className={styles.dashboardPreview}>
-            <div className={styles.dashboard}>
-              <div className={styles.dashboardHeader}>
-                <div className={styles.dashboardTitle}>لوحة التحكم</div>
-                <div className={styles.dashboardControls}>
-                  <div className={styles.controlBtn}>🔔</div>
-                  <div className={styles.controlBtn}>👤</div>
-                </div>
-              </div>
-              
-              <div className={styles.dashboardContent}>
-                <div className={styles.chartContainer}>
-                  <div className={styles.chartTitle}>تحليل الأداء</div>
-                  <div className={styles.chart}>
-                    <div className={styles.bar} style={{height: '60%'}}></div>
-                    <div className={styles.bar} style={{height: '80%'}}></div>
-                    <div className={styles.bar} style={{height: '45%'}}></div>
-                    <div className={styles.bar} style={{height: '90%'}}></div>
-                    <div className={styles.bar} style={{height: '70%'}}></div>
-                    <div className={styles.bar} style={{height: '85%'}}></div>
-                    <div className={styles.bar} style={{height: '55%'}}></div>
+            <img 
+              src="/images/dashboard-preview.jpg" 
+              alt="لوحة تحكم أملاك تك - عرض شامل للبيانات والإحصائيات العقارية"
+              className={styles.dashboardImage}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                if (nextElement) {
+                  nextElement.style.display = 'block';
+                }
+              }}
+            />
+            <div className={styles.dashboardFallback}>
+              <div className={styles.dashboard}>
+                <div className={styles.dashboardHeader}>
+                  <div className={styles.dashboardTitle}>لوحة التحكم</div>
+                  <div className={styles.dashboardControls}>
+                    <div className={styles.controlBtn}>🔔</div>
+                    <div className={styles.controlBtn}>👤</div>
                   </div>
                 </div>
                 
-                <div className={styles.statsContainer}>
-                  <div className={styles.statItem}>
-                    <div className={styles.statNumber}>52.55%</div>
-                    <div className={styles.statLabel}>معدل النمو</div>
+                <div className={styles.dashboardContent}>
+                  <div className={styles.chartContainer}>
+                    <div className={styles.chartTitle}>تحليل الأداء</div>
+                    <div className={styles.chart}>
+                      <div className={styles.bar} style={{height: '60%'}}></div>
+                      <div className={styles.bar} style={{height: '80%'}}></div>
+                      <div className={styles.bar} style={{height: '45%'}}></div>
+                      <div className={styles.bar} style={{height: '90%'}}></div>
+                      <div className={styles.bar} style={{height: '70%'}}></div>
+                      <div className={styles.bar} style={{height: '85%'}}></div>
+                      <div className={styles.bar} style={{height: '55%'}}></div>
+                    </div>
                   </div>
-                  <div className={styles.statItem}>
-                    <div className={styles.statNumber}>13,264</div>
-                    <div className={styles.statLabel}>العقارات</div>
+                  
+                  <div className={styles.statsContainer}>
+                    <div className={styles.statItem}>
+                      <div className={styles.statNumber}>52.55%</div>
+                      <div className={styles.statLabel}>معدل النمو</div>
+                    </div>
+                    <div className={styles.statItem}>
+                      <div className={styles.statNumber}>13,264</div>
+                      <div className={styles.statLabel}>العقارات</div>
+                    </div>
                   </div>
                 </div>
               </div>

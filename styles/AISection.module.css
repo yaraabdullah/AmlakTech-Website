@@ -95,6 +95,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.dashboardImage {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-xl);
+  object-fit: cover;
+}
+
+.dashboardFallback {
+  display: none;
+  width: 100%;
+  max-width: 500px;
 }
 
 .dashboard {
@@ -103,7 +119,6 @@
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-xl);
   width: 100%;
-  max-width: 500px;
 }
 
 .dashboardHeader {
