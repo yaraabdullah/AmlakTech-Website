@@ -65,7 +65,7 @@ export default function AISection() {
           
           <div className={styles.dashboardPreview}>
             <img 
-              src="/images/dashboard-preview.jpg" 
+              src="/icons/dashboard.svg" 
               alt="لوحة تحكم أملاك تك - عرض شامل للبيانات والإحصائيات العقارية"
               className={styles.dashboardImage}
               onError={(e) => {
