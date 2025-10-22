@@ -89,7 +89,7 @@
 
 .title {
   font-size: var(--font-size-5xl);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-white);
   margin-bottom: var(--spacing-lg);
   line-height: var(--line-height-tight);
