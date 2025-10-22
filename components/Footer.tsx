@@ -30,16 +30,16 @@ export default function Footer() {
               </p>
               <div className={styles.socialLinks}>
                 <a href="#" aria-label="يوتيوب">
-                  <img src="/icons/youtube.svg" alt="يوتيوب" className={styles.socialIcon} />
+                  <img src="/icons/Youtube.svg" alt="يوتيوب" className={styles.socialIcon} />
                 </a>
                 <a href="#" aria-label="إنستغرام">
-                  <img src="/icons/instagram.svg" alt="إنستغرام" className={styles.socialIcon} />
+                  <img src="/icons/Instagram.svg" alt="إنستغرام" className={styles.socialIcon} />
                 </a>
                 <a href="#" aria-label="لينكد إن">
-                  <img src="/icons/linkedin.svg" alt="لينكد إن" className={styles.socialIcon} />
+                  <img src="/icons/LinkedIn.svg" alt="لينكد إن" className={styles.socialIcon} />
                 </a>
                 <a href="#" aria-label="تويتر">
-                  <img src="/icons/twitter.svg" alt="تويتر" className={styles.socialIcon} />
+                  <img src="/icons/X.svg" alt="تويتر" className={styles.socialIcon} />
                 </a>
               </div>
             </div>
