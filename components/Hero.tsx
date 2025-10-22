@@ -25,32 +25,15 @@ export default function Hero() {
             </div>
           </div>
           
-          <div className={styles.imageContent}>
-            <div className={styles.imageContainer}>
-              <img 
-                src="/icons/hero-dashboard.svg" 
-                alt="منصة أملاك تك - لوحة تحكم ذكية لإدارة العقارات"
-                className={styles.heroImage}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
-                  if (nextElement) {
-                    nextElement.style.display = 'block';
-                  }
-                }}
-              />
-              <div className={styles.imageFallback}>
+
                 <div className={styles.placeholder}>
                   <div className={styles.placeholderContent}>
-                    <div className={styles.placeholderIcon}>🏢</div>
-                    <p className={styles.placeholderText}>منصة أملاك تك</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+         
+    
     </section>
   )
 }
