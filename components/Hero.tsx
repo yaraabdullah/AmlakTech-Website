@@ -25,11 +25,11 @@ export default function Hero() {
             </div>
           </div>
           
-
+{/* 
                 <div className={styles.placeholder}>
                   <div className={styles.placeholderContent}>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
          
