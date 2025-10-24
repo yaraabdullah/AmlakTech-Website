@@ -1,0 +1,379 @@
+import { useState } from 'react'
+import styles from '../styles/SignUpForm.module.css'
+
+export default function SignUpForm() {
+  const [selectedUserType, setSelectedUserType] = useState('مالك عقار')
+  const [currentStep, setCurrentStep] = useState(1)
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobile: '',
+    city: '',
+    neighborhood: '',
+    postalCode: '',
+    propertiesCount: '1',
+    propertyType: '',
+    password: '',
+    confirmPassword: '',
+    aiAssistant: true,
+    termsAccepted: false
+  })
+
+  const userTypes = [
+    {
+      id: 'مالك عقار',
+      title: 'مالك عقار',
+      description: 'إدارة عقاراتك وعرضها للإيجار أو البيع',
+      icon: '🏠'
+    },
+    {
+      id: 'مستأجر',
+      title: 'مستأجر',
+      description: 'البحث عن عقارات للإيجار وإدارة عقودك',
+      icon: '🔑'
+    },
+    {
+      id: 'مزود خدمة',
+      title: 'مزود خدمة',
+      description: 'تقديم خدمات الصيانة والإصلاح للعقارات',
+      icon: '🔧'
+    },
+    {
+      id: 'مدير عقارات',
+      title: 'مدير عقارات',
+      description: 'إدارة عقارات متعددة وتنظيم العمليات العقارية',
+      icon: '🏢'
+    }
+  ]
+
+  const steps = [
+    { number: 1, title: 'اختيار الحساب', active: currentStep === 1 },
+    { number: 2, title: 'المعلومات الشخصية', active: currentStep === 2 },
+    { number: 3, title: 'التحقق', active: currentStep === 3 },
+    { number: 4, title: 'الانتهاء', active: currentStep === 4 }
+  ]
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }))
+  }
+
+  const handleUserTypeSelect = (userType: string) => {
+    setSelectedUserType(userType)
+    setCurrentStep(2)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission here
+  }
+
+  return (
+    <div className={styles.signUpContainer}>
+      <div className={styles.formWrapper}>
+        {/* Header */}
+        <div className={styles.header}>
+          <h1 className={styles.title}>إنشاء حساب جديد</h1>
+          <p className={styles.subtitle}>
+            اختر نوع الحساب المناسب لك لتوفر لك تجربة مخصصة
+          </p>
+        </div>
+
+        {/* Progress Indicator */}
+        <div className={styles.progressContainer}>
+          <div className={styles.progressLine}>
+            {steps.map((step, index) => (
+              <div key={step.number} className={styles.stepContainer}>
+                <div className={`${styles.stepCircle} ${step.active ? styles.active : ''}`}>
+                  {step.number}
+                </div>
+                <span className={`${styles.stepTitle} ${step.active ? styles.active : ''}`}>
+                  {step.title}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* User Type Selection */}
+        {currentStep === 1 && (
+          <div className={styles.userTypeSection}>
+            <div className={styles.userTypeGrid}>
+              {userTypes.map((userType) => (
+                <div
+                  key={userType.id}
+                  className={`${styles.userTypeCard} ${selectedUserType === userType.id ? styles.selected : ''}`}
+                  onClick={() => handleUserTypeSelect(userType.id)}
+                >
+                  <div className={styles.userTypeIcon}>{userType.icon}</div>
+                  <h3 className={styles.userTypeTitle}>{userType.title}</h3>
+                  <p className={styles.userTypeDescription}>{userType.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Personal Information Form */}
+        {currentStep >= 2 && (
+          <form onSubmit={handleSubmit} className={styles.form}>
+            {/* Form Header */}
+            <div className={styles.formHeader}>
+              <div className={styles.formTitleSection}>
+                <div className={styles.formTitleIcon}>🏠</div>
+                <div>
+                  <h2 className={styles.formTitle}>{selectedUserType}</h2>
+                  <p className={styles.formSubtitle}>ادخل معلوماتك الشخصية لإكمال التسجيل</p>
+                </div>
+              </div>
+              <button type="button" className={styles.changeButton}>
+                <span className={styles.editIcon}>✏️</span>
+                تغيير
+              </button>
+            </div>
+
+            {/* Personal Information Fields */}
+            <div className={styles.formFields}>
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>الاسم الأول</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    placeholder="ادخل الاسم الأول"
+                    className={styles.fieldInput}
+                    required
+                  />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>الاسم الأخير</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    placeholder="ادخل الاسم الأخير"
+                    className={styles.fieldInput}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>البريد الإلكتروني</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="example@email.com"
+                    className={styles.fieldInput}
+                    required
+                  />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>رقم الجوال</label>
+                  <div className={styles.mobileInput}>
+                    <select className={styles.countryCode}>
+                      <option value="+966">+966</option>
+                      <option value="+971">+971</option>
+                      <option value="+965">+965</option>
+                    </select>
+                    <input
+                      type="tel"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      placeholder="5XXXXXXXXXX"
+                      className={styles.fieldInput}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>المدينة</label>
+                  <select
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className={styles.fieldInput}
+                    required
+                  >
+                    <option value="">اختر المدينة</option>
+                    <option value="الرياض">الرياض</option>
+                    <option value="جدة">جدة</option>
+                    <option value="الدمام">الدمام</option>
+                    <option value="مكة">مكة</option>
+                  </select>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>الحي</label>
+                  <input
+                    type="text"
+                    name="neighborhood"
+                    value={formData.neighborhood}
+                    onChange={handleInputChange}
+                    placeholder="ادخل اسم الحي"
+                    className={styles.fieldInput}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>الرمز البريدي</label>
+                  <input
+                    type="text"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleInputChange}
+                    placeholder="ادخل الرمز البريدي"
+                    className={styles.fieldInput}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Information for Property Owner */}
+            {selectedUserType === 'مالك عقار' && (
+              <div className={styles.additionalInfo}>
+                <div className={styles.additionalInfoHeader}>
+                  <span className={styles.additionalInfoIcon}>👤</span>
+                  <h3 className={styles.additionalInfoTitle}>معلومات إضافية للمالك</h3>
+                </div>
+                <div className={styles.fieldRow}>
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.fieldLabel}>عدد العقارات المملوكة</label>
+                    <select
+                      name="propertiesCount"
+                      value={formData.propertiesCount}
+                      onChange={handleInputChange}
+                      className={styles.fieldInput}
+                    >
+                      <option value="1">1</option>
+                      <option value="2-5">2-5</option>
+                      <option value="6-10">6-10</option>
+                      <option value="10+">10+</option>
+                    </select>
+                  </div>
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.fieldLabel}>نوع العقارات المملوكة</label>
+                    <select
+                      name="propertyType"
+                      value={formData.propertyType}
+                      onChange={handleInputChange}
+                      className={styles.fieldInput}
+                    >
+                      <option value="">اختر نوع العقار</option>
+                      <option value="شقة">شقة</option>
+                      <option value="فيلا">فيلا</option>
+                      <option value="منزل">منزل</option>
+                      <option value="مكتب">مكتب</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Password Fields */}
+            <div className={styles.passwordSection}>
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>كلمة المرور</label>
+                  <div className={styles.passwordInput}>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className={styles.fieldInput}
+                      required
+                    />
+                    <span className={styles.passwordToggle}>👁️</span>
+                  </div>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>تأكيد كلمة المرور</label>
+                  <div className={styles.passwordInput}>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className={styles.fieldInput}
+                      required
+                    />
+                    <span className={styles.passwordToggle}>👁️</span>
+                  </div>
+                </div>
+              </div>
+              <p className={styles.passwordHint}>
+                يجب أن تحتوي على 8 أحرف على الأقل مع حرف كبير ورقم
+              </p>
+            </div>
+
+            {/* AI Assistant Section */}
+            <div className={styles.aiAssistantSection}>
+              <div className={styles.aiAssistantHeader}>
+                <span className={styles.aiIcon}>🤖</span>
+                <div>
+                  <h3 className={styles.aiTitle}>المساعد الذكي للعقارات</h3>
+                  <p className={styles.aiDescription}>
+                    اشترك في المساعد الذكي لتحصل على توصيات مخصصة واستشارات عقارية باستخدام الذكاء الاصطناعي
+                  </p>
+                </div>
+              </div>
+              <label className={styles.aiCheckbox}>
+                <input
+                  type="checkbox"
+                  name="aiAssistant"
+                  checked={formData.aiAssistant}
+                  onChange={handleInputChange}
+                />
+                <span className={styles.checkboxText}>تفعيل المساعد الذكي للعقارات</span>
+              </label>
+            </div>
+
+            {/* Terms and Conditions */}
+            <div className={styles.termsSection}>
+              <label className={styles.termsCheckbox}>
+                <input
+                  type="checkbox"
+                  name="termsAccepted"
+                  checked={formData.termsAccepted}
+                  onChange={handleInputChange}
+                  required
+                />
+                <span className={styles.termsText}>
+                  أوافق على{' '}
+                  <a href="#" className={styles.termsLink}>
+                    الشروط والأحكام و سياسة الخصوصية
+                  </a>
+                </span>
+              </label>
+            </div>
+
+            {/* Submit Button */}
+            <button type="submit" className={styles.submitButton}>
+              <span className={styles.submitIcon}>←</span>
+              انشاء
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  )
+}
