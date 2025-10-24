@@ -1,5 +1,5 @@
 .signUpContainer {
-  min-height: 100vh;
+  min-height: calc(100vh - 120px);
   background: var(--color-background-secondary);
   padding: var(--spacing-2xl) 0;
   display: flex;

@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import NotificationBar from '../components/NotificationBar'
+import Header from '../components/Header'
 import SignUpForm from '../components/SignUpForm'
 
 export default function SignUp() {
@@ -16,6 +18,8 @@ export default function SignUp() {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </Head>
       <div dir="rtl" lang="ar">
+        <NotificationBar />
+        <Header />
         <SignUpForm />
       </div>
     </>

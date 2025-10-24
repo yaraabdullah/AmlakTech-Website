@@ -67,6 +67,10 @@ export default function SignUpForm() {
     setCurrentStep(2)
   }
 
+  const handleChangeUserType = () => {
+    setCurrentStep(1)
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
@@ -131,7 +135,7 @@ export default function SignUpForm() {
                   <p className={styles.formSubtitle}>ادخل معلوماتك الشخصية لإكمال التسجيل</p>
                 </div>
               </div>
-              <button type="button" className={styles.changeButton}>
+              <button type="button" className={styles.changeButton} onClick={handleChangeUserType}>
                 <span className={styles.editIcon}>✏️</span>
                 تغيير
               </button>
