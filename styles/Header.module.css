@@ -91,11 +91,15 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: var(--font-family-primary);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .signupBtn:hover {
   background: var(--color-secondary);
   transform: translateY(-1px);
+  color: var(--color-text-white);
 }
 
 .menuToggle {

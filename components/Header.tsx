@@ -24,7 +24,7 @@ export default function Header() {
 
         <div className={styles.authButtons}>
           <button className={styles.loginBtn}>تسجيل الدخول</button>
-          <button className={styles.signupBtn}>ابدأ مجاناً</button>
+          <a href="/signup" className={styles.signupBtn}>ابدأ مجاناً</a>
         </div>
 
         <button 
