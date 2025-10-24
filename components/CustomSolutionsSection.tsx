@@ -49,7 +49,7 @@ export default function CustomSolutionsSection() {
   ]
 
   return (
-    <section className={styles.customSolutionsSection}>
+    <section id="solutions" className={styles.customSolutionsSection}>
       <div className={styles.container}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>حلول مخصصة لجميع المستخدمين</h2>
