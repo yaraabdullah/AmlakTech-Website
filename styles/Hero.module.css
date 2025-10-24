@@ -94,7 +94,7 @@
   margin-bottom: var(--spacing-lg);
   line-height: var(--line-height-tight);
   font-family: var(--font-family-primary);
-  text-shadow: var(--shadow-lg);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .subtitle {
@@ -104,6 +104,7 @@
   line-height: var(--line-height-relaxed);
   opacity: 0.9;
   font-family: var(--font-family-primary);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .buttons {
