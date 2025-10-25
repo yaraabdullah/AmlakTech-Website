@@ -161,7 +161,6 @@ export default function AddProperty() {
                         className={`${styles.propertyTypeCard} ${type.selected ? styles.selected : ''}`}
                         onClick={() => handlePropertyTypeSelect(type.id)}
                       >
-                        <div className={styles.typeIcon}>{type.icon}</div>
                         <span className={styles.typeTitle}>{type.title}</span>
                         <div className={styles.radioButton}>
                           <input

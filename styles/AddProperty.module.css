@@ -230,7 +230,7 @@
 .propertyTypeGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
 }
 
@@ -238,14 +238,14 @@
   background: var(--color-background-primary);
   border: 2px solid #e5e7eb;
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-xl);
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-md);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+  min-height: 80px;
 }
 
 .propertyTypeCard:hover {
@@ -259,13 +259,8 @@
   background: #f0f9ff;
 }
 
-.typeIcon {
-  font-size: var(--font-size-2xl);
-  color: var(--color-primary);
-}
-
 .typeTitle {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
