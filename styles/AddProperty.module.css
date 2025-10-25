@@ -99,11 +99,17 @@
   margin-bottom: var(--spacing-3xl);
 }
 
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
 .pageTitle {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
 }
 
 
@@ -120,10 +126,9 @@
   background: #f8f9fa;
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md) var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--spacing-md);
 }
 
 .aiBannerText {
