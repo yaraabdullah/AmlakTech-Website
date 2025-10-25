@@ -115,7 +115,6 @@ export default function AddProperty() {
           {/* Page Header */}
           <div className={styles.pageHeader}>
             <div className={styles.pageTitle}>
-              <span className={styles.titleIcon}>✏️</span>
               <h1>إضافة عقار جديد</h1>
             </div>
             

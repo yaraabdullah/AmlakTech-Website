@@ -106,13 +106,10 @@
   margin-bottom: var(--spacing-xl);
 }
 
-.titleIcon {
-  font-size: 2rem;
-}
 
 .pageTitle h1 {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
