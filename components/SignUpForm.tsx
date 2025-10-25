@@ -147,14 +147,13 @@ export default function SignUpForm() {
             {/* Form Header */}
             <div className={styles.formHeader}>
               <div className={styles.formTitleSection}>
-                <div className={styles.formTitleIcon}>🏠</div>
+                <div className={styles.formTitleIcon}></div>
                 <div>
                   <h2 className={styles.formTitle}>{selectedUserType}</h2>
                   <p className={styles.formSubtitle}>ادخل معلوماتك الشخصية لإكمال التسجيل</p>
                 </div>
               </div>
               <button type="button" className={styles.changeButton} onClick={handleChangeUserType}>
-                <span className={styles.editIcon}>✏️</span>
                 تغيير
               </button>
             </div>
@@ -324,7 +323,6 @@ export default function SignUpForm() {
                       className={styles.fieldInput}
                       required
                     />
-                    <span className={styles.passwordToggle}>👁️</span>
                   </div>
                 </div>
                 <div className={styles.fieldGroup}>
@@ -338,7 +336,6 @@ export default function SignUpForm() {
                       className={styles.fieldInput}
                       required
                     />
-                    <span className={styles.passwordToggle}>👁️</span>
                   </div>
                 </div>
               </div>
