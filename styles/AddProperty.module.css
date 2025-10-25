@@ -228,7 +228,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto auto;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   max-width: 100%;
 }
@@ -245,6 +245,7 @@
   transition: all 0.3s ease;
   position: relative;
   min-height: 80px;
+  min-width: 200px;
   width: 100%;
   box-sizing: border-box;
 }
