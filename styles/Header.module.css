@@ -20,6 +20,14 @@
   align-items: center;
 }
 
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .logo h1 {
   margin: 0;
   font-size: var(--font-size-2xl);

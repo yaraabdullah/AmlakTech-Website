@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Link from 'next/link'
 import styles from '../styles/Header.module.css'
 
 export default function Header() {
@@ -7,18 +8,18 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <h1>أملاك تك</h1>
           <span>Amlak Tech</span>
-        </div>
+        </Link>
         
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
           <ul className={styles.navList}>
-            <li><a href="#features">المميزات</a></li>
-            <li><a href="#solutions">الحلول</a></li>
-            <li><a href="#pricing">الأسعار</a></li>
-            <li><a href="#testimonials">آراء العملاء</a></li>
-            <li><a href="#contact">تواصل معنا</a></li>
+            <li><a href="/#features">المميزات</a></li>
+            <li><a href="/#solutions">الحلول</a></li>
+            <li><a href="/#pricing">الأسعار</a></li>
+            <li><a href="/#testimonials">آراء العملاء</a></li>
+            <li><a href="/#contact">تواصل معنا</a></li>
           </ul>
         </nav>
 
