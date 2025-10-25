@@ -49,16 +49,18 @@ export default function AddProperty() {
   })
 
   const steps = [
-    { number: 1, title: 'التفاصيل الأساسية', active: currentStep === 1 },
+    { number: 1, title: 'تفاصيل العقار', active: currentStep === 1 },
     { number: 2, title: 'الموقع', active: currentStep === 2 },
-    { number: 3, title: 'الصور', active: currentStep === 3 },
-    { number: 4, title: 'التسعير', active: currentStep === 4 }
+    { number: 3, title: 'الصور والمميزات', active: currentStep === 3 },
+    { number: 4, title: 'التسعير والإتاحة', active: currentStep === 4 }
   ]
 
   const propertyTypes = [
     { id: 'شقة', title: 'شقة', icon: '🏢', selected: formData.propertyType === 'شقة' },
     { id: 'منزل', title: 'منزل', icon: '🏠', selected: formData.propertyType === 'منزل' },
-    { id: 'مكتب', title: 'مكتب', icon: '🏢', selected: formData.propertyType === 'مكتب' },
+    { id: 'فيلا', title: 'فيلا', icon: '🏡', selected: formData.propertyType === 'فيلا' },
+    { id: 'مكتب', title: 'مكتب', icon: '💼', selected: formData.propertyType === 'مكتب' },
+    { id: 'متجر', title: 'متجر', icon: '🏪', selected: formData.propertyType === 'متجر' },
     { id: 'أرض', title: 'أرض', icon: '🏞️', selected: formData.propertyType === 'أرض' }
   ]
 
@@ -117,6 +119,12 @@ export default function AddProperty() {
               <h1>إضافة عقار جديد</h1>
             </div>
             
+            {/* AI Assistant Banner */}
+            <div className={styles.aiBanner}>
+              <p className={styles.aiBannerText}>الذكاء الاصطناعي يساعدك في تحسين إعلان عقارك</p>
+              <span className={styles.aiBannerIcon}>🤖</span>
+            </div>
+            
             {/* Progress Indicator */}
             <div className={styles.progressContainer}>
               <div className={styles.progressText}>
@@ -124,7 +132,7 @@ export default function AddProperty() {
               </div>
               <div className={styles.progressBar}>
                 {steps.map((step, index) => (
-                  <div key={step.number} className={styles.progressStep}>
+                  <div key={step.number} className={`${styles.progressStep} ${step.active ? styles.active : ''}`}>
                     <div className={`${styles.stepCircle} ${step.active ? styles.active : ''}`}>
                       {step.number}
                     </div>
@@ -145,8 +153,8 @@ export default function AddProperty() {
                 {/* Property Type */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
-                    <span className={styles.sectionIcon}>🏠</span>
                     <h2 className={styles.sectionTitle}>نوع العقار</h2>
+                    <span className={styles.sectionIcon}>🏢</span>
                   </div>
                   
                   <div className={styles.propertyTypeGrid}>
@@ -158,6 +166,16 @@ export default function AddProperty() {
                       >
                         <div className={styles.typeIcon}>{type.icon}</div>
                         <span className={styles.typeTitle}>{type.title}</span>
+                        <div className={styles.radioButton}>
+                          <input
+                            type="radio"
+                            name="propertyType"
+                            value={type.id}
+                            checked={type.selected}
+                            onChange={() => handlePropertyTypeSelect(type.id)}
+                            className={styles.radioInput}
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -166,7 +184,6 @@ export default function AddProperty() {
                 {/* Additional Details */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
-                    <span className={styles.sectionIcon}>📋</span>
                     <h2 className={styles.sectionTitle}>تفاصيل إضافية</h2>
                   </div>
                   
@@ -203,30 +220,15 @@ export default function AddProperty() {
                     </div>
                     
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>المساحة</label>
+                      <label className={styles.fieldLabel}>استوديو</label>
                       <input
                         type="text"
-                        name="area"
-                        value={formData.area}
-                        onChange={handleInputChange}
-                        placeholder="متر مربع"
-                        className={styles.fieldInput}
-                      />
-                    </div>
-                    
-                    <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>نوع العقار</label>
-                      <select
                         name="propertySubType"
                         value={formData.propertySubType}
                         onChange={handleInputChange}
+                        placeholder="استوديو"
                         className={styles.fieldInput}
-                      >
-                        <option value="استوديو">استوديو</option>
-                        <option value="شقة">شقة</option>
-                        <option value="دوبلكس">دوبلكس</option>
-                        <option value="بنتهاوس">بنتهاوس</option>
-                      </select>
+                      />
                     </div>
                     
                     <div className={styles.fieldGroup}>
@@ -237,6 +239,18 @@ export default function AddProperty() {
                         value={formData.constructionYear}
                         onChange={handleInputChange}
                         placeholder="مثال: 2020"
+                        className={styles.fieldInput}
+                      />
+                    </div>
+                    
+                    <div className={styles.fieldGroup}>
+                      <label className={styles.fieldLabel}>المساحة (متر مربع)</label>
+                      <input
+                        type="text"
+                        name="area"
+                        value={formData.area}
+                        onChange={handleInputChange}
+                        placeholder="متر مربع"
                         className={styles.fieldInput}
                       />
                     </div>
