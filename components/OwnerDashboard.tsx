@@ -207,6 +207,120 @@ export default function OwnerDashboard() {
 
             </div>
           </div>
+
+          {/* Second Dashboard Row */}
+          <div className={styles.dashboardGrid}>
+            {/* Left Column - Smart Assistant */}
+            <div className={styles.leftColumn}>
+              <div className={styles.aiAssistantSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>المساعد الذكي</h2>
+                  <span className={styles.sectionIcon}>🤖</span>
+                </div>
+                
+                <div className={styles.aiContent}>
+                  <p className={styles.aiDescription}>
+                    مرحباً أحمد! إليك بعض التوصيات الذكية لتحسين أداء محفظتك العقارية
+                  </p>
+                  
+                  <div className={styles.recommendationsList}>
+                    <div className={styles.recommendationCard}>
+                      <h4 className={styles.recommendationTitle}>تحليل أسعار الإيجارات</h4>
+                      <p className={styles.recommendationDescription}>
+                        أسعار الإيجارات في منطقة "الرياض" ارتفعت يمكنك زيادة الإيجارات في عقاراتك بنسبة 7%
+                      </p>
+                    </div>
+                    
+                    <div className={styles.recommendationCard}>
+                      <h4 className={styles.recommendationTitle}>توقعات الصيانة</h4>
+                      <p className={styles.recommendationDescription}>
+                        تحليل البيانات يشير إلى احتمالية حدوث مشاكل في نظام التكييف في "برج النخيل" خلال الشهر القادم
+                      </p>
+                    </div>
+                    
+                    <div className={styles.recommendationCard}>
+                      <h4 className={styles.recommendationTitle}>فرص استثمارية</h4>
+                      <p className={styles.recommendationDescription}>
+                        هناك فرص استثمارية جديدة في المنطقة الشمالية من الرياض
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <button className={styles.getMoreBtn}>
+                    الحصول على المزيد من التوصيات
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Properties Overview */}
+            <div className={styles.rightColumn}>
+              <div className={styles.propertiesSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>نظرة عامة على العقارات</h2>
+                  <button className={styles.viewAllBtn}>عرض الكل</button>
+                </div>
+                
+                <div className={styles.propertiesTable}>
+                  <div className={styles.tableHeader}>
+                    <div>العقار</div>
+                    <div>الوحدات</div>
+                    <div>الإشغال</div>
+                    <div>الإيرادات الشهرية</div>
+                    <div>الحالة</div>
+                  </div>
+                  
+                  <div className={styles.tableRow}>
+                    <div className={styles.propertyName}>
+                      <span className={styles.propertyIcon}>🏢</span>
+                      عمارة الرياض
+                    </div>
+                    <div className={styles.propertyUnits}>8 وحدات</div>
+                    <div className={styles.occupancyCell}>
+                      <div className={styles.occupancyBar}>
+                        <div className={styles.occupancyFill} style={{width: '100%'}}></div>
+                      </div>
+                      <span className={styles.occupancyText}>100%</span>
+                    </div>
+                    <div className={styles.monthlyRevenue}>15,000 ر.س</div>
+                    <div className={`${styles.status} ${styles.excellent}`}>ممتاز</div>
+                  </div>
+                  
+                  <div className={styles.tableRow}>
+                    <div className={styles.propertyName}>
+                      <span className={styles.propertyIcon}>🏢</span>
+                      مجمع الأمل
+                    </div>
+                    <div className={styles.propertyUnits}>12 وحدة</div>
+                    <div className={styles.occupancyCell}>
+                      <div className={styles.occupancyBar}>
+                        <div className={styles.occupancyFill} style={{width: '85%'}}></div>
+                      </div>
+                      <span className={styles.occupancyText}>85%</span>
+                    </div>
+                    <div className={styles.monthlyRevenue}>18,500 ر.س</div>
+                    <div className={`${styles.status} ${styles.good}`}>جيد</div>
+                  </div>
+                  
+                  <div className={styles.tableRow}>
+                    <div className={styles.propertyName}>
+                      <span className={styles.propertyIcon}>🏢</span>
+                      برج النخيل
+                    </div>
+                    <div className={styles.propertyUnits}>6 وحدات</div>
+                    <div className={styles.occupancyCell}>
+                      <div className={styles.occupancyBar}>
+                        <div className={styles.occupancyFill} style={{width: '70%'}}></div>
+                      </div>
+                      <span className={styles.occupancyText}>70%</span>
+                    </div>
+                    <div className={styles.monthlyRevenue}>11,700 ر.س</div>
+                    <div className={`${styles.status} ${styles.average}`}>متوسط</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
