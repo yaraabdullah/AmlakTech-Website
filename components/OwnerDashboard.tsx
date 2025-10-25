@@ -147,7 +147,6 @@ export default function OwnerDashboard() {
               <div className={styles.alertsSection}>
                 <div className={styles.sectionHeader}>
                   <h2 className={styles.sectionTitle}>التنبيهات الهامة</h2>
-                  <span className={styles.sectionIcon}>🔔</span>
                 </div>
                 
                 <div className={styles.alertsList}>
@@ -188,7 +187,6 @@ export default function OwnerDashboard() {
               <div className={styles.cashFlowSection}>
                 <div className={styles.sectionHeader}>
                   <h2 className={styles.sectionTitle}>التدفق النقدي</h2>
-                  <span className={styles.sectionIcon}>💰</span>
                 </div>
                 
                 <div className={styles.cashFlowContent}>
