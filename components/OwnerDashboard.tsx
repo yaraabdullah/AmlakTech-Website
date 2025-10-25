@@ -113,6 +113,14 @@ export default function OwnerDashboard() {
             <p className={styles.welcomeSubtitle}>هذا ملخص لأداء محفظتك العقارية</p>
           </div>
 
+          {/* Add Property Button */}
+          <div className={styles.addPropertySection}>
+            <button className={styles.addPropertyBtn}>
+              <span className={styles.addIcon}>+</span>
+              إضافة عقار جديد
+            </button>
+          </div>
+
           {/* KPI Cards */}
           <div className={styles.kpiSection}>
             <div className={styles.kpiGrid}>
@@ -129,10 +137,6 @@ export default function OwnerDashboard() {
                 </div>
               ))}
             </div>
-            <button className={styles.addPropertyBtn}>
-              <span className={styles.addIcon}>+</span>
-              إضافة عقار جديد
-            </button>
           </div>
 
           {/* Main Dashboard Content */}
