@@ -109,16 +109,16 @@ export default function OwnerDashboard() {
         <div className={styles.container}>
           {/* Header Section with Button and Welcome */}
           <div className={styles.headerSection}>
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.welcomeTitle}>مرحباً، أحمد!</h1>
+              <p className={styles.welcomeSubtitle}>هذا ملخص لأداء محفظتك العقارية</p>
+            </div>
+            
             <div className={styles.addPropertySection}>
               <button className={styles.addPropertyBtn}>
                 <span className={styles.addIcon}>+</span>
                 إضافة عقار جديد
               </button>
-            </div>
-            
-            <div className={styles.welcomeSection}>
-              <h1 className={styles.welcomeTitle}>مرحباً، أحمد!</h1>
-              <p className={styles.welcomeSubtitle}>هذا ملخص لأداء محفظتك العقارية</p>
             </div>
           </div>
 
