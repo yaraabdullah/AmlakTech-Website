@@ -146,105 +146,70 @@ export default function OwnerDashboard() {
               {/* Alerts Section */}
               <div className={styles.alertsSection}>
                 <div className={styles.sectionHeader}>
-                  <h2 className={styles.sectionTitle}>التنبيهات العامة</h2>
-                  <select className={styles.filterSelect}>
-                    <option>أخرة أشهر</option>
-                    <option>هذا الشهر</option>
-                    <option>هذا الأسبوع</option>
-                  </select>
+                  <h2 className={styles.sectionTitle}>التنبيهات الهامة</h2>
+                  <span className={styles.sectionIcon}>🔔</span>
                 </div>
                 
                 <div className={styles.alertsList}>
-                  {alerts.map((alert, index) => (
-                    <div key={index} className={`${styles.alertCard} ${styles[alert.type]}`}>
-                      <div className={styles.alertIcon}>
-                        {alert.type === 'urgent' ? '⚠️' : 
-                         alert.type === 'warning' ? '⚠️' : '💡'}
-                      </div>
-                      <div className={styles.alertContent}>
-                        <h4 className={styles.alertTitle}>{alert.title}</h4>
-                        <p className={styles.alertDescription}>{alert.description}</p>
-                        <button className={styles.alertAction}>{alert.action}</button>
-                      </div>
+                  <div className={`${styles.alertCard} ${styles.urgent}`}>
+                    <div className={styles.alertIcon}>⚠️</div>
+                    <div className={styles.alertContent}>
+                      <h3 className={styles.alertTitle}>صيانة عاجلة</h3>
+                      <p className={styles.alertMessage}>تسرب مياه في الشقة رقم 103 - عمارة الرياض</p>
+                      <a href="#" className={styles.alertLink}>عرض التفاصيل</a>
                     </div>
-                  ))}
+                  </div>
+                  
+                  <div className={`${styles.alertCard} ${styles.warning}`}>
+                    <div className={styles.alertIcon}>⏰</div>
+                    <div className={styles.alertContent}>
+                      <h3 className={styles.alertTitle}>فواتير مستحقة</h3>
+                      <p className={styles.alertMessage}>3 فواتير كهرباء مستحقة الدفع خلال 5 أيام</p>
+                      <a href="#" className={styles.alertLink}>دفع الآن</a>
+                    </div>
+                  </div>
+                  
+                  <div className={`${styles.alertCard} ${styles.info}`}>
+                    <div className={styles.alertIcon}>🧠</div>
+                    <div className={styles.alertContent}>
+                      <h3 className={styles.alertTitle}>توصية الذكاء الاصطناعي</h3>
+                      <p className={styles.alertMessage}>يمكنك زيادة الإيجار بنسبة 5% في 3 عقارات بناءً على أسعار السوق</p>
+                      <a href="#" className={styles.alertLink}>عرض التحليل</a>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Properties Overview */}
-              <div className={styles.propertiesSection}>
-                <div className={styles.sectionHeader}>
-                  <h2 className={styles.sectionTitle}>نظرة عامة على العقارات</h2>
-                  <button className={styles.viewAllBtn}>عرض الكل</button>
-                </div>
-                
-                <div className={styles.propertiesTable}>
-                  <div className={styles.tableHeader}>
-                    <div>العقار</div>
-                    <div>الوحدات</div>
-                    <div>الإشغال</div>
-                    <div>الإيرادات الشهرية</div>
-                    <div>الحالة</div>
-                  </div>
-                  
-                  {properties.map((property, index) => (
-                    <div key={index} className={styles.tableRow}>
-                      <div className={styles.propertyName}>{property.name}</div>
-                      <div className={styles.propertyUnits}>{property.units}</div>
-                      <div className={styles.occupancyCell}>
-                        <div className={styles.occupancyBar}>
-                          <div 
-                            className={styles.occupancyFill} 
-                            style={{width: `${property.occupancy}%`}}
-                          ></div>
-                        </div>
-                        <span className={styles.occupancyText}>{property.occupancy}%</span>
-                      </div>
-                      <div className={styles.monthlyRevenue}>{property.monthlyRevenue} ر.س</div>
-                      <div className={`${styles.status} ${styles[property.status.toLowerCase()]}`}>
-                        {property.status}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
             {/* Right Column */}
             <div className={styles.rightColumn}>
               {/* Cash Flow Section */}
               <div className={styles.cashFlowSection}>
-                <h2 className={styles.sectionTitle}>التدفق النقدي</h2>
-                <div className={styles.cashFlowPlaceholder}>
-                  <p>سيتم عرض التدفق النقدي هنا</p>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>التدفق النقدي</h2>
+                  <span className={styles.sectionIcon}>💰</span>
+                </div>
+                
+                <div className={styles.cashFlowContent}>
+                  <div className={styles.timeFilter}>
+                    <select className={styles.timeSelect}>
+                      <option value="6months">آخر 6 أشهر</option>
+                      <option value="1year">آخر سنة</option>
+                      <option value="2years">آخر سنتين</option>
+                    </select>
+                    <span className={styles.dropdownIcon}>▼</span>
+                  </div>
+                  
+                  <div className={styles.chartArea}>
+                    {/* Chart placeholder - would be replaced with actual chart component */}
+                    <div className={styles.chartPlaceholder}>
+                      <p>سيتم عرض مخطط التدفق النقدي هنا</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* AI Assistant Section */}
-              <div className={styles.aiAssistantSection}>
-                <div className={styles.aiHeader}>
-                  <h2 className={styles.sectionTitle}>المساعد الذكي</h2>
-                  <div className={styles.aiIcon}>🤖</div>
-                </div>
-                
-                <p className={styles.aiDescription}>
-                  مرحباً أحمد! إليك بعض التوصيات الذكية لتحسين أداء محفظتك العقارية
-                </p>
-                
-                <div className={styles.recommendationsList}>
-                  {aiRecommendations.map((rec, index) => (
-                    <div key={index} className={styles.recommendationCard}>
-                      <h4 className={styles.recommendationTitle}>{rec.title}</h4>
-                      <p className={styles.recommendationDescription}>{rec.description}</p>
-                      <button className={styles.recommendationAction}>{rec.action}</button>
-                    </div>
-                  ))}
-                </div>
-                
-                <button className={styles.getMoreBtn}>
-                  الحصول على المزيد من التوصيات
-                </button>
-              </div>
             </div>
           </div>
         </div>
