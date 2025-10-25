@@ -153,7 +153,7 @@ export default function AddProperty() {
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>نوع العقار</h2>
-                    <span className={styles.sectionIcon}>🏢</span>
+                    
                   </div>
                   
                   <div className={styles.propertyTypeGrid}>

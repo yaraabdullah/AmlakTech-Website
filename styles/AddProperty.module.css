@@ -361,10 +361,6 @@
   margin-bottom: var(--spacing-xl);
 }
 
-.sectionIcon {
-  font-size: 1.5rem;
-}
-
 .sectionTitle {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
