@@ -127,9 +127,6 @@ export default function AddProperty() {
             
             {/* Progress Indicator */}
             <div className={styles.progressContainer}>
-              <div className={styles.progressText}>
-                الخطوة {currentStep} من 4
-              </div>
               <div className={styles.progressBar}>
                 {steps.map((step, index) => (
                   <div key={step.number} className={`${styles.progressStep} ${step.active ? styles.active : ''}`}>
@@ -196,6 +193,7 @@ export default function AddProperty() {
                         onChange={handleInputChange}
                         className={styles.fieldInput}
                       >
+                        <option value="استوديو">استوديو</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -220,13 +218,13 @@ export default function AddProperty() {
                     </div>
                     
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>استوديو</label>
+                      <label className={styles.fieldLabel}>المساحة (متر مربع)</label>
                       <input
                         type="text"
-                        name="propertySubType"
-                        value={formData.propertySubType}
+                        name="area"
+                        value={formData.area}
                         onChange={handleInputChange}
-                        placeholder="استوديو"
+                        placeholder=""
                         className={styles.fieldInput}
                       />
                     </div>
@@ -238,19 +236,7 @@ export default function AddProperty() {
                         name="constructionYear"
                         value={formData.constructionYear}
                         onChange={handleInputChange}
-                        placeholder="مثال: 2020"
-                        className={styles.fieldInput}
-                      />
-                    </div>
-                    
-                    <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>المساحة (متر مربع)</label>
-                      <input
-                        type="text"
-                        name="area"
-                        value={formData.area}
-                        onChange={handleInputChange}
-                        placeholder="متر مربع"
+                        placeholder=""
                         className={styles.fieldInput}
                       />
                     </div>
