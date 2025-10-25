@@ -151,7 +151,6 @@ export default function OwnerDashboard() {
                 
                 <div className={styles.alertsList}>
                   <div className={`${styles.alertCard} ${styles.urgent}`}>
-                    <div className={styles.alertIcon}>⚠️</div>
                     <div className={styles.alertContent}>
                       <h3 className={styles.alertTitle}>صيانة عاجلة</h3>
                       <p className={styles.alertMessage}>تسرب مياه في الشقة رقم 103 - عمارة الرياض</p>
@@ -160,7 +159,6 @@ export default function OwnerDashboard() {
                   </div>
                   
                   <div className={`${styles.alertCard} ${styles.warning}`}>
-                    <div className={styles.alertIcon}>⏰</div>
                     <div className={styles.alertContent}>
                       <h3 className={styles.alertTitle}>فواتير مستحقة</h3>
                       <p className={styles.alertMessage}>3 فواتير كهرباء مستحقة الدفع خلال 5 أيام</p>
@@ -169,7 +167,6 @@ export default function OwnerDashboard() {
                   </div>
                   
                   <div className={`${styles.alertCard} ${styles.info}`}>
-                    <div className={styles.alertIcon}>🧠</div>
                     <div className={styles.alertContent}>
                       <h3 className={styles.alertTitle}>توصية الذكاء الاصطناعي</h3>
                       <p className={styles.alertMessage}>يمكنك زيادة الإيجار بنسبة 5% في 3 عقارات بناءً على أسعار السوق</p>

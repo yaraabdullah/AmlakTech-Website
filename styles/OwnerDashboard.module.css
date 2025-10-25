@@ -281,6 +281,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2xl);
+  height: fit-content;
 }
 
 /* Right Column */
@@ -288,6 +289,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2xl);
+  height: fit-content;
 }
 
 /* Section Styles */
@@ -351,7 +353,7 @@
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-md);
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid --color-primary;
   margin-bottom: var(--spacing-md);
   position: relative;
   background: #f8f9fa;
@@ -382,7 +384,6 @@
 
 .alertContent {
   flex: 1;
-  padding-left: var(--spacing-md);
 }
 
 .alertTitle {
@@ -546,13 +547,13 @@
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-sm);
-  height: 100%;
+  height: fit-content;
 }
 
 .cashFlowContent {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: fit-content;
 }
 
 .timeFilter {
@@ -585,7 +586,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
+  min-height: 200px;
+  max-height: 300px;
 }
 
 .chartPlaceholder {
