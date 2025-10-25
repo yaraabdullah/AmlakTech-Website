@@ -162,7 +162,7 @@
 
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-lg);
   flex: 1;
 }
@@ -669,6 +669,12 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 1024px) {
   .dashboardGrid {
     grid-template-columns: 1fr;
@@ -680,7 +686,7 @@
   }
   
   .kpiGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -697,6 +703,10 @@
   
   .dashboardNav {
     flex-wrap: wrap;
+  }
+  
+  .kpiGrid {
+    grid-template-columns: 1fr;
   }
   
   .tableHeader,
