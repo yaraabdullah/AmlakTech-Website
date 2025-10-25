@@ -229,10 +229,11 @@
 /* Property Type Grid */
 .propertyTypeGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
+  max-width: 100%;
 }
 
 .propertyTypeCard {
@@ -247,6 +248,8 @@
   transition: all 0.3s ease;
   position: relative;
   min-height: 80px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .propertyTypeCard:hover {
