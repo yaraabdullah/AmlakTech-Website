@@ -226,9 +226,9 @@
 /* Property Type Grid */
 .propertyTypeGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: var(--spacing-xl);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
   max-width: 100%;
 }
@@ -245,8 +245,6 @@
   transition: all 0.3s ease;
   position: relative;
   min-height: 80px;
-  min-width: 200px;
-  width: 100%;
   box-sizing: border-box;
 }
 
