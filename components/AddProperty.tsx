@@ -115,15 +115,15 @@ export default function AddProperty() {
           {/* Page Header */}
           <div className={styles.pageHeader}>
             <div className={styles.headerRow}>
+              {/* Page Title */}
+              <div className={styles.pageTitle}>
+                <h1>إضافة عقار جديد</h1>
+              </div>
+              
               {/* AI Assistant Banner */}
               <div className={styles.aiBanner}>
                 <span className={styles.aiBannerIcon}>🤖</span>
                 <p className={styles.aiBannerText}>الذكاء الاصطناعي يساعدك في تحسين إعلان عقارك</p>
-              </div>
-              
-              {/* Page Title */}
-              <div className={styles.pageTitle}>
-                <h1>إضافة عقار جديد</h1>
               </div>
             </div>
             
