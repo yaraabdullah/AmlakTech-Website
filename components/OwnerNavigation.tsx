@@ -13,50 +13,42 @@ export default function OwnerNavigation({ currentPage }: OwnerNavigationProps) {
     {
       id: 'dashboard',
       title: 'لوحة التحكم',
-      href: '/owner/dashboard',
-      icon: '🏠'
+      href: '/owner/dashboard'
     },
     {
       id: 'add-property',
       title: 'إضافة عقار',
-      href: '/owner/add-property',
-      icon: '➕'
+      href: '/owner/add-property'
     },
     {
       id: 'property-details',
       title: 'تفاصيل العقارات',
-      href: '/owner/property-details',
-      icon: '📋'
+      href: '/owner/property-details'
     },
     {
       id: 'revenue-reports',
       title: 'تقارير الإيرادات',
-      href: '/owner/revenue-reports',
-      icon: '💰'
+      href: '/owner/revenue-reports'
     },
     {
       id: 'maintenance-schedule',
       title: 'جدول أعمال الصيانة',
-      href: '/owner/maintenance-schedule',
-      icon: '🔧'
+      href: '/owner/maintenance-schedule'
     },
     {
       id: 'contract-management',
       title: 'إدارة العقود',
-      href: '/owner/contract-management',
-      icon: '📄'
+      href: '/owner/contract-management'
     },
     {
       id: 'property-analytics',
       title: 'تحليلات العقار',
-      href: '/owner/property-analytics',
-      icon: '📊'
+      href: '/owner/property-analytics'
     },
     {
       id: 'account-settings',
       title: 'إعدادات الحساب',
-      href: '/owner/account-settings',
-      icon: '⚙️'
+      href: '/owner/account-settings'
     }
   ]
 
@@ -67,28 +59,28 @@ export default function OwnerNavigation({ currentPage }: OwnerNavigationProps) {
 
   return (
     <header className={styles.header}>
-      <div className={styles.headerTop}>
-        <div className={styles.logo}>
-          <Link href="/">
-            <h1>أملاك تك</h1>
-            <span>Amlak Tech</span>
-          </Link>
-        </div>
+      <div className={styles.container}>
+        <Link href="/" className={styles.logo}>
+          <h1>أملاك تك</h1>
+          <span>Amlak Tech</span>
+        </Link>
         
-        <nav className={styles.mainNav}>
-          {navigationItems.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              className={`${styles.navLink} ${currentPage === item.id ? styles.active : ''}`}
-            >
-              <span className={styles.navIcon}>{item.icon}</span>
-              <span className={styles.navText}>{item.title}</span>
-            </Link>
-          ))}
+        <nav className={styles.nav}>
+          <ul className={styles.navList}>
+            {navigationItems.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  className={`${styles.navLink} ${currentPage === item.id ? styles.active : ''}`}
+                >
+                  {item.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
 
-        <div className={styles.headerActions}>
+        <div className={styles.authButtons}>
           <div className={styles.userInfo}>
             <span className={styles.userName}>أحمد محمد</span>
             <span className={styles.userRole}>مالك عقار</span>
@@ -97,44 +89,15 @@ export default function OwnerNavigation({ currentPage }: OwnerNavigationProps) {
             تسجيل الخروج
           </button>
         </div>
-      </div>
 
-      {/* Mobile Navigation */}
-      <div className={styles.mobileNav}>
-        <div className={styles.mobileNavHeader}>
-          <div className={styles.logo}>
-            <Link href="/">
-              <h1>أملاك تك</h1>
-              <span>Amlak Tech</span>
-            </Link>
-          </div>
-          <button className={styles.mobileMenuBtn}>
-            <span>☰</span>
-          </button>
-        </div>
-        
-        <div className={styles.mobileNavContent}>
-          {navigationItems.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              className={`${styles.mobileNavLink} ${currentPage === item.id ? styles.active : ''}`}
-            >
-              <span className={styles.navIcon}>{item.icon}</span>
-              <span className={styles.navText}>{item.title}</span>
-            </Link>
-          ))}
-          
-          <div className={styles.mobileUserInfo}>
-            <div className={styles.userInfo}>
-              <span className={styles.userName}>أحمد محمد</span>
-              <span className={styles.userRole}>مالك عقار</span>
-            </div>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              تسجيل الخروج
-            </button>
-          </div>
-        </div>
+        <button 
+          className={styles.menuToggle}
+          aria-label="فتح القائمة"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
   )
