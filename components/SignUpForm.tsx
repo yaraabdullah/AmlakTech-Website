@@ -43,7 +43,7 @@ export default function SignUpForm() {
       id: 'مدير عقارات',
       title: 'مدير عقارات',
       description: 'إدارة عقارات متعددة وتنظيم العمليات العقارية',
-      icon: '/icons/مستأجر.svg'
+      icon: '/icons/مدير عقارات.svg'
     }
   ]
 

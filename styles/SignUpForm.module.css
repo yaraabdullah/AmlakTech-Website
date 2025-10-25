@@ -114,7 +114,7 @@
 }
 
 .userTypeCard {
-  background: var(--color-background-secondary);
+  background: white;
   border: 2px solid var(--color-border);
   border-radius: var(--border-radius-xl);
   padding: var(--spacing-xl);
