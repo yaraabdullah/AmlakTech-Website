@@ -107,18 +107,19 @@ export default function OwnerDashboard() {
       {/* Main Content */}
       <main className={styles.mainContent}>
         <div className={styles.container}>
-          {/* Welcome Section */}
-          <div className={styles.welcomeSection}>
-            <h1 className={styles.welcomeTitle}>مرحباً، أحمد!</h1>
-            <p className={styles.welcomeSubtitle}>هذا ملخص لأداء محفظتك العقارية</p>
-          </div>
-
-          {/* Add Property Button */}
-          <div className={styles.addPropertySection}>
-            <button className={styles.addPropertyBtn}>
-              <span className={styles.addIcon}>+</span>
-              إضافة عقار جديد
-            </button>
+          {/* Header Section with Button and Welcome */}
+          <div className={styles.headerSection}>
+            <div className={styles.addPropertySection}>
+              <button className={styles.addPropertyBtn}>
+                <span className={styles.addIcon}>+</span>
+                إضافة عقار جديد
+              </button>
+            </div>
+            
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.welcomeTitle}>مرحباً، أحمد!</h1>
+              <p className={styles.welcomeSubtitle}>هذا ملخص لأداء محفظتك العقارية</p>
+            </div>
           </div>
 
           {/* KPI Cards */}
@@ -126,7 +127,6 @@ export default function OwnerDashboard() {
             <div className={styles.kpiGrid}>
               {kpiData.map((kpi, index) => (
                 <div key={index} className={styles.kpiCard}>
-                  <div className={styles.kpiIcon}>{kpi.icon}</div>
                   <div className={styles.kpiContent}>
                     <h3 className={styles.kpiTitle}>{kpi.title}</h3>
                     <div className={styles.kpiValue}>{kpi.value}</div>
