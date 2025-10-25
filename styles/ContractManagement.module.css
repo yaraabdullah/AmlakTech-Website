@@ -1,0 +1,776 @@
+.contractManagementPage {
+  min-height: 100vh;
+  background: var(--color-background-secondary);
+  font-family: var(--font-family-primary);
+}
+
+/* Header */
+.header {
+  background: var(--color-background-primary);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-primary);
+  font-family: var(--font-family-primary);
+}
+
+.logo span {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-primary);
+  margin-right: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+}
+
+.mainNav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.mainNav a {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.mainNav a:hover {
+  color: var(--color-primary);
+}
+
+.mainNav a.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.loginBtn {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.loginBtn:hover {
+  background: var(--color-secondary);
+  transform: translateY(-1px);
+}
+
+/* Main Content */
+.mainContent {
+  padding: var(--spacing-2xl) 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Page Header */
+.pageHeader {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.pageTitle {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+/* Contract Overview Section */
+.contractOverviewSection {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-3xl);
+}
+
+.searchAndCreate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2xl);
+  gap: var(--spacing-lg);
+}
+
+.searchSection {
+  display: flex;
+  align-items: center;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  flex: 1;
+  max-width: 400px;
+}
+
+.searchIcon {
+  font-size: var(--font-size-base);
+  margin-left: var(--spacing-sm);
+  color: var(--color-text-secondary);
+}
+
+.searchInput {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  flex: 1;
+  font-family: var(--font-family-primary);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-light);
+}
+
+.createContractBtn {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-family-primary);
+}
+
+.createContractBtn:hover {
+  background: var(--color-secondary);
+  transform: translateY(-1px);
+}
+
+.addIcon {
+  font-size: var(--font-size-base);
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+}
+
+.metricCard {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  transition: transform 0.3s ease;
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+}
+
+.metricIcon {
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  background: var(--color-blue-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metricContent {
+  flex: 1;
+}
+
+.metricTitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+}
+
+.metricValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+}
+
+.metricChange {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-primary);
+}
+
+.metricChange.up {
+  color: var(--color-success);
+}
+
+.metricChange.neutral {
+  color: var(--color-text-secondary);
+}
+
+/* Smart Assistant Section */
+.smartAssistantSection {
+  background: var(--color-blue-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-3xl);
+}
+
+.assistantHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.assistantIcon {
+  font-size: 1.5rem;
+}
+
+.assistantTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+.assistantDescription {
+  margin-bottom: var(--spacing-xl);
+}
+
+.assistantDescription p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+.activateAssistantBtn {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.activateAssistantBtn:hover {
+  background: var(--color-secondary);
+  transform: translateY(-1px);
+}
+
+/* Contracts List Section */
+.contractsListSection {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-3xl);
+}
+
+/* Tabs */
+.tabsContainer {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-family-primary);
+}
+
+.tab:hover {
+  color: var(--color-primary);
+}
+
+.tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Contracts Table */
+.contractsTable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-md);
+  align-items: center;
+  border: 1px solid var(--color-border);
+  transition: all 0.3s ease;
+}
+
+.tableRow:hover {
+  background: var(--color-blue-light);
+}
+
+.tableRow.active {
+  border-right: 4px solid var(--color-success);
+}
+
+.tableRow.pending {
+  border-right: 4px solid #f59e0b;
+}
+
+.tableRow.expired {
+  border-right: 4px solid var(--color-error);
+}
+
+.tableRow.draft {
+  border-right: 4px solid var(--color-text-secondary);
+}
+
+.contractName,
+.tenantName,
+.leaseStatus {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+}
+
+.contractStatus,
+.overallStatus {
+  display: flex;
+  align-items: center;
+}
+
+.statusBadge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  font-family: var(--font-family-primary);
+}
+
+.statusBadge.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.statusBadge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.statusBadge.expired {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.statusBadge.draft {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paginationInfo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
+}
+
+.paginationButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.paginationBtn {
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.paginationBtn:hover {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+}
+
+/* Renewal Notifications Section */
+.renewalNotificationsSection {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-3xl);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xl);
+  font-family: var(--font-family-primary);
+}
+
+.notificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.notificationCard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  border-right: 4px solid;
+}
+
+.notificationCard.expired {
+  background: #fef2f2;
+  border-right-color: var(--color-error);
+}
+
+.notificationCard.expiring {
+  background: #fffbeb;
+  border-right-color: #f59e0b;
+}
+
+.notificationIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notificationContent {
+  flex: 1;
+}
+
+.notificationTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
+}
+
+.notificationDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
+}
+
+.notificationActions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.notificationAction {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.notificationAction:hover {
+  background: var(--color-secondary);
+}
+
+/* Contract Templates Section */
+.contractTemplatesSection {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.templatesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+}
+
+.templateCard {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s ease;
+}
+
+.templateCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.templateIcon {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.templateContent {
+  flex: 1;
+}
+
+.templateTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.templateDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
+}
+
+.templateFeatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.featureTag {
+  background: var(--color-blue-light);
+  color: var(--color-primary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-primary);
+}
+
+.useTemplateBtn {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-family: var(--font-family-primary);
+}
+
+.useTemplateBtn:hover {
+  background: var(--color-secondary);
+}
+
+/* Footer */
+.footer {
+  background: var(--color-background-dark);
+  color: var(--color-text-white);
+  padding: var(--spacing-3xl) 0 var(--spacing-xl);
+  margin-top: var(--spacing-3xl);
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+  gap: var(--spacing-2xl);
+}
+
+.footerColumn h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-blue-light);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.footerDescription {
+  color: var(--color-text-light);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.socialLinks {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.socialLinks a {
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-size: var(--font-size-lg);
+  transition: color 0.3s ease;
+}
+
+.socialLinks a:hover {
+  color: var(--color-primary);
+}
+
+.footerLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footerLinks li {
+  margin-bottom: var(--spacing-sm);
+}
+
+.footerLinks a {
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.footerLinks a:hover {
+  color: var(--color-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .templatesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerTop {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .mainNav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .searchAndCreate {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .searchSection {
+    max-width: none;
+  }
+  
+  .tabsContainer {
+    flex-wrap: wrap;
+  }
+  
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .notificationActions {
+    flex-direction: column;
+  }
+  
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}

@@ -1,9 +1,16 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import styles from '../styles/Header.module.css'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const router = useRouter()
+
+  const handleLogin = () => {
+    // Redirect to owner dashboard for testing
+    router.push('/owner/dashboard')
+  }
 
   return (
     <header className={styles.header}>
@@ -24,7 +31,7 @@ export default function Header() {
         </nav>
 
         <div className={styles.authButtons}>
-          <button className={styles.loginBtn}>تسجيل الدخول</button>
+          <button className={styles.loginBtn} onClick={handleLogin}>تسجيل الدخول</button>
           <a href="/signup" className={styles.signupBtn}>ابدأ مجاناً</a>
         </div>
 
