@@ -139,6 +139,23 @@
 .userTypeIcon {
   font-size: 2.5rem;
   margin-bottom: var(--spacing-md);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconImage {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: var(--spacing-md);
+}
+
+.iconPlaceholder {
+  display: none;
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .userTypeTitle {

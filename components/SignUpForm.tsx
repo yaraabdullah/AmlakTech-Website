@@ -114,7 +114,25 @@ export default function SignUpForm() {
                   className={`${styles.userTypeCard} ${selectedUserType === userType.id ? styles.selected : ''}`}
                   onClick={() => handleUserTypeSelect(userType.id)}
                 >
-                  <div className={styles.userTypeIcon}>{userType.icon}</div>
+                  <div className={styles.userTypeIcon}>
+                    <img 
+                      src={userType.icon} 
+                      alt={userType.title}
+                      className={styles.iconImage}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (nextElement) {
+                          nextElement.style.display = 'block';
+                        }
+                      }}
+                    />
+                    <div className={styles.iconPlaceholder}>
+                      {userType.id === 'مالك عقار' ? '🏠' : 
+                       userType.id === 'مستأجر' ? '🔑' :
+                       userType.id === 'مزود خدمة' ? '🔧' : '🏢'}
+                    </div>
+                  </div>
                   <h3 className={styles.userTypeTitle}>{userType.title}</h3>
                   <p className={styles.userTypeDescription}>{userType.description}</p>
                 </div>
