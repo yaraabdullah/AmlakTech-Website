@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import OwnerDashboard from '../components/OwnerDashboard'
+import OwnerDashboard from '../../components/OwnerDashboard'
 
 export default function OwnerDashboardPage() {
   return (
