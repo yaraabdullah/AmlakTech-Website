@@ -81,13 +81,7 @@ export default function OwnerNavigation({ currentPage }: OwnerNavigationProps) {
         </nav>
 
         <div className={styles.authButtons}>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>أحمد محمد</span>
-            <span className={styles.userRole}>مالك عقار</span>
-          </div>
-          <button className={styles.logoutBtn} onClick={handleLogout}>
-            تسجيل الخروج
-          </button>
+          {/* User info and logout removed - will be in account settings */}
         </div>
 
         <button 

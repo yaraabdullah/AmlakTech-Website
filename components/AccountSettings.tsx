@@ -1,10 +1,17 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import OwnerNavigation from './OwnerNavigation'
 import styles from '../styles/AccountSettings.module.css'
 
 export default function AccountSettings() {
   const [activeSection, setActiveSection] = useState('personal')
+  const router = useRouter()
+  
+  const handleLogout = () => {
+    // In a real app, this would clear authentication state
+    router.push('/')
+  }
   const [formData, setFormData] = useState({
     // Personal Information
     firstName: 'أحمد',
@@ -47,7 +54,8 @@ export default function AccountSettings() {
     { id: 'notifications', title: 'الإشعارات', icon: '🔔', active: activeSection === 'notifications' },
     { id: 'payment', title: 'طرق الدفع', icon: '💳', active: activeSection === 'payment' },
     { id: 'favorites', title: 'المفضلة', icon: '⭐', active: activeSection === 'favorites' },
-    { id: 'privacy', title: 'الخصوصية', icon: '👁️', active: activeSection === 'privacy' }
+    { id: 'privacy', title: 'الخصوصية', icon: '👁️', active: activeSection === 'privacy' },
+    { id: 'logout', title: 'تسجيل الخروج', icon: '🚪', active: activeSection === 'logout' }
   ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -444,6 +452,40 @@ export default function AccountSettings() {
                     <button className={styles.activateAiBtn}>
                       تفعيل تحليلات الذكاء الاصطناعي
                     </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Logout Section */}
+              {activeSection === 'logout' && (
+                <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>تسجيل الخروج</h2>
+                  
+                  <div className={styles.logoutSection}>
+                    <div className={styles.logoutWarning}>
+                      <div className={styles.warningIcon}>⚠️</div>
+                      <div className={styles.warningContent}>
+                        <h3 className={styles.warningTitle}>هل أنت متأكد من تسجيل الخروج؟</h3>
+                        <p className={styles.warningDescription}>
+                          سيتم تسجيل خروجك من حسابك وسيتم إعادة توجيهك إلى الصفحة الرئيسية.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.logoutActions}>
+                      <button 
+                        className={styles.logoutBtn}
+                        onClick={handleLogout}
+                      >
+                        تسجيل الخروج
+                      </button>
+                      <button 
+                        className={styles.cancelBtn}
+                        onClick={() => setActiveSection('personal')}
+                      >
+                        إلغاء
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
