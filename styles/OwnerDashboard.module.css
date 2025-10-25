@@ -353,7 +353,7 @@
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-md);
-  border-left: 4px solid --color-primary;
+  border-left: 4px solid var(--color-primary);
   margin-bottom: var(--spacing-md);
   position: relative;
   background: #f8f9fa;
