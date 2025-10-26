@@ -469,9 +469,17 @@
   background: var(--color-secondary);
 }
 
-/* Risk Analysis */
-.riskSection {
+/* Risk Analysis Container */
+.riskSectionContainer {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
   margin-bottom: var(--spacing-2xl);
+}
+
+.riskSection {
+  margin: 0;
 }
 
 .riskSection .sectionTitle {
@@ -492,15 +500,15 @@
 }
 
 .riskCard.red {
-  background: #ffffff;
+  background: var(--color-background-secondary);
 }
 
 .riskCard.orange {
-  background: #ffffff;
+  background: var(--color-background-secondary);;
 }
 
 .riskCard.blue {
-  background: #ffffff;
+  background: var(--color-background-secondary);;
 }
 
 .riskHeader {

@@ -289,24 +289,26 @@ export default function PropertyAnalytics() {
           </div>
 
           {/* Risk Analysis */}
-          <div className={styles.riskSection}>
-            <h2 className={styles.sectionTitle}>تحليل المخاطر</h2>
-            
-            <div className={styles.riskCards}>
-              {riskAnalysis.map((risk, index) => (
-                <div key={index} className={`${styles.riskCard} ${styles[risk.levelColor]}`}>
-                  <div className={styles.riskHeader}>
-                    <h3 className={styles.riskLevel}>{risk.level}</h3>
-                    <span className={`${styles.actionBadge} ${styles[risk.levelColor]}`}>
-                      {risk.action}
-                    </span>
+          <div className={styles.riskSectionContainer}>
+            <div className={styles.riskSection}>
+              <h2 className={styles.sectionTitle}>تحليل المخاطر</h2>
+              
+              <div className={styles.riskCards}>
+                {riskAnalysis.map((risk, index) => (
+                  <div key={index} className={`${styles.riskCard} ${styles[risk.levelColor]}`}>
+                    <div className={styles.riskHeader}>
+                      <h3 className={styles.riskLevel}>{risk.level}</h3>
+                      <span className={`${styles.actionBadge} ${styles[risk.levelColor]}`}>
+                        {risk.action}
+                      </span>
+                    </div>
+                    <p className={styles.riskDescription}>{risk.description}</p>
+                    <a href="#" className={`${styles.riskLink} ${styles[risk.linkColor]}`}>
+                      {risk.linkText} ←
+                    </a>
                   </div>
-                  <p className={styles.riskDescription}>{risk.description}</p>
-                  <a href="#" className={`${styles.riskLink} ${styles[risk.linkColor]}`}>
-                    {risk.linkText} ←
-                  </a>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
