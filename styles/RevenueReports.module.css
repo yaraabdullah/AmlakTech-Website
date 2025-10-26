@@ -194,6 +194,18 @@
   font-family: var(--font-family-primary);
 }
 
+.sectionTitleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.sectionTitleWithIcon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .viewAllLink {
   color: var(--color-primary);
   text-decoration: none;
@@ -467,28 +479,12 @@
   background: linear-gradient(135deg, #e0f2fe 0%, #f8f9fa 100%);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-md);
-}
-
-.insightIcon {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.insightIcon img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
+  display: block;
 }
 
 .insightContent {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .insightTitle {

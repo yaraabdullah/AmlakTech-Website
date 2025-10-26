@@ -383,7 +383,7 @@
 
 /* Smart Assistant Section */
 .smartAssistantSection {
-  background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+  background: #ffffff ;
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-2xl);
   box-shadow: var(--shadow-sm);
@@ -437,7 +437,7 @@
 }
 
 .featureCard {
-  background: var(--color-background-primary);
+  background: var(--color-background-secondary);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
   display: flex;

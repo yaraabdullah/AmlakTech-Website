@@ -75,19 +75,16 @@ export default function RevenueReports() {
     {
       title: 'توقعات الإيرادات',
       description: 'بناءً على تحليل البيانات، نتوقع زيادة في الإيرادات بنسبة 5% في الربع القادم.',
-      icon: '/icons/ai-analytics.svg',
       color: 'info'
     },
     {
       title: 'فرص تحسين',
       description: 'يمكن زيادة الإيرادات من خلال تجديد 3 عقود قديمة بأسعار محدثة وتقديم خدمات إضافية.',
-      icon: '/icons/ai-analytics.svg',
       color: 'success'
     },
     {
       title: 'تنبيهات',
       description: '5 عقود ستنتهي خلال الشهر القادم. ننصح بالتواصل مع العملاء لتجديد العقود مبكراً.',
-      icon: '/icons/ai-analytics.svg',
       color: 'warning'
     }
   ]
@@ -294,20 +291,20 @@ export default function RevenueReports() {
           {/* AI Analytics Section */}
           <div className={styles.aiAnalyticsSection}>
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>تحليلات الذكاء الاصطناعي</h2>
+              <div className={styles.sectionTitleWithIcon}>
+                <Image 
+                  src="/icons/ai-analytics.svg"
+                  alt="تحليلات الذكاء الاصطناعي"
+                  width={40}
+                  height={40}
+                />
+                <h2 className={styles.sectionTitle}>تحليلات الذكاء الاصطناعي</h2>
+              </div>
             </div>
             
             <div className={styles.aiInsightsGrid}>
               {aiInsights.map((insight, index) => (
                 <div key={index} className={`${styles.aiInsightCard} ${styles[insight.color]}`}>
-                  <div className={styles.insightIcon}>
-                    <Image 
-                      src={insight.icon}
-                      alt={insight.title}
-                      width={40}
-                      height={40}
-                    />
-                  </div>
                   <div className={styles.insightContent}>
                     <h3 className={styles.insightTitle}>{insight.title}</h3>
                     <p className={styles.insightDescription}>{insight.description}</p>
