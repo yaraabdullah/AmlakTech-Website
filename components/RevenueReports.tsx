@@ -4,83 +4,94 @@ import OwnerNavigation from './OwnerNavigation'
 import styles from '../styles/RevenueReports.module.css'
 
 export default function RevenueReports() {
-  const [selectedPeriod, setSelectedPeriod] = useState('monthly')
+  const [selectedYear, setSelectedYear] = useState('2023')
+  const [selectedPeriod, setSelectedPeriod] = useState('last30days')
 
   const revenueMetrics = [
     {
-      title: 'إجمالي الإيرادات',
-      value: '58,450 ريال',
-      change: '+12% مقارنة بالشهر الماضي',
+      title: 'الإيرادات السنوية',
+      value: '٦٤٥,٧٨٠ ر.س',
+      change: '۱۸ ٪ مقارنة بالعام الماضي',
       trend: 'up',
-      icon: '💰',
-      color: 'success'
-    },
-    {
-      title: 'متوسط الإيجار الشهري',
-      value: '3,200 ريال',
-      change: '+8% مقارنة بالشهر الماضي',
-      trend: 'up',
-      icon: '🏠',
+      icon: '📊',
       color: 'primary'
     },
     {
-      title: 'عدد العقود النشطة',
-      value: '24',
-      change: '+3 عقود جديدة',
+      title: 'أعمال الصيانة المكتملة',
+      value: '٧٨',
+      change: '٥ % مقارنة بالشهر الماضي',
+      trend: 'down',
+      icon: '🔧',
+      color: 'warning'
+    },
+    {
+      title: 'العقود النشطة',
+      value: '٢٤',
+      change: '٣ عقود جديدة',
       trend: 'up',
       icon: '📄',
       color: 'info'
     },
     {
-      title: 'معدل تحصيل الإيرادات',
-      value: '96%',
-      change: '+2% مقارنة بالشهر الماضي',
+      title: 'إجمالي الإيرادات الشهرية',
+      value: '٥٨,٤٥٠ ر.س',
+      change: '١٢ ٪ مقارنة بالشهر الماضي',
       trend: 'up',
-      icon: '📊',
+      icon: '💰',
+      color: 'success'
+    }
+  ]
+
+  const activeContracts = [
+    {
+      company: 'شركة الرياض للتطوير',
+      type: 'عقد صيانة شهري',
+      amount: '١٢,٥٠٠ ر.س',
+      endDate: 'ينتهي في ١٥/٠٨/٢٠٢٣',
+      icon: '🏢'
+    },
+    {
+      company: 'فندق النخيل',
+      type: 'عقد صيانة سنوي',
+      amount: '٨٥,٠٠٠ ر.س',
+      endDate: 'ينتهي في ٠٣/١٢/٢٠٢٣',
+      icon: '🏨'
+    },
+    {
+      company: 'مدارس المستقبل',
+      type: 'عقد صيانة فصلي',
+      amount: '٣٨,٧٥٠ ر.س',
+      endDate: 'ينتهي في ٢٢/٠٩/٢٠٢٣',
+      icon: '🏫'
+    },
+    {
+      company: 'مستشفى الصحة',
+      type: 'عقد صيانة شهري',
+      amount: '١٨,٢٠٠ ر.س',
+      endDate: 'ينتهي في ٠١/٠٨/٢٠٢٣',
+      icon: '🏥'
+    }
+  ]
+
+  const aiInsights = [
+    {
+      title: 'توقعات الإيرادات',
+      description: 'بناءً على تحليل البيانات، نتوقع زيادة في الإيرادات بنسبة 5% في الربع القادم.',
+      icon: '📈',
+      color: 'info'
+    },
+    {
+      title: 'فرص تحسين',
+      description: 'يمكن زيادة الإيرادات من خلال تجديد 3 عقود قديمة بأسعار محدثة وتقديم خدمات إضافية.',
+      icon: '🔍',
+      color: 'success'
+    },
+    {
+      title: 'تنبيهات',
+      description: '5 عقود ستنتهي خلال الشهر القادم. ننصح بالتواصل مع العملاء لتجديد العقود مبكراً.',
+      icon: '⚠️',
       color: 'warning'
     }
-  ]
-
-  const revenueData = [
-    {
-      property: 'فيلا الرياض - شارع الملك فهد',
-      tenant: 'عبدالله محمد',
-      amount: '8,500 ريال',
-      status: 'مدفوع',
-      dueDate: '2024-01-15',
-      statusColor: 'paid'
-    },
-    {
-      property: 'شقة جدة - حي الزهراء',
-      tenant: 'فاطمة علي',
-      amount: '4,200 ريال',
-      status: 'مدفوع',
-      dueDate: '2024-01-10',
-      statusColor: 'paid'
-    },
-    {
-      property: 'مكتب الدمام - كورنيش الدمام',
-      tenant: 'شركة التقنية المتقدمة',
-      amount: '6,800 ريال',
-      status: 'متأخر',
-      dueDate: '2024-01-05',
-      statusColor: 'overdue'
-    },
-    {
-      property: 'شقة مكة - حي العزيزية',
-      tenant: 'خالد الغامدي',
-      amount: '3,500 ريال',
-      status: 'قيد المراجعة',
-      dueDate: '2024-01-20',
-      statusColor: 'pending'
-    }
-  ]
-
-  const periodOptions = [
-    { value: 'weekly', label: 'أسبوعي' },
-    { value: 'monthly', label: 'شهري' },
-    { value: 'quarterly', label: 'ربعي' },
-    { value: 'yearly', label: 'سنوي' }
   ]
 
   return (
@@ -91,25 +102,20 @@ export default function RevenueReports() {
       {/* Main Content */}
       <main className={styles.mainContent}>
         <div className={styles.container}>
-          {/* Page Header */}
-          <div className={styles.pageHeader}>
-            <h1 className={styles.pageTitle}>تقارير الإيرادات</h1>
-            <div className={styles.headerControls}>
-              <div className={styles.periodSelector}>
-                <label>الفترة الزمنية:</label>
-                <select 
-                  value={selectedPeriod} 
-                  onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className={styles.periodSelect}
-                >
-                  {periodOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+          {/* AI Assistant Banner */}
+          <div className={styles.aiBanner}>
+            <div className={styles.aiBannerContent}>
+              <div className={styles.aiBannerTitle}>
+                <span className={styles.aiBannerIcon}>🤖</span>
+                <span>مساعد الذكاء الاصطناعي الخاص بك</span>
               </div>
+              <p className={styles.aiBannerDescription}>
+                يمكن للمساعد الذكي تحليل بياناتك وتقديم توصيات لتحسين الإيرادات وإدارة العقود بشكل أفضل.
+              </p>
             </div>
+            <button className={styles.activateAiBtn}>
+              تفعيل المساعد الذكي
+            </button>
           </div>
 
           {/* Revenue Metrics Section */}
@@ -130,123 +136,169 @@ export default function RevenueReports() {
             </div>
           </div>
 
-          {/* Revenue Details Section */}
-          <div className={styles.revenueDetailsSection}>
-            <h2 className={styles.sectionTitle}>تفاصيل الإيرادات</h2>
-            
-            <div className={styles.revenueTable}>
-              <div className={styles.tableHeader}>
-                <div>العقار</div>
-                <div>المستأجر</div>
-                <div>المبلغ</div>
-                <div>الحالة</div>
-                <div>تاريخ الاستحقاق</div>
+          {/* Dashboard Grid */}
+          <div className={styles.dashboardGrid}>
+            {/* Top Left: Active Contracts */}
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>العقود النشطة</h2>
+                <a href="#" className={styles.viewAllLink}>
+                  عرض الكل <span>←</span>
+                </a>
               </div>
-
-              {revenueData.map((item, index) => (
-                <div key={index} className={`${styles.tableRow} ${styles[item.statusColor]}`}>
-                  <div className={styles.propertyName}>{item.property}</div>
-                  <div className={styles.tenantName}>{item.tenant}</div>
-                  <div className={styles.amount}>{item.amount}</div>
-                  <div className={styles.status}>
-                    <span className={`${styles.statusBadge} ${styles[item.statusColor]}`}>
-                      {item.status}
-                    </span>
+              
+              <div className={styles.contractsList}>
+                {activeContracts.map((contract, index) => (
+                  <div key={index} className={styles.contractItem}>
+                    <div className={styles.contractLeft}>
+                      <span className={styles.contractIcon}>{contract.icon}</span>
+                      <div className={styles.contractDetails}>
+                        <div className={styles.contractCompany}>{contract.company}</div>
+                        <div className={styles.contractType}>{contract.type}</div>
+                      </div>
+                    </div>
+                    <div className={styles.contractRight}>
+                      <div className={styles.contractAmount}>{contract.amount}</div>
+                      <div className={styles.contractEndDate}>{contract.endDate}</div>
+                    </div>
                   </div>
-                  <div className={styles.dueDate}>{item.dueDate}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Right: Revenue Details */}
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>تفصيل الإيرادات</h2>
+                <select 
+                  className={styles.periodSelect}
+                  value={selectedPeriod}
+                  onChange={(e) => setSelectedPeriod(e.target.value)}
+                >
+                  <option value="last30days">آخر ٣٠ يوم</option>
+                  <option value="last7days">آخر ٧ أيام</option>
+                  <option value="last3months">آخر ٣ أشهر</option>
+                </select>
+              </div>
+              
+              <div className={styles.chartArea}>
+                {/* Chart placeholder */}
+                <div className={styles.chartPlaceholder}>
+                  <p>سيتم عرض الرسم البياني هنا</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Left: Annual Revenue */}
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>الإيرادات السنوية</h2>
+                <div className={styles.yearButtons}>
+                  <button 
+                    className={`${styles.yearBtn} ${selectedYear === '2023' ? styles.active : ''}`}
+                    onClick={() => setSelectedYear('2023')}
+                  >
+                    ٢٠٢٣
+                  </button>
+                  <button 
+                    className={`${styles.yearBtn} ${selectedYear === '2022' ? styles.active : ''}`}
+                    onClick={() => setSelectedYear('2022')}
+                  >
+                    ٢٠٢٢
+                  </button>
+                  <button 
+                    className={`${styles.yearBtn} ${selectedYear === '2021' ? styles.active : ''}`}
+                    onClick={() => setSelectedYear('2021')}
+                  >
+                    ٢٠٢١
+                  </button>
+                </div>
+              </div>
+              
+              <div className={styles.annualRevenueContent}>
+                <div className={styles.revenueCircle}>
+                  <div className={styles.revenueValue}>٦٤٥,٧٨٠ ر.س</div>
+                  <div className={styles.revenueGrowth}>⬆️</div>
+                </div>
+                <div className={styles.revenueStats}>
+                  <div className={styles.statItem}>
+                    <div className={styles.statLabel}>العام الماضي</div>
+                    <div className={styles.statValue}>٥٤٧,٢٣٠ ر.س</div>
+                  </div>
+                  <div className={styles.statItem}>
+                    <div className={styles.statLabel}>نسبة النمو</div>
+                    <div className={`${styles.statValue} ${styles.growth}`}>+ ١٨ %</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Right: Completed Maintenance */}
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>أعمال الصيانة المكتملة</h2>
+                <select className={styles.periodSelect}>
+                  <option value="thismonth">هذا الشهر</option>
+                  <option value="lastmonth">الشهر الماضي</option>
+                  <option value="last3months">آخر ٣ أشهر</option>
+                </select>
+              </div>
+              
+              <div className={styles.chartArea}>
+                {/* Chart placeholder */}
+                <div className={styles.chartPlaceholder}>
+                  <p>سيتم عرض الرسم البياني هنا</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Monthly Revenue 2023 */}
+          <div className={styles.monthlyRevenueSection}>
+            <div className={styles.monthlyRevenueHeader}>
+              <h2 className={styles.sectionTitle}>الإيرادات الشهرية ٢٠٢٣</h2>
+              <div className={styles.headerActions}>
+                <select className={styles.filterSelect}>
+                  <option value="all">تصفية</option>
+                  <option value="january">يناير</option>
+                  <option value="february">فبراير</option>
+                  <option value="march">مارس</option>
+                </select>
+                <button className={styles.exportBtn}>
+                  <span>📤</span>
+                  تصدير البيانات
+                </button>
+              </div>
+            </div>
+            
+            <div className={styles.monthlyRevenueChart}>
+              <div className={styles.chartPlaceholder}>
+                <p>سيتم عرض الرسم البياني للإيرادات الشهرية هنا</p>
+              </div>
+            </div>
+          </div>
+
+          {/* AI Analytics Section */}
+          <div className={styles.aiAnalyticsSection}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>تحليلات الذكاء الاصطناعي</h2>
+              <span className={styles.sparkleIcon}>✨</span>
+            </div>
+            
+            <div className={styles.aiInsightsGrid}>
+              {aiInsights.map((insight, index) => (
+                <div key={index} className={`${styles.aiInsightCard} ${styles[insight.color]}`}>
+                  <div className={styles.insightIcon}>{insight.icon}</div>
+                  <div className={styles.insightContent}>
+                    <h3 className={styles.insightTitle}>{insight.title}</h3>
+                    <p className={styles.insightDescription}>{insight.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Charts Section */}
-          <div className={styles.chartsSection}>
-            <h2 className={styles.sectionTitle}>الرسوم البيانية</h2>
-            
-            <div className={styles.chartsGrid}>
-              <div className={styles.chartCard}>
-                <h3 className={styles.chartTitle}>الإيرادات الشهرية</h3>
-                <div className={styles.chartPlaceholder}>
-                  <div className={styles.chartIcon}>📊</div>
-                  <p>رسم بياني للإيرادات الشهرية</p>
-                </div>
-              </div>
-              
-              <div className={styles.chartCard}>
-                <h3 className={styles.chartTitle}>معدل التحصيل</h3>
-                <div className={styles.chartPlaceholder}>
-                  <div className={styles.chartIcon}>📈</div>
-                  <p>رسم بياني لمعدل التحصيل</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.container}>
-          <div className={styles.footerContent}>
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>أملاك تك</h4>
-              <p className={styles.footerDescription}>
-                منصة متكاملة تستثمر تقنيات الذكاء الاصطناعي وتعلم الآلة لإدارة العقارات والخدمات العقارية
-              </p>
-              <div className={styles.socialLinks}>
-                <a href="#" aria-label="فيسبوك">📘</a>
-                <a href="#" aria-label="تويتر">🐦</a>
-                <a href="#" aria-label="إنستغرام">📷</a>
-                <a href="#" aria-label="لينكد إن">💼</a>
-                <a href="#" aria-label="يوتيوب">📺</a>
-              </div>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>المنتجات</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">إدارة الإيجارات</a></li>
-                <li><a href="#">إدارة الصيانة</a></li>
-                <li><a href="#">التحليلات والتقارير</a></li>
-                <li><a href="#">تطبيق الجوال</a></li>
-              </ul>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>الحلول</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">لملاك العقارات</a></li>
-                <li><a href="#">للمستأجرين</a></li>
-                <li><a href="#">لمزودي الخدمات</a></li>
-                <li><a href="#">لمديري العقارات</a></li>
-                <li><a href="#">للشركات العقارية</a></li>
-              </ul>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>الموارد</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">مركز المساعدة</a></li>
-                <li><a href="#">المدونة</a></li>
-                <li><a href="#">دليل المستخدم</a></li>
-                <li><a href="#">الندوات الإلكترونية</a></li>
-                <li><a href="#">الأسئلة الشائعة</a></li>
-              </ul>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>الشركة</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">عن الشركة</a></li>
-                <li><a href="#">فريق العمل</a></li>
-                <li><a href="#">الوظائف</a></li>
-                <li><a href="#">اتصل بنا</a></li>
-                <li><a href="#">الشركاء</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
