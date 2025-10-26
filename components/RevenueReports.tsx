@@ -101,14 +101,6 @@ export default function RevenueReports() {
           <div className={styles.aiBanner}>
             <div className={styles.aiBannerContent}>
               <div className={styles.aiBannerTitle}>
-                <div className={styles.aiBannerIcon}>
-                  <Image 
-                    src="/icons/ai-analytics.svg"
-                    alt="المساعد الذكي"
-                    width={40}
-                    height={40}
-                  />
-                </div>
                 <span>مساعد الذكاء الاصطناعي الخاص بك</span>
               </div>
               <p className={styles.aiBannerDescription}>
