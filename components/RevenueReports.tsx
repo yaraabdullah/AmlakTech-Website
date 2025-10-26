@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import OwnerNavigation from './OwnerNavigation'
+import Footer from './Footer'
 import styles from '../styles/RevenueReports.module.css'
 
 export default function RevenueReports() {
@@ -299,6 +300,9 @@ export default function RevenueReports() {
           </div>
         </div>
       </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

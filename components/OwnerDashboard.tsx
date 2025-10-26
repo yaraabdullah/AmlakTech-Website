@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import OwnerNavigation from './OwnerNavigation'
+import Footer from './Footer'
 import styles from '../styles/OwnerDashboard.module.css'
 
 export default function OwnerDashboard() {
@@ -324,64 +325,7 @@ export default function OwnerDashboard() {
       </main>
 
       {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.container}>
-          <div className={styles.footerContent}>
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>أملاك تك</h4>
-              <p className={styles.footerDescription}>
-                منصة متكاملة تستثمر تقنيات الذكاء الاصطناعي وتعلم الآلة لإدارة العقارات والخدمات العقارية
-              </p>
-              <div className={styles.socialLinks}>
-                <a href="#" aria-label="فيسبوك">📘</a>
-                <a href="#" aria-label="تويتر">🐦</a>
-                <a href="#" aria-label="لينكد إن">💼</a>
-                <a href="#" aria-label="يوتيوب">📺</a>
-              </div>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>الشركة</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">عن الشركة</a></li>
-                <li><a href="#">فريق العمل</a></li>
-                <li><a href="#">الوظائف</a></li>
-                <li><a href="#">اتصل بنا</a></li>
-              </ul>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>الموارد</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">مركز المساعدة</a></li>
-                <li><a href="#">المدونة</a></li>
-                <li><a href="#">دليل المستخدم</a></li>
-                <li><a href="#">الندوات الإلكترونية</a></li>
-              </ul>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>الحلول</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">لملاك العقارات</a></li>
-                <li><a href="#">للمستأجرين</a></li>
-                <li><a href="#">لمزودي الخدمات</a></li>
-                <li><a href="#">لمديري العقارات</a></li>
-              </ul>
-            </div>
-            
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerTitle}>المنتجات</h4>
-              <ul className={styles.footerLinks}>
-                <li><a href="#">إدارة العقارات</a></li>
-                <li><a href="#">إدارة الإيجارات</a></li>
-                <li><a href="#">إدارة الصيانة</a></li>
-                <li><a href="#">التحليلات والتقارير</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
