@@ -119,12 +119,10 @@ export default function PropertyDetails() {
                 <h1 className={styles.propertyName}>{propertyData.name}</h1>
                 <p className={styles.propertyLocation}>{propertyData.location}</p>
               </div>
-              <div className={styles.propertyIcon}>🏢</div>
             </div>
             
             <div className={styles.propertyActions}>
               <button className={styles.editBtn}>
-                <span className={styles.editIcon}>✏️</span>
                 تعديل العقار
               </button>
               <button className={styles.addTenantBtn}>

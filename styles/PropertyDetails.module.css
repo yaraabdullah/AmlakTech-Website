@@ -136,16 +136,6 @@
   font-family: var(--font-family-primary);
 }
 
-.propertyIcon {
-  font-size: 3rem;
-  background: var(--color-blue-light);
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .propertyActions {
   display: flex;
@@ -187,7 +177,6 @@
   transform: translateY(-1px);
 }
 
-.editIcon,
 .addIcon {
   font-size: var(--font-size-base);
 }
