@@ -49,29 +49,25 @@ export default function RevenueReports() {
       company: 'شركة الرياض للتطوير',
       type: 'عقد صيانة شهري',
       amount: '١٢,٥٠٠ ر.س',
-      endDate: 'ينتهي في ١٥/٠٨/٢٠٢٣',
-      icon: '🏢'
+      endDate: 'ينتهي في ١٥/٠٨/٢٠٢٣'
     },
     {
       company: 'فندق النخيل',
       type: 'عقد صيانة سنوي',
       amount: '٨٥,٠٠٠ ر.س',
-      endDate: 'ينتهي في ٠٣/١٢/٢٠٢٣',
-      icon: '🏨'
+      endDate: 'ينتهي في ٠٣/١٢/٢٠٢٣'
     },
     {
       company: 'مدارس المستقبل',
       type: 'عقد صيانة فصلي',
       amount: '٣٨,٧٥٠ ر.س',
-      endDate: 'ينتهي في ٢٢/٠٩/٢٠٢٣',
-      icon: '🏫'
+      endDate: 'ينتهي في ٢٢/٠٩/٢٠٢٣'
     },
     {
       company: 'مستشفى الصحة',
       type: 'عقد صيانة شهري',
       amount: '١٨,٢٠٠ ر.س',
-      endDate: 'ينتهي في ٠١/٠٨/٢٠٢٣',
-      icon: '🏥'
+      endDate: 'ينتهي في ٠١/٠٨/٢٠٢٣'
     }
   ]
 
@@ -160,7 +156,6 @@ export default function RevenueReports() {
                 {activeContracts.map((contract, index) => (
                   <div key={index} className={styles.contractItem}>
                     <div className={styles.contractLeft}>
-                      <span className={styles.contractIcon}>{contract.icon}</span>
                       <div className={styles.contractDetails}>
                         <div className={styles.contractCompany}>{contract.company}</div>
                         <div className={styles.contractType}>{contract.type}</div>
