@@ -17,21 +17,23 @@ export default function ContractManagement() {
       value: '24',
       change: '+8% مقارنة بالشهر الماضي',
       trend: 'up',
-      icon: '✅'
+
     },
+
     {
       title: 'تنتهي قريباً',
       value: '7',
       change: '+3%',
       trend: 'up',
-      icon: '⚠️'
+
     },
+  
     {
       title: 'العقود المنتهية',
       value: '12',
       change: '0% - بحاجة إلى تجديد',
       trend: 'neutral',
-      icon: '❌'
+
     }
   ]
 
@@ -170,7 +172,6 @@ export default function ContractManagement() {
             <div className={styles.metricsGrid}>
               {contractMetrics.map((metric, index) => (
                 <div key={index} className={styles.metricCard}>
-                  <div className={styles.metricIcon}>{metric.icon}</div>
                   <div className={styles.metricContent}>
                     <h3 className={styles.metricTitle}>{metric.title}</h3>
                     <div className={styles.metricValue}>{metric.value}</div>

@@ -479,12 +479,6 @@
   background: linear-gradient(135deg, #e0f2fe 0%, #f8f9fa 100%);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
-  display: block;
-}
-
-.insightContent {
-  display: flex;
-  flex-direction: column;
 }
 
 .insightTitle {

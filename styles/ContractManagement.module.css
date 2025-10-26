@@ -205,17 +205,6 @@
   transform: translateY(-2px);
 }
 
-.metricIcon {
-  font-size: 2rem;
-  width: 60px;
-  height: 60px;
-  background: var(--color-blue-light);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .metricContent {
   flex: 1;
 }

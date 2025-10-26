@@ -305,10 +305,8 @@ export default function RevenueReports() {
             <div className={styles.aiInsightsGrid}>
               {aiInsights.map((insight, index) => (
                 <div key={index} className={`${styles.aiInsightCard} ${styles[insight.color]}`}>
-                  <div className={styles.insightContent}>
-                    <h3 className={styles.insightTitle}>{insight.title}</h3>
-                    <p className={styles.insightDescription}>{insight.description}</p>
-                  </div>
+                  <h3 className={styles.insightTitle}>{insight.title}</h3>
+                  <p className={styles.insightDescription}>{insight.description}</p>
                 </div>
               ))}
             </div>
