@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
@@ -50,13 +51,13 @@ export default function AccountSettings() {
   })
 
   const settingsSections = [
-    { id: 'personal', title: 'المعلومات الشخصية', icon: '👤', active: activeSection === 'personal' },
-    { id: 'security', title: 'الأمان وكلمة المرور', icon: '🔒', active: activeSection === 'security' },
-    { id: 'notifications', title: 'الإشعارات', icon: '🔔', active: activeSection === 'notifications' },
-    { id: 'payment', title: 'طرق الدفع', icon: '💳', active: activeSection === 'payment' },
-    { id: 'favorites', title: 'المفضلة', icon: '⭐', active: activeSection === 'favorites' },
-    { id: 'privacy', title: 'الخصوصية', icon: '👁️', active: activeSection === 'privacy' },
-    { id: 'logout', title: 'تسجيل الخروج', icon: '🚪', active: activeSection === 'logout' }
+    { id: 'personal', title: 'المعلومات الشخصية', icon: '/icons/Personal info.svg', active: activeSection === 'personal' },
+    { id: 'security', title: 'الأمان وكلمة المرور', icon: '/icons/Password.svg', active: activeSection === 'security' },
+    { id: 'notifications', title: 'الإشعارات', icon: '/icons/Notifications.svg', active: activeSection === 'notifications' },
+    { id: 'payment', title: 'طرق الدفع', icon: '/icons/Payment methods.svg', active: activeSection === 'payment' },
+    { id: 'favorites', title: 'الاشتراك', icon: '/icons/Subscription.svg', active: activeSection === 'favorites' },
+    { id: 'privacy', title: 'الخصوصية', icon: '/icons/Privacy.svg', active: activeSection === 'privacy' },
+    { id: 'logout', title: 'تسجيل الخروج', active: activeSection === 'logout' }
   ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -106,7 +107,16 @@ export default function AccountSettings() {
                     className={`${styles.navItem} ${section.active ? styles.active : ''}`}
                     onClick={() => setActiveSection(section.id)}
                   >
-                    <span className={styles.navIcon}>{section.icon}</span>
+                    {section.icon && (
+                      <span className={styles.navIcon}>
+                        <Image 
+                          src={section.icon}
+                          alt={section.title}
+                          width={24}
+                          height={24}
+                        />
+                      </span>
+                    )}
                     <span className={styles.navTitle}>{section.title}</span>
                   </button>
                 ))}

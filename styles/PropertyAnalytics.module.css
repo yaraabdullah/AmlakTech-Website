@@ -17,7 +17,7 @@
 
 /* AI Banner */
 .aiBanner {
-  background: #e0f2fe;
+  background: #ffffff;
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md) var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
@@ -492,15 +492,15 @@
 }
 
 .riskCard.red {
-  background: #fef2f2;
+  background: #ffffff;
 }
 
 .riskCard.orange {
-  background: #fff7ed;
+  background: #ffffff;
 }
 
 .riskCard.blue {
-  background: #eff6ff;
+  background: #ffffff;
 }
 
 .riskHeader {
