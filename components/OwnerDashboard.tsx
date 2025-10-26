@@ -116,7 +116,6 @@ export default function OwnerDashboard() {
             
             <div className={styles.addPropertySection}>
               <button className={styles.addPropertyBtn}>
-                <span className={styles.addIcon}>+</span>
                 إضافة عقار جديد
               </button>
             </div>

@@ -56,12 +56,12 @@ export default function AddProperty() {
   ]
 
   const propertyTypes = [
-    { id: 'شقة', title: 'شقة', icon: '🏢', selected: formData.propertyType === 'شقة' },
-    { id: 'منزل', title: 'منزل', icon: '🏠', selected: formData.propertyType === 'منزل' },
-    { id: 'فيلا', title: 'فيلا', icon: '🏡', selected: formData.propertyType === 'فيلا' },
-    { id: 'مكتب', title: 'مكتب', icon: '💼', selected: formData.propertyType === 'مكتب' },
-    { id: 'متجر', title: 'متجر', icon: '🏪', selected: formData.propertyType === 'متجر' },
-    { id: 'أرض', title: 'أرض', icon: '🏞️', selected: formData.propertyType === 'أرض' }
+    { id: 'شقة', title: 'شقة', selected: formData.propertyType === 'شقة' },
+    { id: 'منزل', title: 'منزل', selected: formData.propertyType === 'منزل' },
+    { id: 'فيلا', title: 'فيلا', selected: formData.propertyType === 'فيلا' },
+    { id: 'مكتب', title: 'مكتب', selected: formData.propertyType === 'مكتب' },
+    { id: 'متجر', title: 'متجر', selected: formData.propertyType === 'متجر' },
+    { id: 'أرض', title: 'أرض', selected: formData.propertyType === 'أرض' }
   ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -122,7 +122,6 @@ export default function AddProperty() {
               
               {/* AI Assistant Banner */}
               <div className={styles.aiBanner}>
-                <span className={styles.aiBannerIcon}>🤖</span>
                 <p className={styles.aiBannerText}>الذكاء الاصطناعي يساعدك في تحسين إعلان عقارك</p>
               </div>
             </div>
@@ -251,7 +250,6 @@ export default function AddProperty() {
               <div className={styles.stepContent}>
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
-                    <span className={styles.sectionIcon}>📍</span>
                     <h2 className={styles.sectionTitle}>موقع العقار</h2>
                   </div>
                   
@@ -366,7 +364,6 @@ export default function AddProperty() {
                 {/* Features Section */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
-                    <span className={styles.sectionIcon}>⭐</span>
                     <h2 className={styles.sectionTitle}>المميزات والمرافق</h2>
                   </div>
                   
@@ -379,18 +376,7 @@ export default function AddProperty() {
                           onChange={() => handleFeatureChange(feature)}
                           className={styles.featureCheckbox}
                         />
-                        <span className={styles.featureIcon}>
-                          {feature === 'parking' ? '🚗' :
-                           feature === 'garden' ? '🌱' :
-                           feature === 'balcony' ? '🏠' :
-                           feature === 'pool' ? '🏊' :
-                           feature === 'elevator' ? '🛗' :
-                           feature === 'gym' ? '💪' :
-                           feature === 'security' ? '🔒' :
-                           feature === 'wifi' ? '📶' :
-                           feature === 'ac' ? '❄️' :
-                           feature === 'jacuzzi' ? '🛁' : '⭐'}
-                        </span>
+                        <span className={styles.featureIcon}></span>
                         <span className={styles.featureText}>
                           {feature === 'parking' ? 'موقف سيارات' :
                            feature === 'garden' ? 'حديقة' :
@@ -432,7 +418,6 @@ export default function AddProperty() {
               <div className={styles.stepContent}>
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
-                    <span className={styles.sectionIcon}>💰</span>
                     <h2 className={styles.sectionTitle}>التسعير والإتاحة</h2>
                   </div>
                   

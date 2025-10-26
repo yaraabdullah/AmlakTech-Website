@@ -361,7 +361,7 @@
 
 .alertCard.urgent {
   background: #f8f9fa;
-  border-left-color: var(--color-primary);
+  border-left-color: #dc2626; /* Red for urgent alerts */
 }
 
 .alertCard.warning {
