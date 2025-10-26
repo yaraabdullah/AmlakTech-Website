@@ -90,9 +90,6 @@
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
   transition: transform 0.3s ease;
 }
 
@@ -101,15 +98,26 @@
   box-shadow: var(--shadow-md);
 }
 
+.metricHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.metricTitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  font-family: var(--font-family-primary);
+}
+
 .metricIcon {
-  width: 60px;
-  height: 60px;
-  background: #ffffff;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
 .metricIcon img {
@@ -119,14 +127,8 @@
 }
 
 .metricContent {
-  flex: 1;
-}
-
-.metricTitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-xs);
-  font-family: var(--font-family-primary);
+  display: flex;
+  flex-direction: column;
 }
 
 .metricValue {

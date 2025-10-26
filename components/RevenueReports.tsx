@@ -121,16 +121,18 @@ export default function RevenueReports() {
             <div className={styles.metricsGrid}>
               {revenueMetrics.map((metric, index) => (
                 <div key={index} className={`${styles.metricCard} ${styles[metric.color]}`}>
-                  <div className={styles.metricIcon}>
-                    <Image 
-                      src={metric.icon} 
-                      alt={metric.title}
-                      width={40}
-                      height={40}
-                    />
+                  <div className={styles.metricHeader}>
+                    <h3 className={styles.metricTitle}>{metric.title}</h3>
+                    <div className={styles.metricIcon}>
+                      <Image 
+                        src={metric.icon} 
+                        alt={metric.title}
+                        width={40}
+                        height={40}
+                      />
+                    </div>
                   </div>
                   <div className={styles.metricContent}>
-                    <h3 className={styles.metricTitle}>{metric.title}</h3>
                     <div className={styles.metricValue}>{metric.value}</div>
                     <div className={`${styles.metricChange} ${styles[metric.trend]}`}>
                       {metric.change}
