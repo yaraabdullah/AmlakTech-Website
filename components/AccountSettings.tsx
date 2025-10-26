@@ -52,9 +52,9 @@ export default function AccountSettings() {
 
   const settingsSections = [
     { id: 'personal', title: 'المعلومات الشخصية', icon: '/icons/Personal info.svg', active: activeSection === 'personal' },
-    { id: 'security', title: 'الأمان وكلمة المرور', icon: '/icons/Password.svg', active: activeSection === 'security' },
+    { id: 'security', title: 'الأمان وكلمة المرور', icon: '/icons/Passowrd.svg', active: activeSection === 'security' },
     { id: 'notifications', title: 'الإشعارات', icon: '/icons/Notifications.svg', active: activeSection === 'notifications' },
-    { id: 'payment', title: 'طرق الدفع', icon: '/icons/Payment methods.svg', active: activeSection === 'payment' },
+    { id: 'payment', title: 'طرق الدفع', icon: '/icons/payment-management.svg', active: activeSection === 'payment' },
     { id: 'favorites', title: 'الاشتراك', icon: '/icons/Subscription.svg', active: activeSection === 'favorites' },
     { id: 'privacy', title: 'الخصوصية', icon: '/icons/Privacy.svg', active: activeSection === 'privacy' },
     { id: 'logout', title: 'تسجيل الخروج', active: activeSection === 'logout' }
