@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
 import styles from '../styles/RevenueReports.module.css'
@@ -14,7 +15,7 @@ export default function RevenueReports() {
       value: '٦٤٥,٧٨٠ ر.س',
       change: '۱۸ ٪ مقارنة بالعام الماضي',
       trend: 'up',
-      icon: '📊',
+      icon: '/icons/reports.svg',
       color: 'primary'
     },
     {
@@ -22,7 +23,7 @@ export default function RevenueReports() {
       value: '٧٨',
       change: '٥ % مقارنة بالشهر الماضي',
       trend: 'down',
-      icon: '🔧',
+      icon: '/icons/maintenance.svg',
       color: 'warning'
     },
     {
@@ -30,7 +31,7 @@ export default function RevenueReports() {
       value: '٢٤',
       change: '٣ عقود جديدة',
       trend: 'up',
-      icon: '📄',
+      icon: '/icons/smart-contracts.svg',
       color: 'info'
     },
     {
@@ -38,7 +39,7 @@ export default function RevenueReports() {
       value: '٥٨,٤٥٠ ر.س',
       change: '١٢ ٪ مقارنة بالشهر الماضي',
       trend: 'up',
-      icon: '💰',
+      icon: '/icons/payment-management.svg',
       color: 'success'
     }
   ]
@@ -124,7 +125,14 @@ export default function RevenueReports() {
             <div className={styles.metricsGrid}>
               {revenueMetrics.map((metric, index) => (
                 <div key={index} className={`${styles.metricCard} ${styles[metric.color]}`}>
-                  <div className={styles.metricIcon}>{metric.icon}</div>
+                  <div className={styles.metricIcon}>
+                    <Image 
+                      src={metric.icon} 
+                      alt={metric.title}
+                      width={40}
+                      height={40}
+                    />
+                  </div>
                   <div className={styles.metricContent}>
                     <h3 className={styles.metricTitle}>{metric.title}</h3>
                     <div className={styles.metricValue}>{metric.value}</div>
@@ -283,7 +291,6 @@ export default function RevenueReports() {
           <div className={styles.aiAnalyticsSection}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>تحليلات الذكاء الاصطناعي</h2>
-              <span className={styles.sparkleIcon}>✨</span>
             </div>
             
             <div className={styles.aiInsightsGrid}>

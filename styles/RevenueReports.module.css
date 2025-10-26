@@ -102,7 +102,6 @@
 }
 
 .metricIcon {
-  font-size: 2rem;
   width: 60px;
   height: 60px;
   background: #e0f2fe;
@@ -111,6 +110,12 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.metricIcon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .metricContent {
@@ -439,10 +444,6 @@
   margin-bottom: var(--spacing-2xl);
 }
 
-.sparkleIcon {
-  font-size: 1.5rem;
-}
-
 .aiInsightsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -451,7 +452,7 @@
 }
 
 .aiInsightCard {
-  background: #e0f2fe;
+  background: linear-gradient(135deg, #e0f2fe 0%, #f8f9fa 100%);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
   display: flex;

@@ -233,10 +233,6 @@
   color: var(--color-primary);
 }
 
-.editIcon {
-  font-size: var(--font-size-sm);
-}
-
 /* Form Fields */
 .formFields {
   margin-bottom: var(--spacing-2xl);
@@ -334,14 +330,7 @@
   position: relative;
 }
 
-.passwordToggle {
-  position: absolute;
-  right: var(--spacing-md);
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: var(--font-size-lg);
-}
+
 
 .passwordHint {
   font-size: var(--font-size-sm);

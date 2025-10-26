@@ -1,21 +1,27 @@
 import styles from '../styles/Footer.module.css'
 
-export default function Footer() {
+interface FooterProps {
+  showCTA?: boolean
+}
+
+export default function Footer({ showCTA = false }: FooterProps) {
   return (
     <footer className={styles.footer}>
       {/* CTA Section */}
-      <div className={styles.ctaSection}>
-        <div className={styles.container}>
-          <h2 className={styles.ctaTitle}>ابدأ في تحسين إدارة عقاراتك اليوم</h2>
-          <p className={styles.ctaSubtitle}>
-            انضم إلى آلاف العملاء الذين يستخدمون أملاك تك لإدارة عقاراتهم بذكاء
-          </p>
-          <div className={styles.ctaContent}>
-            <button className={styles.ctaButton}>ابدأ تجربتك المجانية</button>
-            <p className={styles.trialInfo}>لا حاجة لبطاقة ائتمان. تجربة مجانية لمدة 14 يوم.</p>
+      {showCTA && (
+        <div className={styles.ctaSection}>
+          <div className={styles.container}>
+            <h2 className={styles.ctaTitle}>ابدأ في تحسين إدارة عقاراتك اليوم</h2>
+            <p className={styles.ctaSubtitle}>
+              انضم إلى آلاف العملاء الذين يستخدمون أملاك تك لإدارة عقاراتهم بذكاء
+            </p>
+            <div className={styles.ctaContent}>
+              <button className={styles.ctaButton}>ابدأ تجربتك المجانية</button>
+              <p className={styles.trialInfo}>لا حاجة لبطاقة ائتمان. تجربة مجانية لمدة 14 يوم.</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       
       {/* Main Footer Section */}
       <div className={styles.mainFooter}>
