@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
 import styles from '../styles/ContractManagement.module.css'
@@ -93,21 +94,21 @@ export default function ContractManagement() {
       title: 'عقد إيجار سكني',
       description: 'قالب قياسي لعقود الإيجار السكني يتوافق مع القوانين المحلية',
       features: ['سهل التخصيص', 'معتمد قانونياً'],
-      icon: '🏠',
+      icon: '/icons/مالك عقار.svg',
       action: 'استخدام القالب'
     },
     {
       title: 'عقد بيع عقاري',
       description: 'قالب شامل لعقود البيع العقاري مع ضمانات قانونية كاملة',
       features: ['حماية عالية', 'معتمد قانونياً'],
-      icon: '🏢',
+      icon: '/icons/مالك عقار.svg',
       action: 'استخدام القالب'
     },
     {
       title: 'عقد إيجار تجاري',
       description: 'قالب متكامل لعقود الإيجار التجاري مع شروط مفصلة',
       features: ['شروط مفصلة', 'معتمد قانونياً'],
-      icon: '🏢',
+      icon: '/icons/مالك عقار.svg',
       action: 'استخدام القالب'
     }
   ]
@@ -285,7 +286,14 @@ export default function ContractManagement() {
             <div className={styles.templatesGrid}>
               {contractTemplates.map((template, index) => (
                 <div key={index} className={styles.templateCard}>
-                  <div className={styles.templateIcon}>{template.icon}</div>
+                  <div className={styles.templateIcon}>
+                    <Image 
+                      src={template.icon}
+                      alt={template.title}
+                      width={60}
+                      height={60}
+                    />
+                  </div>
                   <div className={styles.templateContent}>
                     <h3 className={styles.templateTitle}>{template.title}</h3>
                     <p className={styles.templateDescription}>{template.description}</p>

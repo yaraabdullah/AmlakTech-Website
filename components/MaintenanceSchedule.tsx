@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
 import styles from '../styles/MaintenanceSchedule.module.css'
@@ -70,18 +71,15 @@ export default function MaintenanceSchedule() {
   const smartAssistantFeatures = [
     {
       title: 'تحليل الأنماط',
-      description: 'تحليل أنماط الصيانة المتكررة والتنبؤ بالاحتياجات المستقبلية',
-      icon: '📊'
+      description: 'تحليل أنماط الصيانة المتكررة والتنبؤ بالاحتياجات المستقبلية'
     },
     {
-      title: 'الجدولة التلقائية',
-      description: 'اقتراح أوقات مثالية للصيانة بناءً على توفر الفنيين والمستأجرين',
-      icon: '⚙️'
+      title: 'جدولة تلقائية',
+      description: 'اقتراح أفضل الأوقات للصيانة بناء على توفر الفنيين والمستأجرين'
     },
     {
-      title: 'تقدير التكلفة',
-      description: 'تقدير تكاليف الصيانة بناءً على البيانات التاريخية ونوع المشكلة',
-      icon: '💰'
+      title: 'تقدير التكاليف',
+      description: 'تقدير تكاليف الصيانة بناءً على البيانات التاريخية ونوع المشكلة'
     }
   ]
 
@@ -340,23 +338,27 @@ export default function MaintenanceSchedule() {
 
           {/* Smart Assistant Section */}
           <div className={styles.smartAssistantSection}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionTitle}>
-                <span className={styles.sectionIcon}>💡</span>
-                <h2>المساعد الذكي</h2>
+            <div className={styles.assistantHeader}>
+              <div className={styles.assistantHeaderContent}>
+                <div className={styles.assistantIcon}>
+                  <Image 
+                    src="/icons/ai-analytics.svg"
+                    alt="المساعد الذكي"
+                    width={40}
+                    height={40}
+                  />
+                </div>
+                <h2 className={styles.assistantTitle}>المساعد الذكي</h2>
               </div>
             </div>
 
-            <div className={styles.assistantDescription}>
-              <p>
-                يمكن للمساعد الذكي تحليل بيانات الصيانة وتقديم توصيات لتحسين إدارة العقارات
-              </p>
-            </div>
+            <p className={styles.assistantDescription}>
+              يمكن للمساعد الذكي تحليل بيانات الصيانة وتقديم توصيات لتحسين إدارة العقارات
+            </p>
 
             <div className={styles.assistantFeatures}>
               {smartAssistantFeatures.map((feature, index) => (
                 <div key={index} className={styles.featureCard}>
-                  <div className={styles.featureIcon}>{feature.icon}</div>
                   <div className={styles.featureContent}>
                     <h3 className={styles.featureTitle}>{feature.title}</h3>
                     <p className={styles.featureDescription}>{feature.description}</p>

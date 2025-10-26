@@ -75,19 +75,19 @@ export default function RevenueReports() {
     {
       title: 'توقعات الإيرادات',
       description: 'بناءً على تحليل البيانات، نتوقع زيادة في الإيرادات بنسبة 5% في الربع القادم.',
-      icon: '📈',
+      icon: '/icons/ai-analytics.svg',
       color: 'info'
     },
     {
       title: 'فرص تحسين',
       description: 'يمكن زيادة الإيرادات من خلال تجديد 3 عقود قديمة بأسعار محدثة وتقديم خدمات إضافية.',
-      icon: '🔍',
+      icon: '/icons/ai-analytics.svg',
       color: 'success'
     },
     {
       title: 'تنبيهات',
       description: '5 عقود ستنتهي خلال الشهر القادم. ننصح بالتواصل مع العملاء لتجديد العقود مبكراً.',
-      icon: '⚠️',
+      icon: '/icons/ai-analytics.svg',
       color: 'warning'
     }
   ]
@@ -104,7 +104,14 @@ export default function RevenueReports() {
           <div className={styles.aiBanner}>
             <div className={styles.aiBannerContent}>
               <div className={styles.aiBannerTitle}>
-                <span className={styles.aiBannerIcon}>🤖</span>
+                <div className={styles.aiBannerIcon}>
+                  <Image 
+                    src="/icons/ai-analytics.svg"
+                    alt="المساعد الذكي"
+                    width={40}
+                    height={40}
+                  />
+                </div>
                 <span>مساعد الذكاء الاصطناعي الخاص بك</span>
               </div>
               <p className={styles.aiBannerDescription}>
@@ -293,7 +300,14 @@ export default function RevenueReports() {
             <div className={styles.aiInsightsGrid}>
               {aiInsights.map((insight, index) => (
                 <div key={index} className={`${styles.aiInsightCard} ${styles[insight.color]}`}>
-                  <div className={styles.insightIcon}>{insight.icon}</div>
+                  <div className={styles.insightIcon}>
+                    <Image 
+                      src={insight.icon}
+                      alt={insight.title}
+                      width={40}
+                      height={40}
+                    />
+                  </div>
                   <div className={styles.insightContent}>
                     <h3 className={styles.insightTitle}>{insight.title}</h3>
                     <p className={styles.insightDescription}>{insight.description}</p>

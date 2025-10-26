@@ -383,45 +383,82 @@
 
 /* Smart Assistant Section */
 .smartAssistantSection {
-  background: var(--color-background-primary);
+  background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-3xl);
+  padding: var(--spacing-2xl);
   box-shadow: var(--shadow-sm);
   margin-bottom: var(--spacing-3xl);
 }
 
-.assistantDescription {
-  margin-bottom: var(--spacing-2xl);
+.assistantHeader {
+  margin-bottom: var(--spacing-lg);
 }
 
-.assistantDescription p {
-  font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
-  line-height: var(--line-height-relaxed);
+.assistantHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.assistantIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assistantIcon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.assistantTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
   margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+.assistantDescription {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-xl);
   font-family: var(--font-family-primary);
 }
 
 .assistantFeatures {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-xl);
+  gap: var(--spacing-lg);
 }
 
 .featureCard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: var(--spacing-xl);
-  background: var(--color-background-secondary);
+  background: var(--color-background-primary);
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-border);
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .featureIcon {
-  font-size: 2.5rem;
-  margin-bottom: var(--spacing-lg);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.featureIcon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .featureContent {
