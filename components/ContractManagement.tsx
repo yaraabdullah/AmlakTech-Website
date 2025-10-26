@@ -287,14 +287,6 @@ export default function ContractManagement() {
             <div className={styles.templatesGrid}>
               {contractTemplates.map((template, index) => (
                 <div key={index} className={styles.templateCard}>
-                  <div className={styles.templateIcon}>
-                    <Image 
-                      src={template.icon}
-                      alt={template.title}
-                      width={60}
-                      height={60}
-                    />
-                  </div>
                   <div className={styles.templateContent}>
                     <h3 className={styles.templateTitle}>{template.title}</h3>
                     <p className={styles.templateDescription}>{template.description}</p>

@@ -581,11 +581,6 @@
   box-shadow: var(--shadow-lg);
 }
 
-.templateIcon {
-  font-size: 2rem;
-  margin-bottom: var(--spacing-lg);
-}
-
 .templateContent {
   flex: 1;
 }
