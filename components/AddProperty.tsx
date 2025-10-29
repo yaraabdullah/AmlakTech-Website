@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
@@ -99,10 +100,66 @@ export default function AddProperty() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Property submitted:', formData)
-    // Handle form submission here
+    
+    if (currentStep < 4) {
+      nextStep()
+      return
+    }
+
+    setIsSubmitting(true)
+    
+    try {
+      // Get owner ID from API
+      const ownerResponse = await fetch('/api/user/get-owner-id')
+      if (!ownerResponse.ok) {
+        throw new Error('Failed to get owner information')
+      }
+      const owner = await ownerResponse.json()
+      const ownerId = owner.id
+      
+      // Build address string
+      const address = `${formData.streetName}${formData.unitNumber ? `, ${formData.unitNumber}` : ''}${formData.postalCode ? `, ${formData.postalCode}` : ''}`
+      
+      const propertyData = {
+        ownerId,
+        name: `${formData.propertyType} - ${formData.city}`,
+        type: formData.propertyType,
+        address,
+        city: formData.city,
+        area: formData.area ? parseFloat(formData.area) : null,
+        rooms: formData.rooms,
+        bathrooms: formData.bathrooms,
+        constructionYear: formData.constructionYear,
+        description: formData.description,
+        images: formData.images.length > 0 ? formData.images : null,
+      }
+
+      const response = await fetch('/api/properties', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(propertyData),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create property')
+      }
+
+      const property = await response.json()
+      
+      // Redirect to property details or dashboard
+      router.push(`/owner/property-details?id=${property.id}`)
+    } catch (error) {
+      console.error('Error creating property:', error)
+      alert('حدث خطأ أثناء إضافة العقار. يرجى المحاولة مرة أخرى.')
+      setIsSubmitting(false)
+    }
   }
 
   return (

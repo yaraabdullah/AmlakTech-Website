@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  firstName         String
+  lastName          String
+  phone             String?
+  address           String?
+  password          String
+  userType          String    // "مالك عقار", "مستأجر", "مزود خدمة", "مدير عقارات"
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  properties        Property[]
+  contracts         Contract[]
+  maintenanceRequests MaintenanceRequest[]
+  payments          Payment[]
+}
+
+model Property {
+  id                String    @id @default(cuid())
+  ownerId           String
+  owner             User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  name              String
+  type              String    // شقة، منزل، فيلا، مكتب، متجر، أرض
+  address           String
+  city              String
+  area              Float?    // المساحة بالمتر المربع
+  rooms             String?   // عدد الغرف
+  bathrooms         String?   // عدد الحمامات
+  constructionYear  String?
+  status            String    @default("متاح") // متاح، مؤجر، صيانة
+  
+  // Additional details
+  description       String?
+  images            String?   // JSON array of image URLs
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  units             Unit[]
+  contracts         Contract[]
+  maintenanceRequests MaintenanceRequest[]
+  
+  @@index([ownerId])
+}
+
+model Unit {
+  id                String    @id @default(cuid())
+  propertyId       String
+  property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  unitNumber        String
+  type             String?   // استوديو، 1 bedroom, etc.
+  area             Float?
+  status           String    @default("متاح") // متاح، مؤجر
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  contracts        Contract[]
+  
+  @@index([propertyId])
+}
+
+model Contract {
+  id                String    @id @default(cuid())
+  propertyId       String
+  property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  unitId           String?
+  unit             Unit?     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  ownerId          String
+  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  tenantName       String
+  tenantEmail      String?
+  tenantPhone      String?
+  
+  type             String    // إيجار سكني، إيجار تجاري، بيع
+  startDate        DateTime
+  endDate          DateTime
+  monthlyRent      Float
+  deposit          Float?
+  
+  status           String    @default("نشط") // نشط، منتهي، معلق
+  notes            String?
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  payments         Payment[]
+  
+  @@index([propertyId])
+  @@index([ownerId])
+}
+
+model MaintenanceRequest {
+  id                String    @id @default(cuid())
+  propertyId       String
+  property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  ownerId          String
+  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  unit             String?
+  type             String    // كهربائي، سباكة، تكييف، عام
+  priority         String    @default("medium") // low, medium, high, urgent
+  problemDescription String
+  
+  contactName      String?
+  contactPhone     String?
+  scheduledDate    DateTime?
+  status           String    @default("قيد الانتظار") // قيد الانتظار، مجدولة، مكتملة، ملغاة
+  
+  cost             Float?
+  notes            String?
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  @@index([propertyId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+model Payment {
+  id                String    @id @default(cuid())
+  contractId       String?
+  contract         Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  ownerId          String
+  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  type             String    // إيجار، صيانة، أخرى
+  amount           Float
+  dueDate          DateTime
+  paidDate         DateTime?
+  status           String    @default("مستحقة") // مستحقة، مدفوعة، متأخرة
+  
+  paymentMethod    String?
+  notes            String?
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  @@index([contractId])
+  @@index([ownerId])
+  @@index([status])
+  @@index([dueDate])
+}
+

@@ -1,104 +1,168 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
 import styles from '../styles/OwnerDashboard.module.css'
 
-export default function OwnerDashboard() {
-  const [activeTab, setActiveTab] = useState('dashboard')
+interface DashboardStats {
+  kpis: {
+    totalProperties: number
+    occupancyRate: number
+    collectedRents: number
+    expenses: number
+    monthlyRevenue: number
+  }
+  alerts: {
+    urgent: number
+    dueInvoices: number
+  }
+  cashFlow: Array<{
+    month: string
+    income: number
+    expenses: number
+    net: number
+  }>
+  propertiesOverview: Array<{
+    id: string
+    name: string
+    units: string
+    occupancy: string
+    monthlyRevenue: string
+    status: string
+  }>
+  activeContracts: number
+}
 
-  const kpiData = [
+export default function OwnerDashboard() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [urgentMaintenance, setUrgentMaintenance] = useState<any[]>([])
+  const [dueInvoices, setDueInvoices] = useState<any[]>([])
+  const [ownerId, setOwnerId] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchOwnerId()
+  }, [])
+
+  useEffect(() => {
+    if (ownerId) {
+      fetchDashboardData()
+    }
+  }, [ownerId])
+
+  const fetchOwnerId = async () => {
+    try {
+      const response = await fetch('/api/user/get-owner-id')
+      if (response.ok) {
+        const owner = await response.json()
+        setOwnerId(owner.id)
+      }
+    } catch (error) {
+      console.error('Error fetching owner ID:', error)
+      setLoading(false)
+    }
+  }
+
+  const fetchDashboardData = async () => {
+    if (!ownerId) return
+
+    try {
+      setLoading(true)
+      
+      // Fetch dashboard stats
+      const statsResponse = await fetch(`/api/dashboard/stats?ownerId=${ownerId}`)
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json()
+        setStats(statsData)
+      }
+
+      // Fetch urgent maintenance
+      const maintenanceResponse = await fetch(`/api/maintenance?ownerId=${ownerId}&status=قيد الانتظار`)
+      if (maintenanceResponse.ok) {
+        const maintenanceData = await maintenanceResponse.json()
+        const urgent = maintenanceData.filter((m: any) => m.priority === 'urgent').slice(0, 1)
+        setUrgentMaintenance(urgent)
+      }
+
+      // Fetch due invoices
+      const paymentsResponse = await fetch(`/api/payments?ownerId=${ownerId}&status=مستحقة`)
+      if (paymentsResponse.ok) {
+        const paymentsData = await paymentsResponse.json()
+        const fiveDaysFromNow = new Date()
+        fiveDaysFromNow.setDate(fiveDaysFromNow.getDate() + 5)
+        const due = paymentsData.filter((p: any) => {
+          const dueDate = new Date(p.dueDate)
+          return dueDate <= fiveDaysFromNow && dueDate >= new Date()
+        }).slice(0, 3)
+        setDueInvoices(due)
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAddProperty = () => {
+    router.push('/owner/add-property')
+  }
+
+  if (loading || !ownerId) {
+    return (
+      <div className={styles.dashboard}>
+        <OwnerNavigation currentPage="dashboard" />
+        <main className={styles.mainContent}>
+          <div className={styles.container}>
+            <p>جاري التحميل...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  const kpiData = stats ? [
     {
       title: 'العقارات',
-      value: '12',
-      change: '+2 منذ آخر شهر',
+      value: stats.kpis.totalProperties.toString(),
+      change: '',
       trend: 'up',
       icon: '🏢',
       color: 'blue'
     },
     {
       title: 'معدل الإشغال',
-      value: '92%',
-      change: '+5% منذ آخر شهر',
+      value: `${stats.kpis.occupancyRate}%`,
+      change: '',
       trend: 'up',
       icon: '📊',
       color: 'green'
     },
     {
       title: 'الإيجارات المحصلة',
-      value: '45,200 ريال',
-      change: '+8% منذ آخر شهر',
+      value: `${stats.kpis.collectedRents.toLocaleString('ar-SA')} ر.س`,
+      change: '',
       trend: 'up',
       icon: '💰',
       color: 'blue'
     },
     {
       title: 'المصروفات',
-      value: '12,450 ريال',
-      change: '+3% منذ آخر شهر',
+      value: `${stats.kpis.expenses.toLocaleString('ar-SA')} ر.س`,
+      change: '',
       trend: 'up',
       icon: '📄',
       color: 'red'
     }
-  ]
+  ] : []
 
-  const alerts = [
-    {
-      type: 'urgent',
-      title: 'تسرب مياه في الشقة رقم 103',
-      description: 'عمارة الرياض - يحتاج إلى معالجة فورية',
-      action: 'عرض التفاصيل'
-    },
-    {
-      type: 'warning',
-      title: '3 فواتير كهرباء مستحقة الدفع',
-      description: 'خلال 5 أيام',
-      action: 'دفع الآن'
-    },
-    {
-      type: 'info',
-      title: 'توصية ذكية',
-      description: 'يمكنك زيادة الإيجار بنسبة 5% في 3 عقارات بناء على اسعار السوق',
-      action: 'عرض التحليل'
-    }
-  ]
-
-  const properties = [
-    {
-      name: 'عمارة الرياض',
-      units: 8,
-      occupancy: 100,
-      monthlyRevenue: '15,000',
-      status: 'ممتاز'
-    },
-    {
-      name: 'مجمع الأمل',
-      units: 12,
-      occupancy: 85,
-      monthlyRevenue: '18,500',
-      status: 'جيد'
-    },
-    {
-      name: 'برج النخيل',
-      units: 6,
-      occupancy: 70,
-      monthlyRevenue: '11,700',
-      status: 'متوسط'
-    }
-  ]
-
-  const aiRecommendations = [
-    {
-      title: 'تحليل الأسعار',
-      description: 'زيادة الإيجار بنسبة 5% في منطقة الريلان',
-      action: 'عرض التحليل الكامل'
-    },
-    {
-      title: 'توقعات الصيانة',
-      description: 'مشاكل محتملة في نظام التكييف - برج النخيل الشهر القادم',
-      action: 'عرض الحلول المقترحة'
-    }
-  ]
+  const getStatusClass = (status: string) => {
+    if (status === 'ممتاز') return styles.excellent
+    if (status === 'جيد') return styles.good
+    return styles.average
+  }
 
   return (
     <div className={styles.dashboard}>
@@ -116,7 +180,7 @@ export default function OwnerDashboard() {
             </div>
             
             <div className={styles.addPropertySection}>
-              <button className={styles.addPropertyBtn}>
+              <button className={styles.addPropertyBtn} onClick={handleAddProperty}>
                 إضافة عقار جديد
               </button>
             </div>
@@ -150,21 +214,29 @@ export default function OwnerDashboard() {
                 </div>
                 
                 <div className={styles.alertsList}>
-                  <div className={`${styles.alertCard} ${styles.urgent}`}>
-                    <div className={styles.alertContent}>
-                      <h3 className={styles.alertTitle}>صيانة عاجلة</h3>
-                      <p className={styles.alertMessage}>تسرب مياه في الشقة رقم 103 - عمارة الرياض</p>
-                      <a href="#" className={styles.alertLink}>عرض التفاصيل</a>
+                  {urgentMaintenance.length > 0 && urgentMaintenance.map((maintenance, index) => (
+                    <div key={index} className={`${styles.alertCard} ${styles.urgent}`}>
+                      <div className={styles.alertContent}>
+                        <h3 className={styles.alertTitle}>صيانة عاجلة</h3>
+                        <p className={styles.alertMessage}>
+                          {maintenance.problemDescription} - {maintenance.property?.name || maintenance.unit}
+                        </p>
+                        <a href="#" className={styles.alertLink}>عرض التفاصيل</a>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                   
-                  <div className={`${styles.alertCard} ${styles.warning}`}>
-                    <div className={styles.alertContent}>
-                      <h3 className={styles.alertTitle}>فواتير مستحقة</h3>
-                      <p className={styles.alertMessage}>3 فواتير كهرباء مستحقة الدفع خلال 5 أيام</p>
-                      <a href="#" className={styles.alertLink}>دفع الآن</a>
+                  {dueInvoices.length > 0 && (
+                    <div className={`${styles.alertCard} ${styles.warning}`}>
+                      <div className={styles.alertContent}>
+                        <h3 className={styles.alertTitle}>فواتير مستحقة</h3>
+                        <p className={styles.alertMessage}>
+                          {dueInvoices.length} {dueInvoices.length === 1 ? 'فاتورة' : 'فواتير'} مستحقة الدفع خلال 5 أيام
+                        </p>
+                        <a href="#" className={styles.alertLink}>دفع الآن</a>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
                   <div className={`${styles.alertCard} ${styles.info}`}>
                     <div className={styles.alertContent}>
@@ -270,53 +342,34 @@ export default function OwnerDashboard() {
                     <div>الحالة</div>
                   </div>
                   
-                  <div className={styles.tableRow}>
-                    <div className={styles.propertyName}>
-                      <span className={styles.propertyIcon}>🏢</span>
-                      عمارة الرياض
-                    </div>
-                    <div className={styles.propertyUnits}>8 وحدات</div>
-                    <div className={styles.occupancyCell}>
-                      <div className={styles.occupancyBar}>
-                        <div className={styles.occupancyFill} style={{width: '100%'}}></div>
+                  {stats?.propertiesOverview.map((property, index) => {
+                    const occupancyPercent = parseInt(property.occupancy.replace('%', ''))
+                    return (
+                      <div key={property.id || index} className={styles.tableRow}>
+                        <div className={styles.propertyName}>
+                          <span className={styles.propertyIcon}>🏢</span>
+                          {property.name}
+                        </div>
+                        <div className={styles.propertyUnits}>{property.units}</div>
+                        <div className={styles.occupancyCell}>
+                          <div className={styles.occupancyBar}>
+                            <div className={styles.occupancyFill} style={{width: `${occupancyPercent}%`}}></div>
+                          </div>
+                          <span className={styles.occupancyText}>{property.occupancy}</span>
+                        </div>
+                        <div className={styles.monthlyRevenue}>{property.monthlyRevenue}</div>
+                        <div className={`${styles.status} ${getStatusClass(property.status)}`}>{property.status}</div>
                       </div>
-                      <span className={styles.occupancyText}>100%</span>
-                    </div>
-                    <div className={styles.monthlyRevenue}>15,000 ر.س</div>
-                    <div className={`${styles.status} ${styles.excellent}`}>ممتاز</div>
-                  </div>
+                    )
+                  })}
                   
-                  <div className={styles.tableRow}>
-                    <div className={styles.propertyName}>
-                      <span className={styles.propertyIcon}>🏢</span>
-                      مجمع الأمل
-                    </div>
-                    <div className={styles.propertyUnits}>12 وحدة</div>
-                    <div className={styles.occupancyCell}>
-                      <div className={styles.occupancyBar}>
-                        <div className={styles.occupancyFill} style={{width: '85%'}}></div>
+                  {(!stats || stats.propertiesOverview.length === 0) && (
+                    <div className={styles.tableRow}>
+                      <div style={{ textAlign: 'center', padding: 'var(--spacing-lg)', gridColumn: '1 / -1' }}>
+                        لا توجد عقارات بعد. أضف عقارك الأول!
                       </div>
-                      <span className={styles.occupancyText}>85%</span>
                     </div>
-                    <div className={styles.monthlyRevenue}>18,500 ر.س</div>
-                    <div className={`${styles.status} ${styles.good}`}>جيد</div>
-                  </div>
-                  
-                  <div className={styles.tableRow}>
-                    <div className={styles.propertyName}>
-                      <span className={styles.propertyIcon}>🏢</span>
-                      برج النخيل
-                    </div>
-                    <div className={styles.propertyUnits}>6 وحدات</div>
-                    <div className={styles.occupancyCell}>
-                      <div className={styles.occupancyBar}>
-                        <div className={styles.occupancyFill} style={{width: '70%'}}></div>
-                      </div>
-                      <span className={styles.occupancyText}>70%</span>
-                    </div>
-                    <div className={styles.monthlyRevenue}>11,700 ر.س</div>
-                    <div className={`${styles.status} ${styles.average}`}>متوسط</div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
