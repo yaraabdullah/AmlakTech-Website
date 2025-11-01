@@ -46,7 +46,7 @@ export default function AddTenant() {
         const response = await fetch('/api/user/get-owner-id')
         if (response.ok) {
           const data = await response.json()
-          setOwnerId(data.ownerId)
+          setOwnerId(data.id) // API returns 'id' not 'ownerId'
         } else {
           router.push('/login')
         }
