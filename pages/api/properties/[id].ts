@@ -10,18 +10,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: {
           id: id as string,
         },
-        include: {
-          units: true,
-          contracts: {
-            include: {
-              payments: true,
-            },
-          },
-          maintenanceRequests: {
-            orderBy: {
-              createdAt: 'desc',
-            },
-          },
+        select: {
+          id: true,
+          ownerId: true,
+          name: true,
+          type: true,
+          address: true,
+          city: true,
+          area: true,
+          rooms: true,
+          bathrooms: true,
+          constructionYear: true,
+          status: true,
+          unitNumber: true,
+          postalCode: true,
+          country: true,
+          propertySubType: true,
+          features: true,
+          monthlyRent: true,
+          insurance: true,
+          availableFrom: true,
+          minRentalPeriod: true,
+          publicDisplay: true,
+          paymentEmail: true,
+          supportPhone: true,
+          paymentAccount: true,
+          description: true,
+          images: true,
+          createdAt: true,
+          updatedAt: true,
           owner: {
             select: {
               id: true,
@@ -48,9 +65,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       return res.status(200).json(propertyWithStrings)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching property:', error)
-      return res.status(500).json({ error: 'Failed to fetch property' })
+      return res.status(500).json({ error: 'Failed to fetch property', details: error.message })
     }
   }
 

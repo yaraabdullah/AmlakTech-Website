@@ -93,86 +93,124 @@ export default function AddProperty() {
       setLoading(true)
       console.log('Fetching property data for ID:', propertyId)
       const response = await fetch(`/api/properties/${propertyId}`)
-      if (response.ok) {
-        const property = await response.json()
-        console.log('Property data fetched:', property)
-        setPropertyId(property.id)
-        
-        // Parse address to extract street name and postal code
-        const addressParts = property.address ? property.address.split('، ') : []
-        const streetName = addressParts[0] || ''
-        const postalCodePart = addressParts.find((part: string) => part.includes('الرمز البريدي'))
-        const postalCode = postalCodePart ? postalCodePart.replace('الرمز البريدي: ', '') : ''
-        
-        // Parse images
-        let images: string[] = []
-        if (property.images) {
-          try {
-            images = typeof property.images === 'string' ? JSON.parse(property.images) : property.images
-          } catch (e) {
+      
+      if (!response.ok) {
+        let errorData
+        try {
+          errorData = await response.json()
+        } catch {
+          errorData = { error: `HTTP ${response.status}: Failed to fetch property` }
+        }
+        console.error('Failed to fetch property:', response.status, errorData)
+        alert(`فشل في جلب بيانات العقار: ${errorData.error || 'خطأ غير معروف'}`)
+        setLoading(false)
+        router.push('/owner/property-details')
+        return
+      }
+      
+      let property
+      try {
+        property = await response.json()
+      } catch (error) {
+        console.error('Error parsing JSON:', error)
+        alert('خطأ في قراءة بيانات العقار')
+        setLoading(false)
+        router.push('/owner/property-details')
+        return
+      }
+      
+      console.log('Property data fetched:', property)
+      
+      if (!property || !property.id) {
+        console.error('Invalid property data:', property)
+        alert('بيانات العقار غير صحيحة')
+        setLoading(false)
+        router.push('/owner/property-details')
+        return
+      }
+      
+      setPropertyId(property.id)
+      
+      // Parse address to extract street name and postal code
+      const addressParts = property.address ? property.address.split('، ') : []
+      const streetName = addressParts[0] || ''
+      const postalCodePart = addressParts.find((part: string) => part.includes('الرمز البريدي'))
+      const postalCode = postalCodePart ? postalCodePart.replace('الرمز البريدي: ', '') : ''
+      
+      // Parse images
+      let images: string[] = []
+      if (property.images) {
+        try {
+          images = typeof property.images === 'string' ? JSON.parse(property.images) : property.images
+          if (!Array.isArray(images)) {
             images = []
           }
+        } catch (e) {
+          console.warn('Error parsing images:', e)
+          images = []
         }
-        
-        // Parse features
-        let features = {
-          parking: true,
-          garden: false,
-          balcony: false,
-          pool: false,
-          elevator: false,
-          gym: false,
-          security: false,
-          wifi: false,
-          ac: false,
-          jacuzzi: false
-        }
-        if (property.features) {
-          try {
-            features = typeof property.features === 'string' ? JSON.parse(property.features) : property.features
-          } catch (e) {
-            // Use defaults
-          }
-        }
-        
-        // Extract property name to get property type
-        const nameParts = property.name ? property.name.split(' - ') : []
-        const propertyTypeFromName = nameParts.length > 0 ? nameParts[0] : property.type || 'شقة'
-        
-        const newFormData = {
-          propertyType: propertyTypeFromName,
-          rooms: property.rooms || '1',
-          bathrooms: property.bathrooms || '1',
-          area: property.area ? property.area.toString() : '',
-          propertySubType: property.propertySubType || 'استوديو',
-          constructionYear: property.constructionYear || '',
-          streetName,
-          city: property.city || '',
-          postalCode,
-          country: property.country || 'المملكة العربية السعودية',
-          images,
-          features,
-          description: property.description || '',
-          monthlyRent: property.monthlyRent ? property.monthlyRent.toString() : '',
-          insurance: property.insurance ? property.insurance.toString() : '',
-          availableFrom: property.availableFrom ? new Date(property.availableFrom).toISOString().split('T')[0] : '',
-          minRentalPeriod: property.minRentalPeriod || 'شهر واحد',
-          publicDisplay: property.publicDisplay || false,
-          paymentEmail: property.paymentEmail || '',
-          supportPhone: property.supportPhone || '',
-          paymentAccount: property.paymentAccount || 'لا يوجد'
-        }
-        console.log('Setting form data:', newFormData)
-        setFormData(newFormData)
-      } else {
-        console.error('Failed to fetch property')
-        router.push('/owner/property-details')
       }
-    } catch (error) {
-      console.error('Error fetching property:', error)
-      router.push('/owner/property-details')
-    } finally {
+      
+      // Parse features
+      let features = {
+        parking: false,
+        garden: false,
+        balcony: false,
+        pool: false,
+        elevator: false,
+        gym: false,
+        security: false,
+        wifi: false,
+        ac: false,
+        jacuzzi: false
+      }
+      if (property.features) {
+        try {
+          const parsedFeatures = typeof property.features === 'string' ? JSON.parse(property.features) : property.features
+          if (typeof parsedFeatures === 'object' && parsedFeatures !== null) {
+            features = { ...features, ...parsedFeatures }
+          }
+        } catch (e) {
+          console.warn('Error parsing features:', e)
+          // Use defaults
+        }
+      }
+      
+      // Extract property name to get property type
+      const nameParts = property.name ? property.name.split(' - ') : []
+      const propertyTypeFromName = nameParts.length > 0 ? nameParts[0] : property.type || 'شقة'
+      
+      const newFormData = {
+        propertyType: propertyTypeFromName,
+        rooms: property.rooms || '1',
+        bathrooms: property.bathrooms || '1',
+        area: property.area ? property.area.toString() : '',
+        propertySubType: property.propertySubType || 'استوديو',
+        constructionYear: property.constructionYear || '',
+        streetName,
+        city: property.city || '',
+        postalCode,
+        country: property.country || 'المملكة العربية السعودية',
+        images,
+        features,
+        description: property.description || '',
+        monthlyRent: property.monthlyRent ? property.monthlyRent.toString() : '',
+        insurance: property.insurance ? property.insurance.toString() : '',
+        availableFrom: property.availableFrom ? new Date(property.availableFrom).toISOString().split('T')[0] : '',
+        minRentalPeriod: property.minRentalPeriod || 'شهر واحد',
+        publicDisplay: property.publicDisplay || false,
+        paymentEmail: property.paymentEmail || '',
+        supportPhone: property.supportPhone || '',
+        paymentAccount: property.paymentAccount || 'لا يوجد'
+      }
+      console.log('Setting form data:', newFormData)
+      setFormData(newFormData)
       setLoading(false)
+    } catch (error: any) {
+      console.error('Error fetching property:', error)
+      alert(`حدث خطأ في جلب بيانات العقار: ${error.message || 'خطأ غير معروف'}`)
+      setLoading(false)
+      router.push('/owner/property-details')
     }
   }
 
