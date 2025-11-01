@@ -1,6 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../lib/prisma'
 
+// Increase body size limit for image uploads (base64 encoded images can be large)
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+    responseLimit: '10mb',
+  },
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {

@@ -120,19 +120,23 @@ export default function AddProperty() {
         continue
       }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert(`الصورة ${file.name} كبيرة جداً. الحد الأقصى 5 ميجابايت.`)
-        continue
-      }
-
-      // Convert to base64
+      // Compress and convert to base64
       try {
-        const base64 = await convertToBase64(file)
+        // Compress image before converting to base64
+        // Max dimensions: 1920x1920, quality: 0.8 (80%)
+        const compressedFile = await compressImage(file, 1920, 1920, 0.8)
+        
+        // Validate compressed file size (max 2MB after compression)
+        if (compressedFile.size > 2 * 1024 * 1024) {
+          alert(`بعد الضغط، الصورة ${file.name} لا تزال كبيرة جداً. يرجى اختيار صورة أصغر.`)
+          continue
+        }
+        
+        const base64 = await convertToBase64(compressedFile)
         newImages.push(base64)
       } catch (error) {
-        console.error(`Error converting ${file.name} to base64:`, error)
-        alert(`حدث خطأ في تحميل ${file.name}`)
+        console.error(`Error processing ${file.name}:`, error)
+        alert(`حدث خطأ في معالجة ${file.name}`)
       }
     }
 
@@ -145,6 +149,66 @@ export default function AddProperty() {
 
     // Reset input
     e.target.value = ''
+  }
+
+  const compressImage = (file: File, maxWidth: number = 1920, maxHeight: number = 1920, quality: number = 0.8): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          // Calculate new dimensions
+          let width = img.width
+          let height = img.height
+          
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height)
+            width = width * ratio
+            height = height * ratio
+          }
+          
+          // Create canvas and draw resized image
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'))
+            return
+          }
+          
+          ctx.drawImage(img, 0, 0, width, height)
+          
+          // Convert to blob
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Failed to compress image'))
+                return
+              }
+              // Create a new File from the blob
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              })
+              resolve(compressedFile)
+            },
+            'image/jpeg',
+            quality
+          )
+        }
+        img.onerror = reject
+        
+        if (typeof e.target?.result === 'string') {
+          img.src = e.target.result
+        } else {
+          reject(new Error('Failed to read image'))
+        }
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
   }
 
   const convertToBase64 = (file: File): Promise<string> => {
