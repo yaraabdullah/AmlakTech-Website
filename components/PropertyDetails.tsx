@@ -45,7 +45,7 @@ export default function PropertyDetails() {
   }, [ownerId])
 
   useEffect(() => {
-    if (ownerId && selectedProperty) {
+    if (ownerId) {
       fetchScheduledMaintenance()
       fetchContracts()
     }
@@ -189,39 +189,39 @@ export default function PropertyDetails() {
 
   // Fetch contracts (tenants) for selected property
   const fetchContracts = async () => {
-    if (!ownerId || !selectedProperty?.id) {
-      console.log('Missing ownerId or propertyId:', { ownerId, propertyId: selectedProperty?.id })
+    if (!ownerId) {
+      console.log('Missing ownerId')
       setContracts([])
       return
     }
 
     try {
       setLoadingContracts(true)
-      // First, try without status filter to get all contracts for this property
-      const response = await fetch(`/api/contracts?ownerId=${ownerId}&propertyId=${selectedProperty.id}`)
+      // Try fetching all contracts for this owner first (without propertyId filter)
+      let url = `/api/contracts?ownerId=${ownerId}`
+      
+      // If property is selected, filter by propertyId
+      if (selectedProperty?.id) {
+        url += `&propertyId=${selectedProperty.id}`
+      }
+      
+      console.log('Fetching contracts from:', url)
+      const response = await fetch(url)
       
       if (response.ok) {
         const data = await response.json()
-        console.log('Contracts fetched:', data)
+        console.log('Contracts fetched from API:', data)
+        console.log('Number of contracts:', data.length)
+        console.log('Contract details:', data.map((c: any) => ({
+          id: c.id,
+          propertyId: c.propertyId,
+          tenantId: c.tenantId,
+          tenantName: c.tenant?.firstName + ' ' + c.tenant?.lastName || c.tenantName,
+          status: c.status
+        })))
         
-        // For debugging: show all contracts first, then filter
-        console.log('All contracts for property:', data)
-        console.log('Contract statuses:', data.map((c: any) => ({ id: c.id, status: c.status, propertyId: c.propertyId })))
-        
-        // Filter for active contracts only (status: نشط or active contracts)
-        // Temporarily showing all contracts to debug
-        const activeContracts = data.filter((contract: any) => {
-          const isActive = contract.status === 'نشط' || 
-                           contract.status === 'active' || 
-                           !contract.status || 
-                           (contract.endDate && new Date(contract.endDate) > new Date())
-          console.log(`Contract ${contract.id}: status=${contract.status}, isActive=${isActive}`)
-          return isActive
-        })
-        
-        console.log('Active contracts after filter:', activeContracts)
-        // Temporarily show all contracts to debug
-        setContracts(data.length > 0 ? data : activeContracts)
+        // Show all contracts (no filter for now)
+        setContracts(data)
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
         console.error('Failed to fetch contracts:', response.status, errorData)
