@@ -108,8 +108,8 @@ export default function AddProperty() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (currentStep < 4) {
-      nextStep()
+    // Only submit on step 4
+    if (currentStep !== 4) {
       return
     }
 
@@ -271,7 +271,16 @@ export default function AddProperty() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+            // Only submit if we're on the last step
+            if (currentStep === 4) {
+              handleSubmit(e)
+            } else {
+              // Just go to next step for earlier steps
+              nextStep()
+            }
+          }} className={styles.form}>
             {/* Step 1: Basic Details */}
             {currentStep === 1 && (
               <div className={styles.stepContent}>
