@@ -67,6 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         contactName,
         contactPhone,
         scheduledDate,
+        timePeriod,
         notifyTenant,
       } = req.body
 
@@ -81,17 +82,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           data: {
             propertyId,
             ownerId: ownerIdBigInt,
-            unit,
+            unit: unit || null,
             type,
             priority: priority || 'medium',
             problemDescription,
-            contactName,
-            contactPhone,
+            contactName: contactName || null,
+            contactPhone: contactPhone || null,
+            notifyTenant: notifyTenant === true || notifyTenant === 'true',
             scheduledDate: scheduledDate ? new Date(scheduledDate) : null,
+            timePeriod: timePeriod || null,
             status: scheduledDate ? 'مجدولة' : 'قيد الانتظار',
           },
           include: {
-            property: true,
+            property: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+                city: true,
+              },
+            },
           },
         })
 

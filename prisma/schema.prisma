@@ -165,7 +165,9 @@ model MaintenanceRequest {
   
   contactName      String?   @map("contact_name")
   contactPhone     String?   @map("contact_phone")
+  notifyTenant     Boolean   @default(false) @map("notify_tenant")
   scheduledDate    DateTime? @map("scheduled_date")
+  timePeriod       String?   @map("time_period") // morning, afternoon, evening
   status           String    @default("قيد الانتظار") // قيد الانتظار، مجدولة، مكتملة، ملغاة
   
   cost             Float?

@@ -295,8 +295,29 @@
 }
 
 .calendarHeader {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+}
+
+.calendarNavBtn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+  min-width: 40px;
+}
+
+.calendarNavBtn:hover {
+  background: var(--color-blue-light);
+  border-color: var(--color-primary);
 }
 
 .monthYear {
@@ -344,6 +365,21 @@
 .calendarDay.selected {
   background: var(--color-primary);
   color: var(--color-text-white);
+  font-weight: var(--font-weight-semibold);
+}
+
+.calendarDay.today {
+  border: 2px solid var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.calendarDay.emptyDay {
+  cursor: default;
+  background: transparent;
+}
+
+.calendarDay.emptyDay:hover {
+  background: transparent;
 }
 
 .timePeriod {

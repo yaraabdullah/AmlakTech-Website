@@ -27,6 +27,11 @@ export default function MaintenanceSchedule() {
   const [properties, setProperties] = useState<Property[]>([])
   const [ownerId, setOwnerId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [maintenanceRequests, setMaintenanceRequests] = useState<any[]>([])
+  const [loadingMaintenance, setLoadingMaintenance] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
   useEffect(() => {
     fetchOwnerId()
@@ -35,8 +40,30 @@ export default function MaintenanceSchedule() {
   useEffect(() => {
     if (ownerId) {
       fetchProperties()
+      fetchMaintenanceRequests()
     }
   }, [ownerId])
+
+  const fetchMaintenanceRequests = async () => {
+    if (!ownerId) return
+    
+    setLoadingMaintenance(true)
+    try {
+      const response = await fetch(`/api/maintenance?ownerId=${ownerId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setMaintenanceRequests(data)
+      } else {
+        console.error('Failed to fetch maintenance requests')
+        setMaintenanceRequests([])
+      }
+    } catch (error) {
+      console.error('Error fetching maintenance requests:', error)
+      setMaintenanceRequests([])
+    } finally {
+      setLoadingMaintenance(false)
+    }
+  }
 
   const fetchOwnerId = async () => {
     try {
@@ -153,23 +180,153 @@ export default function MaintenanceSchedule() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Maintenance request submitted:', formData)
-    // Handle form submission here
+    
+    if (!ownerId || !formData.property || !formData.maintenanceType || !formData.problemDescription) {
+      setSubmitError('يرجى ملء جميع الحقول المطلوبة')
+      return
+    }
+
+    setSubmitting(true)
+    setSubmitError(null)
+    setSubmitSuccess(false)
+
+    try {
+      // Use selectedDate if provided
+      let scheduledDate: string | null = null
+      if (formData.selectedDate) {
+        // Format: YYYY-MM-DD
+        scheduledDate = formData.selectedDate
+      }
+
+      const requestData = {
+        propertyId: formData.property,
+        ownerId: ownerId,
+        unit: formData.unit || null,
+        type: formData.maintenanceType,
+        priority: formData.priority,
+        problemDescription: formData.problemDescription,
+        contactName: formData.contactName || null,
+        contactPhone: formData.phoneNumber || null,
+        notifyTenant: formData.notifyTenant,
+        scheduledDate: scheduledDate,
+        timePeriod: formData.timePeriod || null,
+      }
+
+      const response = await fetch('/api/maintenance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'فشل في إرسال طلب الصيانة')
+      }
+
+      // Success
+      setSubmitSuccess(true)
+      
+      // Reset form
+      setFormData({
+        property: '',
+        unit: '',
+        maintenanceType: '',
+        priority: 'medium',
+        problemDescription: '',
+        contactName: '',
+        phoneNumber: '',
+        notifyTenant: false,
+        selectedDate: '',
+        timePeriod: ''
+      })
+
+      // Reload maintenance requests
+      fetchMaintenanceRequests()
+
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false)
+      }, 3000)
+
+    } catch (error: any) {
+      console.error('Error submitting maintenance request:', error)
+      setSubmitError(error.message || 'حدث خطأ في إرسال طلب الصيانة')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const [calendarDate, setCalendarDate] = useState(new Date())
+
+  const handleDateSelect = (day: number) => {
+    const selectedDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), day)
+    const formattedDate = selectedDate.toISOString().split('T')[0] // Format: YYYY-MM-DD
+    setFormData(prev => ({
+      ...prev,
+      selectedDate: formattedDate
+    }))
+  }
+
+  const handlePrevMonth = () => {
+    setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1))
+  }
+
+  const handleNextMonth = () => {
+    setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1))
   }
 
   const generateCalendarDays = () => {
-    const days = []
-    const today = new Date()
-    const currentMonth = today.getMonth()
-    const currentYear = today.getFullYear()
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+    const year = calendarDate.getFullYear()
+    const month = calendarDate.getMonth()
+    const firstDay = new Date(year, month, 1).getDay()
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
     
+    // Convert Sunday (0) to Arabic week (Sunday = 0, but we need to shift for RTL)
+    // Arabic week: Saturday = 0, Sunday = 1, ..., Friday = 6
+    const arabicFirstDay = (firstDay + 1) % 7
+    
+    const days = []
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < arabicFirstDay; i++) {
+      days.push(null)
+    }
+    
+    // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(day)
     }
+    
     return days
+  }
+
+  const getCurrentMonthYear = () => {
+    const months = [
+      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+    ]
+    return `${months[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`
+  }
+
+  const isDateSelected = (day: number | null) => {
+    if (!day || !formData.selectedDate) return false
+    const selectedDate = new Date(formData.selectedDate)
+    return selectedDate.getDate() === day &&
+           selectedDate.getMonth() === calendarDate.getMonth() &&
+           selectedDate.getFullYear() === calendarDate.getFullYear()
+  }
+
+  const isToday = (day: number | null) => {
+    if (!day) return false
+    const today = new Date()
+    return today.getDate() === day &&
+           today.getMonth() === calendarDate.getMonth() &&
+           today.getFullYear() === calendarDate.getFullYear()
   }
 
   const calendarDays = generateCalendarDays()
@@ -214,6 +371,36 @@ export default function MaintenanceSchedule() {
             </div>
 
             <form onSubmit={handleSubmit} className={styles.maintenanceForm}>
+              {/* Success Message */}
+              {submitSuccess && (
+                <div style={{
+                  background: '#dcfce7',
+                  color: '#166534',
+                  padding: '1rem',
+                  borderRadius: '0.5rem',
+                  marginBottom: '1.5rem',
+                  textAlign: 'center',
+                  fontFamily: 'var(--font-family-primary)'
+                }}>
+                  ✅ تم إرسال طلب الصيانة بنجاح
+                </div>
+              )}
+
+              {/* Error Message */}
+              {submitError && (
+                <div style={{
+                  background: '#fee2e2',
+                  color: '#991b1b',
+                  padding: '1rem',
+                  borderRadius: '0.5rem',
+                  marginBottom: '1.5rem',
+                  textAlign: 'center',
+                  fontFamily: 'var(--font-family-primary)'
+                }}>
+                  ❌ {submitError}
+                </div>
+              )}
+
               <div className={styles.formGrid}>
                 {/* Left Column - Form Fields */}
                 <div className={styles.formFields}>
@@ -371,29 +558,68 @@ export default function MaintenanceSchedule() {
                   
                   <div className={styles.calendar}>
                     <div className={styles.calendarHeader}>
-                      <h4 className={styles.monthYear}>يوليو 2025</h4>
+                      <button
+                        type="button"
+                        onClick={handlePrevMonth}
+                        className={styles.calendarNavBtn}
+                        aria-label="الشهر السابق"
+                      >
+                        ‹
+                      </button>
+                      <h4 className={styles.monthYear}>{getCurrentMonthYear()}</h4>
+                      <button
+                        type="button"
+                        onClick={handleNextMonth}
+                        className={styles.calendarNavBtn}
+                        aria-label="الشهر التالي"
+                      >
+                        ›
+                      </button>
                     </div>
                     
                     <div className={styles.calendarGrid}>
+                      <div className={styles.dayHeader}>السبت</div>
                       <div className={styles.dayHeader}>الأحد</div>
                       <div className={styles.dayHeader}>الاثنين</div>
                       <div className={styles.dayHeader}>الثلاثاء</div>
                       <div className={styles.dayHeader}>الأربعاء</div>
                       <div className={styles.dayHeader}>الخميس</div>
                       <div className={styles.dayHeader}>الجمعة</div>
-                      <div className={styles.dayHeader}>السبت</div>
                       
-                      {calendarDays.map((day) => (
+                      {calendarDays.map((day, index) => (
                         <div
-                          key={day}
+                          key={`${day}-${index}`}
                           className={`${styles.calendarDay} ${
-                            day >= 28 && day <= 31 ? styles.highlighted : ''
-                          } ${day === 29 ? styles.selected : ''}`}
+                            day === null ? styles.emptyDay : ''
+                          } ${isToday(day) ? styles.today : ''} ${
+                            isDateSelected(day) ? styles.selected : ''
+                          }`}
+                          onClick={() => day !== null && handleDateSelect(day)}
+                          style={{
+                            cursor: day !== null ? 'pointer' : 'default',
+                            opacity: day === null ? 0.3 : 1
+                          }}
                         >
                           {day}
                         </div>
                       ))}
                     </div>
+                    {formData.selectedDate && (
+                      <div style={{
+                        marginTop: '1rem',
+                        padding: '0.5rem',
+                        textAlign: 'center',
+                        fontSize: '0.875rem',
+                        color: 'var(--color-primary)',
+                        fontFamily: 'var(--font-family-primary)'
+                      }}>
+                        التاريخ المحدد: {new Date(formData.selectedDate).toLocaleDateString('ar-SA', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   <div className={styles.timePeriod}>
@@ -413,9 +639,13 @@ export default function MaintenanceSchedule() {
                 </div>
               </div>
 
-              <button type="submit" className={styles.submitBtn}>
+              <button 
+                type="submit" 
+                className={styles.submitBtn}
+                disabled={submitting || loading || properties.length === 0}
+              >
                 <span className={styles.submitIcon}>📅</span>
-                جدولة الصيانة
+                {submitting ? 'جاري الإرسال...' : 'جدولة الصيانة'}
               </button>
             </form>
           </div>
@@ -469,26 +699,81 @@ export default function MaintenanceSchedule() {
                 <div>الإجراءات</div>
               </div>
 
-              {upcomingMaintenance.map((maintenance, index) => (
-                <div key={index} className={styles.tableRow}>
-                  <div className={styles.propertyName}>{maintenance.property}</div>
-                  <div className={styles.unitName}>{maintenance.unit}</div>
-                  <div className={styles.maintenanceType}>
-                    <span className={styles.typeIcon}>{maintenance.typeIcon}</span>
-                    <span className={styles.typeName}>{maintenance.type}</span>
-                  </div>
-                  <div className={styles.maintenanceDate}>{maintenance.date}</div>
-                  <div className={styles.maintenanceStatus}>
-                    <span className={`${styles.statusBadge} ${styles[maintenance.statusColor]}`}>
-                      {maintenance.status}
-                    </span>
-                  </div>
-                  <div className={styles.maintenanceActions}>
-                    <button className={styles.actionBtn}>✏️</button>
-                    <button className={styles.actionBtn}>👁️</button>
-                  </div>
+              {loadingMaintenance ? (
+                <div style={{ padding: '2rem', textAlign: 'center' }}>جاري التحميل...</div>
+              ) : maintenanceRequests.length === 0 ? (
+                <div style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
+                  لا توجد طلبات صيانة حالياً
                 </div>
-              ))}
+              ) : (
+                maintenanceRequests.map((maintenance) => {
+                  // Map maintenance type to icon
+                  const typeIcons: { [key: string]: string } = {
+                    'electrical': '⚡',
+                    'plumbing': '💧',
+                    'ac': '❄️',
+                    'general': '🔧'
+                  }
+                  
+                  const typeNames: { [key: string]: string } = {
+                    'electrical': 'كهربائي',
+                    'plumbing': 'سباكة',
+                    'ac': 'تكييف',
+                    'general': 'عام'
+                  }
+
+                  // Map status to color
+                  const statusColors: { [key: string]: string } = {
+                    'قيد الانتظار': 'pending',
+                    'مجدولة': 'scheduled',
+                    'مكتملة': 'completed',
+                    'ملغاة': 'cancelled'
+                  }
+
+                  const formatDate = (date: string | null) => {
+                    if (!date) return '-'
+                    const d = new Date(date)
+                    return d.toLocaleDateString('ar-SA', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })
+                  }
+
+                  return (
+                    <div key={maintenance.id} className={styles.tableRow}>
+                      <div className={styles.propertyName}>
+                        {maintenance.property?.name || 'غير محدد'}
+                      </div>
+                      <div className={styles.unitName}>
+                        {maintenance.unit || '-'}
+                      </div>
+                      <div className={styles.maintenanceType}>
+                        <span className={styles.typeIcon}>
+                          {typeIcons[maintenance.type] || '🔧'}
+                        </span>
+                        <span className={styles.typeName}>
+                          {typeNames[maintenance.type] || maintenance.type}
+                        </span>
+                      </div>
+                      <div className={styles.maintenanceDate}>
+                        {maintenance.scheduledDate 
+                          ? formatDate(maintenance.scheduledDate) 
+                          : formatDate(maintenance.createdAt)}
+                      </div>
+                      <div className={styles.maintenanceStatus}>
+                        <span className={`${styles.statusBadge} ${styles[statusColors[maintenance.status] || 'pending']}`}>
+                          {maintenance.status}
+                        </span>
+                      </div>
+                      <div className={styles.maintenanceActions}>
+                        <button className={styles.actionBtn}>✏️</button>
+                        <button className={styles.actionBtn}>👁️</button>
+                      </div>
+                    </div>
+                  )
+                })
+              )}
             </div>
           </div>
         </div>
