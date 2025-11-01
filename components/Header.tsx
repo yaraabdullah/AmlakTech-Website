@@ -8,8 +8,7 @@ export default function Header() {
   const router = useRouter()
 
   const handleLogin = () => {
-    // Redirect to owner dashboard for testing
-    router.push('/owner/dashboard')
+    router.push('/login')
   }
 
   return (

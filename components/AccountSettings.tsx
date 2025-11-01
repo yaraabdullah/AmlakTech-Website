@@ -70,14 +70,30 @@ export default function AccountSettings() {
 
   const fetchUserData = async () => {
     try {
-      // Get owner ID
-      const ownerResponse = await fetch('/api/user/get-owner-id')
-      if (ownerResponse.ok) {
-        const owner = await ownerResponse.json()
-        setUserId(owner.id)
+      // Get user ID from localStorage (from login) or fallback to API
+      let userId: string | null = null
+      
+      if (typeof window !== 'undefined') {
+        userId = localStorage.getItem('userId')
+      }
+
+      // Fallback: Get from API if not in localStorage
+      if (!userId) {
+        const ownerResponse = await fetch('/api/user/get-owner-id')
+        if (ownerResponse.ok) {
+          const owner = await ownerResponse.json()
+          userId = owner.id
+        } else {
+          router.push('/login')
+          return
+        }
+      }
+
+      if (userId) {
+        setUserId(userId)
         
         // Fetch full user data
-        const userResponse = await fetch(`/api/user/${owner.id}`)
+        const userResponse = await fetch(`/api/user/${userId}`)
         if (userResponse.ok) {
           const userData = await userResponse.json()
           setFormData(prev => ({
@@ -95,6 +111,7 @@ export default function AccountSettings() {
       }
     } catch (error) {
       console.error('Error fetching user data:', error)
+      router.push('/login')
     } finally {
       setLoading(false)
     }
@@ -191,7 +208,13 @@ export default function AccountSettings() {
   }
 
   const handleLogout = () => {
-    // In a real app, this would clear authentication state
+    // Clear localStorage (login session)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('userType')
+    }
+    // Redirect to homepage
     router.push('/')
   }
 

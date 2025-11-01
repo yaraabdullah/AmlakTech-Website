@@ -54,14 +54,31 @@ export default function OwnerDashboard() {
 
   const fetchOwnerId = async () => {
     try {
+      // Try to get user ID from localStorage (from login)
+      if (typeof window !== 'undefined') {
+        const userId = localStorage.getItem('userId')
+        const userType = localStorage.getItem('userType')
+        
+        // Only allow owners to access this dashboard
+        if (userId && userType === 'owner') {
+          setOwnerId(userId)
+          return
+        }
+      }
+
+      // Fallback: Get first owner (for demo/testing)
       const response = await fetch('/api/user/get-owner-id')
       if (response.ok) {
         const owner = await response.json()
         setOwnerId(owner.id)
+      } else {
+        // No user found, redirect to login
+        router.push('/login')
       }
     } catch (error) {
       console.error('Error fetching owner ID:', error)
       setLoading(false)
+      router.push('/login')
     }
   }
 

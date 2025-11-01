@@ -125,13 +125,28 @@ export default function AddProperty() {
     setSubmitSuccess(false)
     
     try {
-      // Get owner ID from API
-      const ownerResponse = await fetch('/api/user/get-owner-id')
-      if (!ownerResponse.ok) {
-        throw new Error('فشل في الحصول على معلومات المستخدم')
+      // Get owner ID from localStorage (from login) or fallback to API
+      let ownerId: string | null = null
+      
+      if (typeof window !== 'undefined') {
+        ownerId = localStorage.getItem('userId')
+        const userType = localStorage.getItem('userType')
+        
+        // Verify user is owner
+        if (userType !== 'owner') {
+          throw new Error('هذه الصفحة للملاك فقط')
+        }
       }
-      const owner = await ownerResponse.json()
-      const ownerId = owner.id
+
+      // Fallback: Get from API if not in localStorage
+      if (!ownerId) {
+        const ownerResponse = await fetch('/api/user/get-owner-id')
+        if (!ownerResponse.ok) {
+          throw new Error('فشل في الحصول على معلومات المستخدم')
+        }
+        const owner = await ownerResponse.json()
+        ownerId = owner.id
+      }
       
       // Build address string
       const addressParts = [formData.streetName]
