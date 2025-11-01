@@ -20,16 +20,17 @@ export default function AddTenant() {
     tenantPhone: '',
     tenantNationalId: '',
     tenantCity: '',
-    tenantAddress: '',
-    emergencyContact: '',
-    emergencyPhone: '',
+    tenantNeighborhood: '',
+    tenantPostalCode: '',
     // Contract information
     contractType: 'إيجار سكني',
     startDate: '',
     endDate: '',
     monthlyRent: '',
-    deposit: '',
-    notes: ''
+    notes: '',
+    // Optional fields
+    emergencyContact: '',
+    emergencyPhone: ''
   })
 
   const contractTypes = [
@@ -57,25 +58,12 @@ export default function AddTenant() {
     fetchOwnerId()
   }, [])
 
-  // Fetch properties
+  // Set property ID from query parameter
   useEffect(() => {
-    const fetchProperties = async () => {
-      if (!ownerId) return
-      try {
-        const response = await fetch(`/api/properties?ownerId=${ownerId}`)
-        if (response.ok) {
-          const data = await response.json()
-          setProperties(data)
-          if (propertyId && !formData.propertyId) {
-            setFormData(prev => ({ ...prev, propertyId: propertyId as string }))
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching properties:', error)
-      }
+    if (propertyId && typeof propertyId === 'string') {
+      setFormData(prev => ({ ...prev, propertyId: propertyId as string }))
     }
-    fetchProperties()
-  }, [ownerId, propertyId])
+  }, [propertyId])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -88,7 +76,7 @@ export default function AddTenant() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.propertyId || !formData.tenantFirstName || !formData.tenantLastName || !formData.tenantPhone || !formData.startDate || !formData.endDate || !formData.monthlyRent) {
+    if (!formData.propertyId || !formData.tenantFirstName || !formData.tenantLastName || !formData.tenantPhone || !formData.tenantEmail || !formData.tenantNationalId || !formData.tenantCity || !formData.tenantNeighborhood || !formData.tenantPostalCode || !formData.startDate || !formData.endDate || !formData.monthlyRent) {
       alert('يرجى ملء جميع الحقول المطلوبة')
       return
     }
@@ -121,11 +109,11 @@ export default function AddTenant() {
         const tenantData = {
           firstName: formData.tenantFirstName,
           lastName: formData.tenantLastName,
-          email: formData.tenantEmail || null,
+          email: formData.tenantEmail,
           phoneNumber: formData.tenantPhone,
-          nationalId: formData.tenantNationalId || null,
-          city: formData.tenantCity || null,
-          address: formData.tenantAddress || null,
+          nationalId: formData.tenantNationalId,
+          city: formData.tenantCity,
+          address: formData.tenantNeighborhood ? `${formData.tenantNeighborhood}، الرمز البريدي: ${formData.tenantPostalCode}` : null,
           emergencyContact: formData.emergencyContact || null,
           emergencyPhone: formData.emergencyPhone || null,
           userId: null // No user account by default
@@ -157,7 +145,7 @@ export default function AddTenant() {
         startDate: new Date(formData.startDate).toISOString(),
         endDate: new Date(formData.endDate).toISOString(),
         monthlyRent: parseFloat(formData.monthlyRent),
-        deposit: formData.deposit ? parseFloat(formData.deposit) : null,
+        deposit: null, // Deposit removed as per requirements
         notes: formData.notes || null,
         status: 'نشط'
       }
@@ -210,31 +198,6 @@ export default function AddTenant() {
           </div>
 
           <form onSubmit={handleSubmit} className={styles.tenantForm}>
-            {/* Property Selection */}
-            <div className={styles.formSection}>
-              <h2 className={styles.sectionTitle}>معلومات العقار</h2>
-              <div className={styles.formGroup}>
-                <label htmlFor="propertyId" className={styles.label}>
-                  العقار <span className={styles.required}>*</span>
-                </label>
-                <select
-                  id="propertyId"
-                  name="propertyId"
-                  value={formData.propertyId}
-                  onChange={handleInputChange}
-                  className={styles.select}
-                  required
-                >
-                  <option value="">اختر العقار</option>
-                  {properties.map((property) => (
-                    <option key={property.id} value={property.id}>
-                      {property.name} - {property.address}, {property.city}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
             {/* Tenant Information */}
             <div className={styles.formSection}>
               <h2 className={styles.sectionTitle}>معلومات المستأجر</h2>
@@ -288,7 +251,7 @@ export default function AddTenant() {
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor="tenantEmail" className={styles.label}>
-                    البريد الإلكتروني
+                    البريد الإلكتروني <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="email"
@@ -298,13 +261,14 @@ export default function AddTenant() {
                     onChange={handleInputChange}
                     className={styles.input}
                     placeholder="example@email.com"
+                    required
                   />
                 </div>
               </div>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label htmlFor="tenantNationalId" className={styles.label}>
-                    رقم الهوية الوطنية
+                    رقم الهوية الوطنية <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
@@ -314,11 +278,12 @@ export default function AddTenant() {
                     onChange={handleInputChange}
                     className={styles.input}
                     placeholder="10 أرقام"
+                    required
                   />
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor="tenantCity" className={styles.label}>
-                    المدينة
+                    المدينة <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
@@ -328,22 +293,41 @@ export default function AddTenant() {
                     onChange={handleInputChange}
                     className={styles.input}
                     placeholder="المدينة"
+                    required
                   />
                 </div>
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="tenantAddress" className={styles.label}>
-                  العنوان
-                </label>
-                <input
-                  type="text"
-                  id="tenantAddress"
-                  name="tenantAddress"
-                  value={formData.tenantAddress}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  placeholder="العنوان الكامل"
-                />
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="tenantNeighborhood" className={styles.label}>
+                    الحي <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="tenantNeighborhood"
+                    name="tenantNeighborhood"
+                    value={formData.tenantNeighborhood}
+                    onChange={handleInputChange}
+                    className={styles.input}
+                    placeholder="الحي"
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="tenantPostalCode" className={styles.label}>
+                    الرمز البريدي <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="tenantPostalCode"
+                    name="tenantPostalCode"
+                    value={formData.tenantPostalCode}
+                    onChange={handleInputChange}
+                    className={styles.input}
+                    placeholder="الرمز البريدي"
+                    required
+                  />
+                </div>
               </div>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
@@ -448,29 +432,13 @@ export default function AddTenant() {
                   />
                 </div>
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="deposit" className={styles.label}>
-                  الضمان (ريال)
-                </label>
-                <input
-                  type="number"
-                  id="deposit"
-                  name="deposit"
-                  value={formData.deposit}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  placeholder="0"
-                  min="0"
-                  step="0.01"
-                />
-              </div>
             </div>
 
             {/* Notes */}
             <div className={styles.formSection}>
               <div className={styles.formGroup}>
                 <label htmlFor="notes" className={styles.label}>
-                  ملاحظات إضافية
+                  معلومات إضافية
                 </label>
                 <textarea
                   id="notes"
