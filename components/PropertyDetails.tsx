@@ -29,6 +29,7 @@ export default function PropertyDetails() {
   const [properties, setProperties] = useState<Property[]>([])
   const [ownerId, setOwnerId] = useState<string | null>(null)
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
+  const [scheduledMaintenance, setScheduledMaintenance] = useState<any[]>([])
 
   useEffect(() => {
     fetchOwnerId()
@@ -37,8 +38,15 @@ export default function PropertyDetails() {
   useEffect(() => {
     if (ownerId) {
       fetchProperties()
+      fetchScheduledMaintenance()
     }
   }, [ownerId])
+
+  useEffect(() => {
+    if (ownerId && selectedProperty) {
+      fetchScheduledMaintenance()
+    }
+  }, [selectedProperty])
 
   const fetchOwnerId = async () => {
     try {
@@ -93,6 +101,33 @@ export default function PropertyDetails() {
     }
   }
 
+  const fetchScheduledMaintenance = async () => {
+    if (!ownerId) return
+
+    try {
+      // Fetch scheduled maintenance (status: مجدولة)
+      const params = new URLSearchParams({
+        ownerId: ownerId,
+        status: 'مجدولة'
+      })
+      
+      // If a specific property is selected, filter by property
+      if (selectedProperty?.id) {
+        params.append('propertyId', selectedProperty.id)
+      }
+
+      const response = await fetch(`/api/maintenance?${params.toString()}`)
+      if (response.ok) {
+        const data = await response.json()
+        setScheduledMaintenance(data)
+      } else {
+        console.error('Failed to fetch scheduled maintenance')
+      }
+    } catch (error) {
+      console.error('Error fetching scheduled maintenance:', error)
+    }
+  }
+
   const occupancyData = {
     average: 92,
     current: 100,
@@ -131,26 +166,23 @@ export default function PropertyDetails() {
     }
   ]
 
-  const maintenanceSchedule = [
-    {
-      title: 'صيانة نظام التكييف',
-      description: 'تنظيف وصيانة دورية لنظام التكييف المركزي',
-      date: '15 يوليو 2023',
-      time: '10:00 صباحاً',
-      company: 'شركة البرودة للتكييف',
-      contact: '+966 55 123 4567',
-      status: 'موعد'
-    },
-    {
-      title: 'فحص نظام الإنذار',
-      description: 'فحص دوري النظام إنذار الحريق',
-      date: '22 يوليو 2023',
-      time: '2:00 مساءً',
-      company: 'شركة الأمان للسلامة',
-      contact: '+966 50 987 6543',
-      status: 'بانتظار التأكيد'
+  // Format maintenance data from database
+  const formatMaintenanceDate = (dateString: string | null) => {
+    if (!dateString) return 'غير محدد'
+    const date = new Date(dateString)
+    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
+    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+  }
+
+  const formatMaintenanceTime = (timePeriod: string | null) => {
+    if (!timePeriod) return 'غير محدد'
+    const timeMap: { [key: string]: string } = {
+      'morning': 'صباحاً',
+      'afternoon': 'بعد الظهر',
+      'evening': 'مساءً'
     }
-  ]
+    return timeMap[timePeriod] || timePeriod
+  }
 
   const tenants = [
     {
@@ -413,37 +445,59 @@ export default function PropertyDetails() {
               <h2 className={styles.cardTitle}>الصيانة المجدولة</h2>
               
               <div className={styles.maintenanceList}>
-                {maintenanceSchedule.map((maintenance, index) => (
-                  <div key={index} className={styles.maintenanceItem}>
-                    <div className={styles.maintenanceContent}>
-                      <h4 className={styles.maintenanceTitle}>{maintenance.title}</h4>
-                      <p className={styles.maintenanceDescription}>{maintenance.description}</p>
-                      <div className={styles.maintenanceDetails}>
-                        <div className={styles.maintenanceDetail}>
-                          <span className={styles.detailLabel}>التاريخ:</span>
-                          <span className={styles.detailValue}>{maintenance.date}</span>
-                        </div>
-                        <div className={styles.maintenanceDetail}>
-                          <span className={styles.detailLabel}>الوقت:</span>
-                          <span className={styles.detailValue}>{maintenance.time}</span>
-                        </div>
-                        <div className={styles.maintenanceDetail}>
-                          <span className={styles.detailLabel}>الشركة:</span>
-                          <span className={styles.detailValue}>{maintenance.company}</span>
-                        </div>
-                        <div className={styles.maintenanceDetail}>
-                          <span className={styles.detailLabel}>الاتصال:</span>
-                          <span className={styles.detailValue}>{maintenance.contact}</span>
+                {scheduledMaintenance.length > 0 ? (
+                  scheduledMaintenance.map((maintenance) => (
+                    <div key={maintenance.id} className={styles.maintenanceItem}>
+                      <div className={styles.maintenanceContent}>
+                        <h4 className={styles.maintenanceTitle}>
+                          {maintenance.type} - {maintenance.property?.name || 'عقار'}
+                        </h4>
+                        <p className={styles.maintenanceDescription}>{maintenance.problemDescription}</p>
+                        <div className={styles.maintenanceDetails}>
+                          {maintenance.scheduledDate && (
+                            <div className={styles.maintenanceDetail}>
+                              <span className={styles.detailLabel}>التاريخ:</span>
+                              <span className={styles.detailValue}>{formatMaintenanceDate(maintenance.scheduledDate)}</span>
+                            </div>
+                          )}
+                          {maintenance.timePeriod && (
+                            <div className={styles.maintenanceDetail}>
+                              <span className={styles.detailLabel}>الوقت:</span>
+                              <span className={styles.detailValue}>{formatMaintenanceTime(maintenance.timePeriod)}</span>
+                            </div>
+                          )}
+                          {maintenance.contactName && (
+                            <div className={styles.maintenanceDetail}>
+                              <span className={styles.detailLabel}>المسؤول:</span>
+                              <span className={styles.detailValue}>{maintenance.contactName}</span>
+                            </div>
+                          )}
+                          {maintenance.contactPhone && (
+                            <div className={styles.maintenanceDetail}>
+                              <span className={styles.detailLabel}>الاتصال:</span>
+                              <span className={styles.detailValue}>{maintenance.contactPhone}</span>
+                            </div>
+                          )}
+                          {maintenance.unit && (
+                            <div className={styles.maintenanceDetail}>
+                              <span className={styles.detailLabel}>الوحدة:</span>
+                              <span className={styles.detailValue}>{maintenance.unit}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
+                      <div className={styles.maintenanceStatus}>
+                        <span className={`${styles.statusBadge} ${styles[maintenance.status.toLowerCase().replace(' ', '')] || styles.default}`}>
+                          {maintenance.status}
+                        </span>
+                      </div>
                     </div>
-                    <div className={styles.maintenanceStatus}>
-                      <span className={`${styles.statusBadge} ${styles[maintenance.status.toLowerCase()]}`}>
-                        {maintenance.status}
-                      </span>
-                    </div>
+                  ))
+                ) : (
+                  <div className={styles.emptyMaintenance}>
+                    <p>لا توجد صيانة مجدولة حالياً</p>
                   </div>
-                ))}
+                )}
               </div>
               
               <button className={styles.scheduleBtn}>
