@@ -41,6 +41,7 @@ export default function OwnerDashboard() {
   const [urgentMaintenance, setUrgentMaintenance] = useState<any[]>([])
   const [dueInvoices, setDueInvoices] = useState<any[]>([])
   const [ownerId, setOwnerId] = useState<string | null>(null)
+  const [ownerName, setOwnerName] = useState<string>('')
 
   useEffect(() => {
     fetchOwnerId()
@@ -49,8 +50,26 @@ export default function OwnerDashboard() {
   useEffect(() => {
     if (ownerId) {
       fetchDashboardData()
+      fetchOwnerInfo()
     }
   }, [ownerId])
+
+  const fetchOwnerInfo = async () => {
+    if (!ownerId) return
+    
+    try {
+      const response = await fetch(`/api/user/${ownerId}`)
+      if (response.ok) {
+        const userData = await response.json()
+        // Use first name, or full name if available
+        const name = userData.firstName || userData.first_name || ''
+        setOwnerName(name)
+      }
+    } catch (error) {
+      console.error('Error fetching owner info:', error)
+      // If API fails, keep empty name
+    }
+  }
 
   const fetchOwnerId = async () => {
     try {
@@ -192,7 +211,9 @@ export default function OwnerDashboard() {
           {/* Header Section with Button and Welcome */}
           <div className={styles.headerSection}>
             <div className={styles.welcomeSection}>
-              <h1 className={styles.welcomeTitle}>مرحباً، أحمد!</h1>
+              <h1 className={styles.welcomeTitle}>
+                {ownerName ? `مرحباً، ${ownerName}!` : 'مرحباً!'}
+              </h1>
               <p className={styles.welcomeSubtitle}>هذا ملخص لأداء محفظتك العقارية</p>
             </div>
             
@@ -309,7 +330,7 @@ export default function OwnerDashboard() {
                 
                 <div className={styles.aiContent}>
                   <p className={styles.aiDescription}>
-                    مرحباً أحمد! إليك بعض التوصيات الذكية لتحسين أداء محفظتك العقارية
+                    {ownerName ? `مرحباً ${ownerName}! ` : 'مرحباً! '}إليك بعض التوصيات الذكية لتحسين أداء محفظتك العقارية
                   </p>
                   
                   <div className={styles.recommendationsList}>
