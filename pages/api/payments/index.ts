@@ -37,7 +37,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         })
 
-        return res.status(200).json(payments)
+        // Convert BigInt values to strings for JSON serialization
+        const paymentsWithStrings = payments.map(payment => ({
+          ...payment,
+          ownerId: payment.ownerId.toString(),
+          contractId: payment.contractId || null,
+        }))
+
+        return res.status(200).json(paymentsWithStrings)
       } catch (dbError: any) {
         // If table doesn't exist, return empty array
         if (dbError.code === 'P2021') {
@@ -87,7 +94,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         })
 
-        return res.status(201).json(payment)
+        // Convert BigInt values to strings for JSON serialization
+        const paymentWithStrings = {
+          ...payment,
+          ownerId: payment.ownerId.toString(),
+          contractId: payment.contractId || null,
+        }
+
+        return res.status(201).json(paymentWithStrings)
       } catch (dbError: any) {
         // If table doesn't exist, return error message
         if (dbError.code === 'P2021') {

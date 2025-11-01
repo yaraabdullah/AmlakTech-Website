@@ -185,22 +185,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    return res.status(200).json({
+    // Ensure all BigInt values are converted to strings/numbers
+    const response = {
       kpis: {
         totalProperties,
         occupancyRate,
-        collectedRents,
-        expenses,
-        monthlyRevenue,
+        collectedRents: Number(collectedRents) || 0,
+        expenses: Number(expenses) || 0,
+        monthlyRevenue: Number(monthlyRevenue) || 0,
       },
       alerts: {
         urgent: urgentMaintenance.length,
         dueInvoices: dueInvoices.length,
       },
-      cashFlow,
+      cashFlow: cashFlow.map(item => ({
+        month: item.month,
+        income: Number(item.income) || 0,
+        expenses: Number(item.expenses) || 0,
+        net: Number(item.net) || 0,
+      })),
       propertiesOverview,
       activeContracts: activeContracts.length,
-    })
+    }
+
+    return res.status(200).json(response)
   } catch (error) {
     console.error('Error fetching dashboard stats:', error)
     return res.status(500).json({ error: 'Failed to fetch dashboard stats' })

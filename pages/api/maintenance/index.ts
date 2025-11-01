@@ -33,7 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         })
 
-        return res.status(200).json(maintenance)
+        // Convert BigInt values to strings for JSON serialization
+        const maintenanceWithStrings = maintenance.map(item => ({
+          ...item,
+          ownerId: item.ownerId.toString(),
+          property: item.property ? item.property : null,
+        }))
+
+        return res.status(200).json(maintenanceWithStrings)
       } catch (dbError: any) {
         // If table doesn't exist, return empty array
         if (dbError.code === 'P2021') {
@@ -88,7 +95,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         })
 
-        return res.status(201).json(maintenance)
+        // Convert BigInt values to strings for JSON serialization
+        const maintenanceWithStrings = {
+          ...maintenance,
+          ownerId: maintenance.ownerId.toString(),
+        }
+
+        return res.status(201).json(maintenanceWithStrings)
       } catch (dbError: any) {
         // If table doesn't exist, return error message
         if (dbError.code === 'P2021') {

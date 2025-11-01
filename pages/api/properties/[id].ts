@@ -37,7 +37,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: 'Property not found' })
       }
 
-      return res.status(200).json(property)
+      // Convert BigInt values to strings for JSON serialization
+      const propertyWithStrings = {
+        ...property,
+        ownerId: property.ownerId.toString(),
+        owner: property.owner ? {
+          ...property.owner,
+          id: property.owner.id.toString(),
+        } : null,
+      }
+
+      return res.status(200).json(propertyWithStrings)
     } catch (error) {
       console.error('Error fetching property:', error)
       return res.status(500).json({ error: 'Failed to fetch property' })
@@ -83,7 +93,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       })
 
-      return res.status(200).json(property)
+      // Convert BigInt values to strings for JSON serialization
+      const propertyWithStrings = {
+        ...property,
+        ownerId: property.ownerId.toString(),
+      }
+
+      return res.status(200).json(propertyWithStrings)
     } catch (error) {
       console.error('Error updating property:', error)
       return res.status(500).json({ error: 'Failed to update property' })

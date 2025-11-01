@@ -43,7 +43,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       })
 
-      return res.status(200).json(properties)
+      // Convert BigInt values to strings for JSON serialization
+      const propertiesWithStrings = properties.map(property => ({
+        ...property,
+        ownerId: property.ownerId.toString(),
+        owner: property.owner ? {
+          ...property.owner,
+          id: property.owner.id.toString(),
+        } : null,
+      }))
+
+      return res.status(200).json(propertiesWithStrings)
     } catch (error) {
       console.error('Error fetching properties:', error)
       return res.status(500).json({ error: 'Failed to fetch properties' })
@@ -140,7 +150,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       })
 
-      return res.status(201).json(property)
+      // Convert BigInt values to strings for JSON serialization
+      const propertyWithStrings = {
+        ...property,
+        ownerId: property.ownerId.toString(),
+        owner: property.owner ? {
+          ...property.owner,
+          id: property.owner.id.toString(),
+        } : null,
+      }
+
+      return res.status(201).json(propertyWithStrings)
     } catch (error) {
       console.error('Error creating property:', error)
       return res.status(500).json({ error: 'Failed to create property' })

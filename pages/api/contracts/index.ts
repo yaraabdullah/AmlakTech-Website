@@ -41,7 +41,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       })
 
-      return res.status(200).json(contracts)
+      // Convert BigInt values to strings for JSON serialization
+      const contractsWithStrings = contracts.map(contract => ({
+        ...contract,
+        ownerId: contract.ownerId.toString(),
+      }))
+
+      return res.status(200).json(contractsWithStrings)
     } catch (error) {
       console.error('Error fetching contracts:', error)
       return res.status(500).json({ error: 'Failed to fetch contracts' })
@@ -92,7 +98,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       })
 
-      return res.status(201).json(contract)
+      // Convert BigInt values to strings for JSON serialization
+      const contractWithStrings = {
+        ...contract,
+        ownerId: contract.ownerId.toString(),
+      }
+
+      return res.status(201).json(contractWithStrings)
     } catch (error) {
       console.error('Error creating contract:', error)
       return res.status(500).json({ error: 'Failed to create contract' })
