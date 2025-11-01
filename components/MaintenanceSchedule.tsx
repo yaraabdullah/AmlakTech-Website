@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
 import styles from '../styles/MaintenanceSchedule.module.css'
+
+interface Property {
+  id: string
+  name: string
+}
 
 export default function MaintenanceSchedule() {
   const [formData, setFormData] = useState({
@@ -19,11 +24,68 @@ export default function MaintenanceSchedule() {
     timePeriod: ''
   })
 
-  const properties = [
-    { id: '1', name: 'عمارة الرياض' },
-    { id: '2', name: 'مجمع الأمل' },
-    { id: '3', name: 'برج النخيل' }
-  ]
+  const [properties, setProperties] = useState<Property[]>([])
+  const [ownerId, setOwnerId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchOwnerId()
+  }, [])
+
+  useEffect(() => {
+    if (ownerId) {
+      fetchProperties()
+    }
+  }, [ownerId])
+
+  const fetchOwnerId = async () => {
+    try {
+      // Get user ID from localStorage (from login)
+      if (typeof window !== 'undefined') {
+        const userId = localStorage.getItem('userId')
+        const userType = localStorage.getItem('userType')
+        
+        // Only allow owners to access this page
+        if (userId && userType === 'owner') {
+          setOwnerId(userId)
+          return
+        }
+      }
+      
+      // If no userId in localStorage, redirect to login
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+    } catch (error) {
+      console.error('Error fetching owner ID:', error)
+      setLoading(false)
+    }
+  }
+
+  const fetchProperties = async () => {
+    if (!ownerId) return
+    
+    try {
+      const response = await fetch(`/api/properties?ownerId=${ownerId}`)
+      if (response.ok) {
+        const data = await response.json()
+        // Transform API response to Property format
+        const propertiesList = data.map((prop: any) => ({
+          id: prop.id,
+          name: prop.name || `${prop.type} - ${prop.address || prop.city || ''}`
+        }))
+        setProperties(propertiesList)
+      } else {
+        console.error('Failed to fetch properties')
+        setProperties([])
+      }
+    } catch (error) {
+      console.error('Error fetching properties:', error)
+      setProperties([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const units = [
     { id: '101', name: 'شقة 101' },
@@ -112,6 +174,20 @@ export default function MaintenanceSchedule() {
 
   const calendarDays = generateCalendarDays()
 
+  if (loading && !ownerId) {
+    return (
+      <div className={styles.maintenanceSchedulePage}>
+        <OwnerNavigation currentPage="maintenance-schedule" />
+        <main className={styles.mainContent}>
+          <div className={styles.container}>
+            <p>جاري التحميل...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className={styles.maintenanceSchedulePage}>
       {/* Header */}
@@ -148,14 +224,22 @@ export default function MaintenanceSchedule() {
                       value={formData.property}
                       onChange={handleInputChange}
                       className={styles.fieldInput}
+                      disabled={loading || properties.length === 0}
                     >
-                      <option value="">اختر العقار</option>
+                      <option value="">
+                        {loading ? 'جاري التحميل...' : properties.length === 0 ? 'لا توجد عقارات' : 'اختر العقار'}
+                      </option>
                       {properties.map((property) => (
                         <option key={property.id} value={property.id}>
                           {property.name}
                         </option>
                       ))}
                     </select>
+                    {properties.length === 0 && !loading && (
+                      <p style={{ fontSize: '0.875rem', color: '#ef4444', marginTop: '0.5rem' }}>
+                        لم يتم العثور على عقارات. قم بإضافة عقار أولاً.
+                      </p>
+                    )}
                   </div>
 
                   <div className={styles.fieldGroup}>
