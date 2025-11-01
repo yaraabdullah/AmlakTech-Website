@@ -4,7 +4,7 @@ import { prisma } from '../../../lib/prisma'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const { ownerId, status } = req.query
+      const { ownerId, status, propertyId } = req.query
 
       if (!ownerId) {
         return res.status(400).json({ error: 'ownerId is required' })
@@ -15,6 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: {
           ownerId: ownerIdBigInt,
           ...(status && { status: status as string }),
+          ...(propertyId && { propertyId: propertyId as string }),
         },
         include: {
           property: {

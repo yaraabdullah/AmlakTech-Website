@@ -30,6 +30,8 @@ export default function PropertyDetails() {
   const [ownerId, setOwnerId] = useState<string | null>(null)
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
   const [scheduledMaintenance, setScheduledMaintenance] = useState<any[]>([])
+  const [contracts, setContracts] = useState<any[]>([])
+  const [loadingContracts, setLoadingContracts] = useState(false)
 
   useEffect(() => {
     fetchOwnerId()
@@ -45,8 +47,9 @@ export default function PropertyDetails() {
   useEffect(() => {
     if (ownerId && selectedProperty) {
       fetchScheduledMaintenance()
+      fetchContracts()
     }
-  }, [selectedProperty])
+  }, [selectedProperty, ownerId])
 
   const fetchOwnerId = async () => {
     try {
@@ -184,17 +187,71 @@ export default function PropertyDetails() {
     return timeMap[timePeriod] || timePeriod
   }
 
-  const tenants = [
-    {
-      name: 'أحمد محمد علي',
-      email: 'ahmed@sample.com',
-      avatar: '/icons/profile-placeholder.svg',
-      startDate: '01/01/2023',
-      endDate: '31/12/2023',
-      monthlyRent: '4,500 ريال',
-      paymentStatus: 'مدفوع'
+  // Fetch contracts (tenants) for selected property
+  const fetchContracts = async () => {
+    if (!ownerId || !selectedProperty?.id) {
+      setContracts([])
+      return
     }
-  ]
+
+    try {
+      setLoadingContracts(true)
+      const response = await fetch(`/api/contracts?ownerId=${ownerId}&propertyId=${selectedProperty.id}&status=نشط`)
+      if (response.ok) {
+        const data = await response.json()
+        setContracts(data)
+      } else {
+        console.error('Failed to fetch contracts')
+        setContracts([])
+      }
+    } catch (error) {
+      console.error('Error fetching contracts:', error)
+      setContracts([])
+    } finally {
+      setLoadingContracts(false)
+    }
+  }
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-'
+    try {
+      const date = new Date(dateString)
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = date.getFullYear()
+      return `${day}/${month}/${year}`
+    } catch (error) {
+      return dateString
+    }
+  }
+
+  // Get payment status (simplified - you can enhance this based on payments table)
+  const getPaymentStatus = (contract: any) => {
+    // For now, return 'مدفوع' as default
+    // You can enhance this by checking the payments table
+    return 'مدفوع'
+  }
+
+  // Get tenant display name
+  const getTenantName = (contract: any) => {
+    if (contract.tenant) {
+      return `${contract.tenant.firstName} ${contract.tenant.lastName}`
+    } else if (contract.tenantName) {
+      return contract.tenantName
+    }
+    return 'غير معروف'
+  }
+
+  // Get tenant email
+  const getTenantEmail = (contract: any) => {
+    if (contract.tenant?.email) {
+      return contract.tenant.email
+    } else if (contract.tenantEmail) {
+      return contract.tenantEmail
+    }
+    return '-'
+  }
 
   const aiRecommendations = [
     {
@@ -561,27 +618,55 @@ export default function PropertyDetails() {
                 <div>إجراءات</div>
               </div>
               
-              {tenants.map((tenant, index) => (
-                <div key={index} className={styles.tableRow}>
-                  <div className={styles.tenantInfo}>
-                    <img src={tenant.avatar} alt={tenant.name} className={styles.tenantAvatar} />
-                    <div className={styles.tenantDetails}>
-                      <div className={styles.tenantName}>{tenant.name}</div>
-                      <div className={styles.tenantEmail}>{tenant.email}</div>
+              {loadingContracts ? (
+                <div className={styles.emptyTenants}>
+                  <p>جاري تحميل بيانات المستأجرين...</p>
+                </div>
+              ) : contracts.length > 0 ? (
+                contracts.map((contract) => (
+                  <div key={contract.id} className={styles.tableRow}>
+                    <div className={styles.tenantInfo}>
+                      <div className={styles.tenantAvatar}>
+                        {getTenantName(contract).charAt(0)}
+                      </div>
+                      <div className={styles.tenantDetails}>
+                        <div className={styles.tenantName}>{getTenantName(contract)}</div>
+                        <div className={styles.tenantEmail}>{getTenantEmail(contract)}</div>
+                      </div>
+                    </div>
+                    <div className={styles.tenantStartDate}>{formatDate(contract.startDate)}</div>
+                    <div className={styles.tenantEndDate}>{formatDate(contract.endDate)}</div>
+                    <div className={styles.tenantRent}>
+                      {contract.monthlyRent ? `${contract.monthlyRent.toLocaleString('ar-SA')} ريال` : '-'}
+                    </div>
+                    <div className={styles.paymentStatus}>
+                      <span className={`${styles.statusBadge} ${styles.paid}`}>
+                        {getPaymentStatus(contract)}
+                      </span>
+                    </div>
+                    <div className={styles.tenantActions}>
+                      <button 
+                        className={styles.actionBtn}
+                        onClick={() => router.push(`/owner/contract-management?contractId=${contract.id}`)}
+                        title="عرض التفاصيل"
+                      >
+                        👁️
+                      </button>
+                      <button 
+                        className={styles.actionBtn}
+                        onClick={() => router.push(`/owner/contract-management?contractId=${contract.id}&edit=true`)}
+                        title="تعديل"
+                      >
+                        ✏️
+                      </button>
                     </div>
                   </div>
-                  <div className={styles.tenantStartDate}>{tenant.startDate}</div>
-                  <div className={styles.tenantEndDate}>{tenant.endDate}</div>
-                  <div className={styles.tenantRent}>{tenant.monthlyRent}</div>
-                  <div className={styles.paymentStatus}>
-                    <span className={`${styles.statusBadge} ${styles.paid}`}>{tenant.paymentStatus}</span>
-                  </div>
-                  <div className={styles.tenantActions}>
-                    <button className={styles.actionBtn}>👁️</button>
-                    <button className={styles.actionBtn}>✏️</button>
-                  </div>
+                ))
+              ) : (
+                <div className={styles.emptyTenants}>
+                  <p>لا يوجد مستأجرين حالياً لهذا العقار</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
