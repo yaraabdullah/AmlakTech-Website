@@ -16,6 +16,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ownerId: ownerIdBigInt,
         },
         include: {
+          owner: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              phone_number: true,
+            },
+          },
           units: true,
           contracts: {
             where: {
@@ -80,6 +89,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           status: 'متاح',
         },
         include: {
+          owner: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              phone_number: true,
+            },
+          },
           units: true,
         },
       })

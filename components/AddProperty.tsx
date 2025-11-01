@@ -102,6 +102,8 @@ export default function AddProperty() {
 
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -111,19 +113,35 @@ export default function AddProperty() {
       return
     }
 
+    // Validate required fields
+    if (!formData.streetName || !formData.city) {
+      setSubmitError('يرجى إدخال اسم الشارع والمدينة')
+      setCurrentStep(2)
+      return
+    }
+
     setIsSubmitting(true)
+    setSubmitError(null)
+    setSubmitSuccess(false)
     
     try {
       // Get owner ID from API
       const ownerResponse = await fetch('/api/user/get-owner-id')
       if (!ownerResponse.ok) {
-        throw new Error('Failed to get owner information')
+        throw new Error('فشل في الحصول على معلومات المستخدم')
       }
       const owner = await ownerResponse.json()
-      const ownerId = owner.id // This is now a string representation of BigInt
+      const ownerId = owner.id
       
       // Build address string
-      const address = `${formData.streetName}${formData.unitNumber ? `, ${formData.unitNumber}` : ''}${formData.postalCode ? `, ${formData.postalCode}` : ''}`
+      const addressParts = [formData.streetName]
+      if (formData.unitNumber) {
+        addressParts.push(`الوحدة ${formData.unitNumber}`)
+      }
+      if (formData.postalCode) {
+        addressParts.push(`الرمز البريدي: ${formData.postalCode}`)
+      }
+      const address = addressParts.join('، ')
       
       const propertyData = {
         ownerId,
@@ -132,11 +150,11 @@ export default function AddProperty() {
         address,
         city: formData.city,
         area: formData.area ? parseFloat(formData.area) : null,
-        rooms: formData.rooms,
-        bathrooms: formData.bathrooms,
-        constructionYear: formData.constructionYear,
-        description: formData.description,
-        images: formData.images.length > 0 ? formData.images : null,
+        rooms: formData.rooms || null,
+        bathrooms: formData.bathrooms || null,
+        constructionYear: formData.constructionYear || null,
+        description: formData.description || null,
+        images: formData.images.length > 0 ? JSON.stringify(formData.images) : null,
       }
 
       const response = await fetch('/api/properties', {
@@ -147,17 +165,20 @@ export default function AddProperty() {
         body: JSON.stringify(propertyData),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to create property')
+        throw new Error(data.error || 'فشل في إضافة العقار')
       }
 
-      const property = await response.json()
-      
-      // Redirect to property details or dashboard
-      router.push(`/owner/property-details?id=${property.id}`)
-    } catch (error) {
+      // Success - show success message and redirect
+      setSubmitSuccess(true)
+      setTimeout(() => {
+        router.push(`/owner/property-details?id=${data.id}`)
+      }, 1500)
+    } catch (error: any) {
       console.error('Error creating property:', error)
-      alert('حدث خطأ أثناء إضافة العقار. يرجى المحاولة مرة أخرى.')
+      setSubmitError(error.message || 'حدث خطأ أثناء إضافة العقار. يرجى المحاولة مرة أخرى.')
       setIsSubmitting(false)
     }
   }
@@ -202,6 +223,20 @@ export default function AddProperty() {
           </div>
 
           {/* Form */}
+          {/* Success Message */}
+          {submitSuccess && (
+            <div className={styles.successMessage}>
+              ✅ تم إضافة العقار بنجاح! جاري التوجيه...
+            </div>
+          )}
+          
+          {/* Error Message */}
+          {submitError && (
+            <div className={styles.errorMessage}>
+              ❌ {submitError}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className={styles.form}>
             {/* Step 1: Basic Details */}
             {currentStep === 1 && (
@@ -626,9 +661,22 @@ export default function AddProperty() {
                     التالي
                   </button>
                 ) : (
-                  <button type="submit" className={styles.submitBtn}>
-                    <span className={styles.submitIcon}>←</span>
-                    إضافة العقار
+                  <button 
+                    type="submit" 
+                    className={styles.submitBtn}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className={styles.loadingSpinner}>⏳</span>
+                        جاري الحفظ...
+                      </>
+                    ) : (
+                      <>
+                        <span className={styles.submitIcon}>←</span>
+                        إضافة العقار
+                      </>
+                    )}
                   </button>
                 )}
               </div>

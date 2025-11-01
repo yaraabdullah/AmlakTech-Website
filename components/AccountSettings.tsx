@@ -22,7 +22,9 @@ export default function AccountSettings() {
     email: '',
     nationalId: '',
     phone: '',
-    address: '',
+    city: '',
+    neighborhood: '',
+    postalCode: '',
     
     // Security
     currentPassword: '',
@@ -85,7 +87,9 @@ export default function AccountSettings() {
             email: userData.email || '',
             nationalId: userData.nationalId || '',
             phone: userData.phone || '',
-            address: userData.address || '',
+            city: userData.city || '',
+            neighborhood: userData.neighborhood || '',
+            postalCode: userData.postalCode || '',
           }))
         }
       }
@@ -96,7 +100,7 @@ export default function AccountSettings() {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
     setFormData(prev => ({
       ...prev,
@@ -125,7 +129,9 @@ export default function AccountSettings() {
             email: formData.email,
             nationalId: formData.nationalId || null,
             phone: formData.phone,
-            address: formData.address,
+            city: formData.city,
+            neighborhood: formData.neighborhood,
+            postalCode: formData.postalCode,
           }),
         })
 
@@ -329,13 +335,49 @@ export default function AccountSettings() {
                       </div>
                       
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>العنوان</label>
-                        <input
-                          type="text"
-                          name="address"
-                          value={formData.address}
+                        <label className={styles.fieldLabel}>المدينة</label>
+                        <select
+                          name="city"
+                          value={formData.city}
                           onChange={handleInputChange}
                           className={styles.fieldInput}
+                        >
+                          <option value="">اختر المدينة</option>
+                          <option value="الرياض">الرياض</option>
+                          <option value="جدة">جدة</option>
+                          <option value="الدمام">الدمام</option>
+                          <option value="مكة">مكة</option>
+                          <option value="المدينة المنورة">المدينة المنورة</option>
+                          <option value="الطائف">الطائف</option>
+                          <option value="بريدة">بريدة</option>
+                          <option value="خميس مشيط">خميس مشيط</option>
+                          <option value="حفر الباطن">حفر الباطن</option>
+                          <option value="الجبيل">الجبيل</option>
+                        </select>
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الحي</label>
+                        <input
+                          type="text"
+                          name="neighborhood"
+                          value={formData.neighborhood}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="ادخل اسم الحي"
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الرمز البريدي</label>
+                        <input
+                          type="text"
+                          name="postalCode"
+                          value={formData.postalCode}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="ادخل الرمز البريدي"
+                          maxLength={10}
                         />
                       </div>
                     </div>
