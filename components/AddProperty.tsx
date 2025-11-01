@@ -24,7 +24,7 @@ export default function AddProperty() {
     country: 'المملكة العربية السعودية',
     
     // Step 3: Images and Features
-    images: [],
+    images: [] as string[],
     features: {
       parking: true,
       garden: false,
@@ -94,6 +94,98 @@ export default function AddProperty() {
 
   const handlePropertyTypeSelect = (type: string) => {
     setFormData(prev => ({ ...prev, propertyType: type }))
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    const maxImages = 20
+    const remainingSlots = maxImages - formData.images.length
+    
+    if (files.length > remainingSlots) {
+      alert(`يمكنك تحميل ${remainingSlots} صورة فقط. لديك ${formData.images.length} صورة بالفعل.`)
+      e.target.value = '' // Reset input
+      return
+    }
+
+    const newImages: string[] = []
+
+    for (let i = 0; i < files.length && formData.images.length + newImages.length < maxImages; i++) {
+      const file = files[i]
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert(`الملف ${file.name} ليس صورة. سيتم تخطيه.`)
+        continue
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`الصورة ${file.name} كبيرة جداً. الحد الأقصى 5 ميجابايت.`)
+        continue
+      }
+
+      // Convert to base64
+      try {
+        const base64 = await convertToBase64(file)
+        newImages.push(base64)
+      } catch (error) {
+        console.error(`Error converting ${file.name} to base64:`, error)
+        alert(`حدث خطأ في تحميل ${file.name}`)
+      }
+    }
+
+    if (newImages.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...newImages]
+      }))
+    }
+
+    // Reset input
+    e.target.value = ''
+  }
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result)
+        } else {
+          reject(new Error('Failed to convert file to base64'))
+        }
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handleRemoveImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }))
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      // Create a fake event to reuse handleImageUpload
+      const fakeEvent = {
+        target: { files, value: '' }
+      } as React.ChangeEvent<HTMLInputElement>
+      handleImageUpload(fakeEvent)
+    }
   }
 
   const nextStep = () => {
@@ -493,17 +585,57 @@ export default function AddProperty() {
                   </div>
                   
                   <div className={styles.imagesSection}>
-                    <div className={styles.uploadArea}>
+                    <div 
+                      className={styles.uploadArea}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    >
+                      <input
+                        type="file"
+                        id="imageUpload"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageUpload}
+                        style={{ display: 'none' }}
+                      />
                       <div className={styles.uploadIcon}>☁️</div>
                       <p className={styles.uploadText}>اسحب الصور هنا أو انقر لرفعها</p>
                       <p className={styles.uploadHint}>
                         يمكنك تحميل حتى 20 صورة كحد أقصى. يفضل صور عالية الجودة
                       </p>
-                      <button type="button" className={styles.addImagesBtn}>
+                      <label htmlFor="imageUpload" className={styles.addImagesBtn}>
                         <span className={styles.addIcon}>+</span>
                         أضف الصور
-                      </button>
+                      </label>
+                      {formData.images.length > 0 && (
+                        <p className={styles.imageCount}>
+                          {formData.images.length} / 20 صورة
+                        </p>
+                      )}
                     </div>
+
+                    {/* Image Preview Grid */}
+                    {formData.images.length > 0 && (
+                      <div className={styles.imagePreviewGrid}>
+                        {formData.images.map((image, index) => (
+                          <div key={index} className={styles.imagePreviewItem}>
+                            <img 
+                              src={image} 
+                              alt={`Property ${index + 1}`}
+                              className={styles.imagePreview}
+                            />
+                            <button
+                              type="button"
+                              className={styles.removeImageBtn}
+                              onClick={() => handleRemoveImage(index)}
+                              aria-label="إزالة الصورة"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     
                     <div className={styles.aiBanner}>
                       <p>صور عالية الجودة تزيد من معدل الحجز بنسبة 40%</p>
