@@ -74,6 +74,14 @@ export default function AddProperty() {
     }))
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // Prevent form submission on Enter key for steps 1-3
+    if (e.key === 'Enter' && currentStep < 4) {
+      e.preventDefault()
+      // Don't navigate on Enter, just prevent submission
+    }
+  }
+
   const handleFeatureChange = (feature: string) => {
     setFormData(prev => ({
       ...prev,
@@ -273,14 +281,14 @@ export default function AddProperty() {
 
           <form onSubmit={(e) => {
             e.preventDefault()
-            // Only submit if we're on the last step
+            e.stopPropagation()
+            // Only submit if we're on step 4
+            // For steps 1-3, do absolutely nothing - just prevent default
             if (currentStep === 4) {
               handleSubmit(e)
-            } else {
-              // Just go to next step for earlier steps
-              nextStep()
             }
-          }} className={styles.form}>
+            // For steps 1-3, do nothing - don't even navigate
+          }} className={styles.form} noValidate>
             {/* Step 1: Basic Details */}
             {currentStep === 1 && (
               <div className={styles.stepContent}>
@@ -360,6 +368,7 @@ export default function AddProperty() {
                         name="area"
                         value={formData.area}
                         onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
                         placeholder=""
                         className={styles.fieldInput}
                       />
@@ -372,6 +381,7 @@ export default function AddProperty() {
                         name="constructionYear"
                         value={formData.constructionYear}
                         onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
                         placeholder=""
                         className={styles.fieldInput}
                       />
@@ -407,6 +417,7 @@ export default function AddProperty() {
                           name="streetName"
                           value={formData.streetName}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           placeholder="مثال: شارع الملك فهد، رقم 123"
                           className={styles.fieldInput}
                         />
@@ -419,6 +430,7 @@ export default function AddProperty() {
                           name="unitNumber"
                           value={formData.unitNumber}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           placeholder="مثال: 101"
                           className={styles.fieldInput}
                         />
@@ -431,6 +443,7 @@ export default function AddProperty() {
                           name="city"
                           value={formData.city}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           placeholder="مثال: الرياض"
                           className={styles.fieldInput}
                         />
@@ -443,6 +456,7 @@ export default function AddProperty() {
                           name="postalCode"
                           value={formData.postalCode}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           placeholder="مثال: 12345"
                           className={styles.fieldInput}
                         />
@@ -541,6 +555,7 @@ export default function AddProperty() {
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
                     placeholder="اكتب وصفاً مفصلاً للعقار..."
                     className={styles.descriptionTextarea}
                     rows={6}
@@ -566,6 +581,12 @@ export default function AddProperty() {
                           name="monthlyRent"
                           value={formData.monthlyRent}
                           onChange={handleInputChange}
+                          onKeyDown={(e) => {
+                            // Prevent form submission on Enter in step 4 fields
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                            }
+                          }}
                           placeholder="0"
                           className={styles.fieldInput}
                         />
@@ -581,6 +602,12 @@ export default function AddProperty() {
                           name="insurance"
                           value={formData.insurance}
                           onChange={handleInputChange}
+                          onKeyDown={(e) => {
+                            // Allow Enter on step 4 fields, but prevent form submission
+                            if (e.key === 'Enter' && currentStep === 4) {
+                              e.preventDefault()
+                            }
+                          }}
                           placeholder="0"
                           className={styles.fieldInput}
                         />
@@ -654,6 +681,12 @@ export default function AddProperty() {
                         name="paymentEmail"
                         value={formData.paymentEmail}
                         onChange={handleInputChange}
+                        onKeyDown={(e) => {
+                          // Allow Enter on step 4 fields, but prevent form submission
+                          if (e.key === 'Enter' && currentStep === 4) {
+                            e.preventDefault()
+                          }
+                        }}
                         placeholder="email@example.com"
                         className={styles.fieldInput}
                       />
@@ -666,6 +699,12 @@ export default function AddProperty() {
                         name="supportPhone"
                         value={formData.supportPhone}
                         onChange={handleInputChange}
+                        onKeyDown={(e) => {
+                          // Allow Enter on step 4 fields, but prevent form submission
+                          if (e.key === 'Enter' && currentStep === 4) {
+                            e.preventDefault()
+                          }
+                        }}
                         placeholder="966XXXXXXXX"
                         className={styles.fieldInput}
                       />
@@ -694,13 +733,29 @@ export default function AddProperty() {
             <div className={styles.formNavigation}>
               <div className={styles.navButtons}>
                 {currentStep > 1 && (
-                  <button type="button" onClick={prevStep} className={styles.prevBtn}>
+                  <button 
+                    type="button" 
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      prevStep()
+                    }} 
+                    className={styles.prevBtn}
+                  >
                     السابق
                   </button>
                 )}
                 
                 {currentStep < 4 ? (
-                  <button type="button" onClick={nextStep} className={styles.nextBtn}>
+                  <button 
+                    type="button" 
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      nextStep()
+                    }} 
+                    className={styles.nextBtn}
+                  >
                     التالي
                   </button>
                 ) : (
