@@ -292,7 +292,14 @@ export default function PropertyDetails() {
             </div>
             
             <div className={styles.propertyActions}>
-              <button className={styles.editBtn}>
+              <button 
+                className={styles.editBtn}
+                onClick={() => {
+                  if (selectedProperty?.id) {
+                    router.push(`/owner/edit-property?id=${selectedProperty.id}`)
+                  }
+                }}
+              >
                 تعديل العقار
               </button>
               <button className={styles.addTenantBtn}>
@@ -500,7 +507,16 @@ export default function PropertyDetails() {
                 )}
               </div>
               
-              <button className={styles.scheduleBtn}>
+              <button 
+                className={styles.scheduleBtn}
+                onClick={() => {
+                  if (selectedProperty?.id) {
+                    router.push(`/owner/maintenance-schedule?propertyId=${selectedProperty.id}`)
+                  } else {
+                    router.push('/owner/maintenance-schedule')
+                  }
+                }}
+              >
                 + جدولة صيانة جديدة
               </button>
             </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 import OwnerNavigation from './OwnerNavigation'
@@ -11,6 +12,7 @@ interface Property {
 }
 
 export default function MaintenanceSchedule() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     property: '',
     unit: '',
@@ -43,6 +45,14 @@ export default function MaintenanceSchedule() {
       fetchMaintenanceRequests()
     }
   }, [ownerId])
+
+  useEffect(() => {
+    // Check if propertyId is in URL query and set it
+    if (router.isReady && router.query.propertyId && properties.length > 0) {
+      const propertyId = router.query.propertyId as string
+      setFormData(prev => ({ ...prev, property: propertyId }))
+    }
+  }, [router.isReady, router.query.propertyId, properties])
 
   const fetchMaintenanceRequests = async () => {
     if (!ownerId) return

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import OwnerNavigation from './OwnerNavigation'
@@ -6,7 +6,13 @@ import Footer from './Footer'
 import styles from '../styles/AddProperty.module.css'
 
 export default function AddProperty() {
+  const router = useRouter()
+  const { id } = router.query
+  const isEditMode = !!id
+  
+  const [loading, setLoading] = useState(isEditMode)
   const [currentStep, setCurrentStep] = useState(1)
+  const [propertyId, setPropertyId] = useState<string | null>(isEditMode ? id as string : null)
   const [formData, setFormData] = useState({
     // Step 1: Basic Details
     propertyType: 'شقة',
@@ -64,6 +70,97 @@ export default function AddProperty() {
     { id: 'متجر', title: 'متجر', selected: formData.propertyType === 'متجر' },
     { id: 'أرض', title: 'أرض', selected: formData.propertyType === 'أرض' }
   ]
+
+  // Fetch property data if in edit mode
+  useEffect(() => {
+    if (isEditMode && router.isReady && id && typeof id === 'string') {
+      fetchPropertyData(id)
+    }
+  }, [isEditMode, router.isReady, id])
+
+  const fetchPropertyData = async (propertyId: string) => {
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/properties/${propertyId}`)
+      if (response.ok) {
+        const property = await response.json()
+        setPropertyId(property.id)
+        
+        // Parse address to extract street name and postal code
+        const addressParts = property.address ? property.address.split('، ') : []
+        const streetName = addressParts[0] || ''
+        const postalCodePart = addressParts.find((part: string) => part.includes('الرمز البريدي'))
+        const postalCode = postalCodePart ? postalCodePart.replace('الرمز البريدي: ', '') : ''
+        
+        // Parse images
+        let images: string[] = []
+        if (property.images) {
+          try {
+            images = typeof property.images === 'string' ? JSON.parse(property.images) : property.images
+          } catch (e) {
+            images = []
+          }
+        }
+        
+        // Parse features
+        let features = {
+          parking: true,
+          garden: false,
+          balcony: false,
+          pool: false,
+          elevator: false,
+          gym: false,
+          security: false,
+          wifi: false,
+          ac: false,
+          jacuzzi: false
+        }
+        if (property.features) {
+          try {
+            features = typeof property.features === 'string' ? JSON.parse(property.features) : property.features
+          } catch (e) {
+            // Use defaults
+          }
+        }
+        
+        // Extract property name to get property type
+        const nameParts = property.name ? property.name.split(' - ') : []
+        const propertyTypeFromName = nameParts.length > 0 ? nameParts[0] : property.type || 'شقة'
+        
+        setFormData({
+          propertyType: propertyTypeFromName,
+          rooms: property.rooms || '1',
+          bathrooms: property.bathrooms || '1',
+          area: property.area ? property.area.toString() : '',
+          propertySubType: property.propertySubType || 'استوديو',
+          constructionYear: property.constructionYear || '',
+          streetName,
+          city: property.city || '',
+          postalCode,
+          country: property.country || 'المملكة العربية السعودية',
+          images,
+          features,
+          description: property.description || '',
+          monthlyRent: property.monthlyRent ? property.monthlyRent.toString() : '',
+          insurance: property.insurance ? property.insurance.toString() : '',
+          availableFrom: property.availableFrom ? new Date(property.availableFrom).toISOString().split('T')[0] : '',
+          minRentalPeriod: property.minRentalPeriod || 'شهر واحد',
+          publicDisplay: property.publicDisplay || false,
+          paymentEmail: property.paymentEmail || '',
+          supportPhone: property.supportPhone || '',
+          paymentAccount: property.paymentAccount || 'لا يوجد'
+        })
+      } else {
+        console.error('Failed to fetch property')
+        router.push('/owner/property-details')
+      }
+    } catch (error) {
+      console.error('Error fetching property:', error)
+      router.push('/owner/property-details')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
@@ -263,7 +360,6 @@ export default function AddProperty() {
     }
   }
 
-  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = useState(false)
@@ -347,11 +443,17 @@ export default function AddProperty() {
         paymentAccount: formData.paymentAccount || null,
         // Additional details
         description: formData.description || null,
-        images: formData.images.length > 0 ? JSON.stringify(formData.images) : null,
+        images: formData.images.length > 0 ? formData.images : null,
       }
 
-      const response = await fetch('/api/properties', {
-        method: 'POST',
+      // Use PUT for edit mode, POST for create mode
+      const url = isEditMode && propertyId 
+        ? `/api/properties/${propertyId}`
+        : '/api/properties'
+      const method = isEditMode && propertyId ? 'PUT' : 'POST'
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -361,19 +463,33 @@ export default function AddProperty() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'فشل في إضافة العقار')
+        throw new Error(data.error || (isEditMode ? 'فشل في تعديل العقار' : 'فشل في إضافة العقار'))
       }
 
       // Success - show success message and redirect
       setSubmitSuccess(true)
       setTimeout(() => {
-        router.push(`/owner/property-details?id=${data.id}`)
+        router.push('/owner/property-details')
       }, 1500)
     } catch (error: any) {
-      console.error('Error creating property:', error)
-      setSubmitError(error.message || 'حدث خطأ أثناء إضافة العقار. يرجى المحاولة مرة أخرى.')
+      console.error(`Error ${isEditMode ? 'updating' : 'creating'} property:`, error)
+      setSubmitError(error.message || `حدث خطأ أثناء ${isEditMode ? 'تعديل' : 'إضافة'} العقار. يرجى المحاولة مرة أخرى.`)
       setIsSubmitting(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.addPropertyPage}>
+        <OwnerNavigation currentPage="add-property" />
+        <main className={styles.mainContent}>
+          <div className={styles.container}>
+            <p>جاري تحميل بيانات العقار...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
   }
 
   return (
@@ -389,7 +505,7 @@ export default function AddProperty() {
             <div className={styles.headerRow}>
               {/* Page Title */}
               <div className={styles.pageTitle}>
-                <h1>إضافة عقار جديد</h1>
+                <h1>{isEditMode ? 'تعديل العقار' : 'إضافة عقار جديد'}</h1>
               </div>
               
               {/* AI Assistant Banner */}

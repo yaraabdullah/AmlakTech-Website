@@ -68,28 +68,62 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         description,
         images,
         status,
+        postalCode,
+        country,
+        propertySubType,
+        features,
+        monthlyRent,
+        insurance,
+        availableFrom,
+        minRentalPeriod,
+        publicDisplay,
+        paymentEmail,
+        supportPhone,
+        paymentAccount,
       } = req.body
+
+      const updateData: any = {}
+      
+      if (name !== undefined) updateData.name = name
+      if (type !== undefined) updateData.type = type
+      if (address !== undefined) updateData.address = address
+      if (city !== undefined) updateData.city = city
+      if (area !== undefined) updateData.area = area ? parseFloat(area) : null
+      if (rooms !== undefined) updateData.rooms = rooms
+      if (bathrooms !== undefined) updateData.bathrooms = bathrooms
+      if (constructionYear !== undefined) updateData.constructionYear = constructionYear
+      if (description !== undefined) updateData.description = description
+      if (images !== undefined) updateData.images = images ? (typeof images === 'string' ? images : JSON.stringify(images)) : null
+      if (status !== undefined) updateData.status = status
+      if (postalCode !== undefined) updateData.postalCode = postalCode
+      if (country !== undefined) updateData.country = country
+      if (propertySubType !== undefined) updateData.propertySubType = propertySubType
+      if (features !== undefined) updateData.features = features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null
+      if (monthlyRent !== undefined) updateData.monthlyRent = monthlyRent ? parseFloat(monthlyRent) : null
+      if (insurance !== undefined) updateData.insurance = insurance ? parseFloat(insurance) : null
+      if (availableFrom !== undefined) updateData.availableFrom = availableFrom ? new Date(availableFrom) : null
+      if (minRentalPeriod !== undefined) updateData.minRentalPeriod = minRentalPeriod
+      if (publicDisplay !== undefined) updateData.publicDisplay = publicDisplay === true || publicDisplay === 'true'
+      if (paymentEmail !== undefined) updateData.paymentEmail = paymentEmail
+      if (supportPhone !== undefined) updateData.supportPhone = supportPhone
+      if (paymentAccount !== undefined) updateData.paymentAccount = paymentAccount
 
       const property = await prisma.property.update({
         where: {
           id: id as string,
         },
-        data: {
-          ...(name && { name }),
-          ...(type && { type }),
-          ...(address && { address }),
-          ...(city && { city }),
-          ...(area !== undefined && { area: parseFloat(area) }),
-          ...(rooms && { rooms }),
-          ...(bathrooms && { bathrooms }),
-          ...(constructionYear && { constructionYear }),
-          ...(description && { description }),
-          ...(images && { images: JSON.stringify(images) }),
-          ...(status && { status }),
-        },
+        data: updateData,
         include: {
           units: true,
           contracts: true,
+          owner: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
         },
       })
 
@@ -97,6 +131,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const propertyWithStrings = {
         ...property,
         ownerId: property.ownerId.toString(),
+        owner: property.owner ? {
+          ...property.owner,
+          id: property.owner.id.toString(),
+        } : null,
       }
 
       return res.status(200).json(propertyWithStrings)
