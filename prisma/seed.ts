@@ -7,23 +7,25 @@ async function main() {
   // Create a demo owner
   const hashedPassword = await bcrypt.hash('password123', 10)
   
-  const owner = await prisma.owner.upsert({
+  const owner = await prisma.users.upsert({
     where: { email: 'ahmed@example.com' },
     update: {},
     create: {
       email: 'ahmed@example.com',
-      firstName: 'أحمد',
-      lastName: 'الغامدي',
-      phone: '966501234567',
-      address: 'الرياض، المملكة العربية السعودية',
-      password: hashedPassword,
+      first_name: 'أحمد',
+      last_name: 'الغامدي',
+      phone_number: '966501234567',
+      national_id: '1234567890',
+      password_hash: hashedPassword,
+      user_type: 'owner',
+      is_verified: false,
     },
   })
 
   // Create sample properties
   const property1 = await prisma.property.create({
     data: {
-      ownerId: owner.id,
+      ownerId: BigInt(owner.id.toString()),
       name: 'عمارة الرياض',
       type: 'شقة',
       address: 'الرياض، حي الترجس',
@@ -39,7 +41,7 @@ async function main() {
 
   const property2 = await prisma.property.create({
     data: {
-      ownerId: owner.id,
+      ownerId: BigInt(owner.id.toString()),
       name: 'مجمع الأمل',
       type: 'شقة',
       address: 'الرياض، حي الشفاء',
@@ -55,7 +57,7 @@ async function main() {
 
   const property3 = await prisma.property.create({
     data: {
-      ownerId: owner.id,
+      ownerId: BigInt(owner.id.toString()),
       name: 'برج النخيل',
       type: 'شقة',
       address: 'الرياض، حي النخيل',
@@ -85,7 +87,7 @@ async function main() {
     data: {
       propertyId: property1.id,
       unitId: unit1.id,
-      ownerId: owner.id,
+      ownerId: BigInt(owner.id.toString()),
       tenantName: 'محمد العلي',
       tenantEmail: 'mohamed@example.com',
       tenantPhone: '0501234567',
@@ -101,7 +103,7 @@ async function main() {
   const contract2 = await prisma.contract.create({
     data: {
       propertyId: property2.id,
-      ownerId: owner.id,
+      ownerId: BigInt(owner.id.toString()),
       tenantName: 'سارة خالد',
       tenantEmail: 'sara@example.com',
       tenantPhone: '0551234567',
@@ -119,7 +121,7 @@ async function main() {
     data: [
       {
         contractId: contract1.id,
-        ownerId: owner.id,
+        ownerId: BigInt(owner.id.toString()),
         type: 'إيجار',
         amount: 8500,
         dueDate: new Date('2025-08-01'),
@@ -128,7 +130,7 @@ async function main() {
       },
       {
         contractId: contract1.id,
-        ownerId: owner.id,
+        ownerId: BigInt(owner.id.toString()),
         type: 'إيجار',
         amount: 8500,
         dueDate: new Date('2025-09-01'),
@@ -136,7 +138,7 @@ async function main() {
       },
       {
         contractId: contract2.id,
-        ownerId: owner.id,
+        ownerId: BigInt(owner.id.toString()),
         type: 'إيجار',
         amount: 12000,
         dueDate: new Date('2025-08-01'),
@@ -151,7 +153,7 @@ async function main() {
     data: [
       {
         propertyId: property1.id,
-        ownerId: owner.id,
+        ownerId: BigInt(owner.id.toString()),
         unit: '103',
         type: 'سباكة',
         priority: 'urgent',
@@ -162,7 +164,7 @@ async function main() {
       },
       {
         propertyId: property1.id,
-        ownerId: owner.id,
+        ownerId: BigInt(owner.id.toString()),
         unit: '101',
         type: 'كهربائي',
         priority: 'medium',

@@ -25,8 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           owner: {
             select: {
               id: true,
-              firstName: true,
-              lastName: true,
+              first_name: true,
+              last_name: true,
               email: true,
             },
           },
