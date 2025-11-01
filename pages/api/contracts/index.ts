@@ -110,15 +110,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const ownerIdBigInt = BigInt(ownerId)
       
+      // If tenantId is provided, fetch tenant data to populate legacy fields
+      let tenantData = {
+        tenantName: tenantName || null,
+        tenantEmail: tenantEmail || null,
+        tenantPhone: tenantPhone || null,
+      }
+      
+      if (tenantId) {
+        try {
+          const tenant = await prisma.tenant.findUnique({
+            where: { id: tenantId },
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              phoneNumber: true,
+            },
+          })
+          
+          if (tenant) {
+            // Populate legacy fields from tenant table
+            tenantData = {
+              tenantName: `${tenant.firstName} ${tenant.lastName}`,
+              tenantEmail: tenant.email || null,
+              tenantPhone: tenant.phoneNumber || null,
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching tenant data:', error)
+          // Fall back to provided values or null
+        }
+      }
+      
       // Prepare contract data
       const contractData: any = {
         propertyId,
         unitId: unitId || null,
         ownerId: ownerIdBigInt,
         tenantId: tenantId || null,
-        tenantName: tenantId ? null : (tenantName || null),
-        tenantEmail: tenantId ? null : (tenantEmail || null),
-        tenantPhone: tenantId ? null : (tenantPhone || null),
+        tenantName: tenantData.tenantName,
+        tenantEmail: tenantData.tenantEmail,
+        tenantPhone: tenantData.tenantPhone,
         type,
         startDate: new Date(startDate),
         endDate: new Date(endDate),

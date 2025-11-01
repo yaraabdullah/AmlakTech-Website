@@ -190,18 +190,41 @@ export default function PropertyDetails() {
   // Fetch contracts (tenants) for selected property
   const fetchContracts = async () => {
     if (!ownerId || !selectedProperty?.id) {
+      console.log('Missing ownerId or propertyId:', { ownerId, propertyId: selectedProperty?.id })
       setContracts([])
       return
     }
 
     try {
       setLoadingContracts(true)
-      const response = await fetch(`/api/contracts?ownerId=${ownerId}&propertyId=${selectedProperty.id}&status=نشط`)
+      // First, try without status filter to get all contracts for this property
+      const response = await fetch(`/api/contracts?ownerId=${ownerId}&propertyId=${selectedProperty.id}`)
+      
       if (response.ok) {
         const data = await response.json()
-        setContracts(data)
+        console.log('Contracts fetched:', data)
+        
+        // For debugging: show all contracts first, then filter
+        console.log('All contracts for property:', data)
+        console.log('Contract statuses:', data.map((c: any) => ({ id: c.id, status: c.status, propertyId: c.propertyId })))
+        
+        // Filter for active contracts only (status: نشط or active contracts)
+        // Temporarily showing all contracts to debug
+        const activeContracts = data.filter((contract: any) => {
+          const isActive = contract.status === 'نشط' || 
+                           contract.status === 'active' || 
+                           !contract.status || 
+                           (contract.endDate && new Date(contract.endDate) > new Date())
+          console.log(`Contract ${contract.id}: status=${contract.status}, isActive=${isActive}`)
+          return isActive
+        })
+        
+        console.log('Active contracts after filter:', activeContracts)
+        // Temporarily show all contracts to debug
+        setContracts(data.length > 0 ? data : activeContracts)
       } else {
-        console.error('Failed to fetch contracts')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Failed to fetch contracts:', response.status, errorData)
         setContracts([])
       }
     } catch (error) {
