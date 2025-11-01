@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 import OwnerNavigation from './OwnerNavigation'
@@ -6,90 +7,230 @@ import Footer from './Footer'
 import styles from '../styles/ContractManagement.module.css'
 
 export default function ContractManagement() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState('all')
+  const [loading, setLoading] = useState(true)
+  const [ownerId, setOwnerId] = useState<string | null>(null)
+  const [contracts, setContracts] = useState<any[]>([])
+  const [filteredContracts, setFilteredContracts] = useState<any[]>([])
+  const [contractMetrics, setContractMetrics] = useState([
+    {
+      title: 'العقود النشطة',
+      value: '0',
+      change: '0',
+      trend: 'neutral',
+    },
+    {
+      title: 'تنتهي قريباً',
+      value: '0',
+      change: '0',
+      trend: 'neutral',
+    },
+    {
+      title: 'العقود المنتهية',
+      value: '0',
+      change: '0',
+      trend: 'neutral',
+    }
+  ])
   const [formData, setFormData] = useState({
     searchQuery: ''
   })
 
-  const contractMetrics = [
-    {
-      title: 'العقود النشطة',
-      value: '24',
-      change: '+8% مقارنة بالشهر الماضي',
-      trend: 'up',
+  // Fetch owner ID
+  useEffect(() => {
+    const fetchOwnerId = async () => {
+      try {
+        if (typeof window !== 'undefined') {
+          const userId = localStorage.getItem('userId')
+          const userType = localStorage.getItem('userType')
+          
+          if (userId && userType === 'owner') {
+            setOwnerId(userId)
+            return
+          }
+        }
 
-    },
-
-    {
-      title: 'تنتهي قريباً',
-      value: '7',
-      change: '+3%',
-      trend: 'up',
-
-    },
-  
-    {
-      title: 'العقود المنتهية',
-      value: '12',
-      change: '0% - بحاجة إلى تجديد',
-      trend: 'neutral',
-
+        const response = await fetch('/api/user/get-owner-id')
+        if (response.ok) {
+          const data = await response.json()
+          setOwnerId(data.id)
+        } else {
+          router.push('/login')
+        }
+      } catch (error) {
+        console.error('Error fetching owner ID:', error)
+        router.push('/login')
+      }
     }
-  ]
+    fetchOwnerId()
+  }, [])
 
-  const contracts = [
-    {
-      name: 'عقد إيجار سكني',
-      tenant: 'عبدالله محمد',
-      status: 'نشط',
-      leaseStatus: 'مرتبط بإيجار',
-      overallStatus: 'متوافقة',
-      statusColor: 'active'
-    },
-    {
-      name: 'عقد بيع عقاري',
-      tenant: 'فاطمة علي',
-      status: 'قيد التوقيع',
-      leaseStatus: 'غير مرتبط',
-      overallStatus: 'لم تصدر',
-      statusColor: 'pending'
-    },
-    {
-      name: 'عقد إدارة عقار',
-      tenant: 'شركة التقنية المتقدمة',
-      status: 'منتهي',
-      leaseStatus: 'مرتبط بإيجار',
-      overallStatus: 'متوافقة',
-      statusColor: 'expired'
-    },
-    {
-      name: 'عقد إيجار تجاري',
-      tenant: 'خالد الغامدي',
-      status: 'مسودة',
-      leaseStatus: 'غير مرتبط',
-      overallStatus: 'لم تصدر',
-      statusColor: 'draft'
+  // Helper functions
+  const getTenantName = (contract: any) => {
+    if (contract.tenant) {
+      return `${contract.tenant.firstName} ${contract.tenant.lastName}`
+    } else if (contract.tenantName) {
+      return contract.tenantName
     }
-  ]
+    return 'غير معروف'
+  }
 
-  const renewalNotifications = [
-    {
-      type: 'expired',
-      title: 'عقد إدارة عقار منتهي',
-      description: 'العقد # CON-2023-003 انتهى في 10 يونيو 2023 (منذ 45 يوم)',
-      icon: '⚠️',
-      urgent: true,
-      actions: ['تجديد العقد', 'أرشفة العقد']
-    },
-    {
-      type: 'expiring',
-      title: 'عقد إيجار سكني ينتهي قريباً',
-      description: 'العقد # CON-2023-001 سينتهي في 15 يناير 2024 (خلال 30 يوم)',
-      icon: '🔔',
-      urgent: false,
-      actions: ['تجديد العقد', 'تذكيري لاحقاً']
+  const getStatusColor = (status: string) => {
+    if (status === 'نشط') return 'active'
+    if (status === 'منتهي' || status === 'expired') return 'expired'
+    if (status === 'قيد التوقيع' || status === 'معلق' || status === 'pending') return 'pending'
+    if (status === 'مسودة' || status === 'draft') return 'draft'
+    return 'neutral'
+  }
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-'
+    try {
+      const date = new Date(dateString)
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = date.getFullYear()
+      return `${day}/${month}/${year}`
+    } catch (error) {
+      return dateString
     }
-  ]
+  }
+
+  const getDaysUntilExpiry = (endDate: string) => {
+    if (!endDate) return null
+    try {
+      const end = new Date(endDate)
+      const today = new Date()
+      const diff = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+      return diff
+    } catch {
+      return null
+    }
+  }
+
+  // Fetch contracts
+  useEffect(() => {
+    if (ownerId) {
+      fetchContracts()
+    }
+  }, [ownerId])
+
+  // Filter contracts based on active tab and search query
+  useEffect(() => {
+    let filtered = contracts
+
+    // Filter by tab
+    if (activeTab !== 'all') {
+      filtered = filtered.filter(contract => {
+        const status = contract.status
+        if (activeTab === 'active') return status === 'نشط'
+        if (activeTab === 'pending') return status === 'قيد التوقيع' || status === 'معلق'
+        if (activeTab === 'expired') return status === 'منتهي'
+        if (activeTab === 'drafts') return status === 'مسودة'
+        return true
+      })
+    }
+
+    // Filter by search query
+    if (formData.searchQuery.trim()) {
+      const query = formData.searchQuery.toLowerCase()
+      filtered = filtered.filter(contract => {
+        const tenantName = getTenantName(contract).toLowerCase()
+        const propertyName = contract.property?.name?.toLowerCase() || ''
+        const contractType = contract.type?.toLowerCase() || ''
+        return tenantName.includes(query) || 
+               propertyName.includes(query) || 
+               contractType.includes(query)
+      })
+    }
+
+    setFilteredContracts(filtered)
+  }, [contracts, activeTab, formData.searchQuery])
+
+  // Calculate metrics
+  useEffect(() => {
+    if (contracts.length > 0) {
+      const active = contracts.filter(c => c.status === 'نشط').length
+      const expiring = contracts.filter(c => {
+        if (c.status !== 'نشط' || !c.endDate) return false
+        const endDate = new Date(c.endDate)
+        const daysUntilExpiry = Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+        return daysUntilExpiry <= 30 && daysUntilExpiry > 0
+      }).length
+      const expired = contracts.filter(c => c.status === 'منتهي' || (c.endDate && new Date(c.endDate) < new Date())).length
+
+      setContractMetrics([
+        {
+          title: 'العقود النشطة',
+          value: active.toString(),
+          change: active > 0 ? `${active} عقد نشط` : 'لا توجد عقود نشطة',
+          trend: active > 0 ? 'up' : 'neutral',
+        },
+        {
+          title: 'تنتهي قريباً',
+          value: expiring.toString(),
+          change: expiring > 0 ? `${expiring} عقد خلال 30 يوم` : 'لا توجد عقود تنتهي قريباً',
+          trend: expiring > 0 ? 'up' : 'neutral',
+        },
+        {
+          title: 'العقود المنتهية',
+          value: expired.toString(),
+          change: expired > 0 ? `${expired} عقد منتهي` : 'لا توجد عقود منتهية',
+          trend: 'neutral',
+        }
+      ])
+    }
+  }, [contracts])
+
+  const fetchContracts = async () => {
+    if (!ownerId) return
+
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/contracts?ownerId=${ownerId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setContracts(data)
+      } else {
+        console.error('Failed to fetch contracts')
+        setContracts([])
+      }
+    } catch (error) {
+      console.error('Error fetching contracts:', error)
+      setContracts([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Calculate renewal notifications from real contracts
+  const renewalNotifications = contracts
+    .filter(contract => {
+      if (!contract.endDate) return false
+      const daysUntilExpiry = getDaysUntilExpiry(contract.endDate)
+      return daysUntilExpiry !== null && daysUntilExpiry <= 45 && daysUntilExpiry >= -30
+    })
+    .map(contract => {
+      const daysUntilExpiry = getDaysUntilExpiry(contract.endDate)
+      const isExpired = daysUntilExpiry !== null && daysUntilExpiry < 0
+      const isUrgent = daysUntilExpiry !== null && daysUntilExpiry <= 30 && daysUntilExpiry >= 0
+
+      return {
+        type: isExpired ? 'expired' : 'expiring',
+        title: isExpired 
+          ? `عقد ${contract.type} منتهي` 
+          : `عقد ${contract.type} ينتهي قريباً`,
+        description: isExpired
+          ? `العقد # ${contract.id.slice(0, 8)} انتهى في ${formatDate(contract.endDate)} (منذ ${Math.abs(daysUntilExpiry!)} يوم)`
+          : `العقد # ${contract.id.slice(0, 8)} سينتهي في ${formatDate(contract.endDate)} (خلال ${daysUntilExpiry} يوم)`,
+        icon: isExpired ? '⚠️' : '🔔',
+        urgent: isUrgent || isExpired,
+        actions: isExpired ? ['تجديد العقد', 'أرشفة العقد'] : ['تجديد العقد', 'تذكيري لاحقاً'],
+        contractId: contract.id
+      }
+    })
+    .slice(0, 5) // Show max 5 notifications
 
   const contractTemplates = [
     {
@@ -162,7 +303,10 @@ export default function ContractManagement() {
                   className={styles.searchInput}
                 />
               </div>
-              <button className={styles.createContractBtn}>
+              <button 
+                className={styles.createContractBtn}
+                onClick={() => router.push('/owner/add-tenant')}
+              >
                 <span className={styles.addIcon}>+</span>
                 إنشاء عقد جديد
               </button>
@@ -222,38 +366,72 @@ export default function ContractManagement() {
               <div className={styles.tableHeader}>
                 <div>اسم العقد</div>
                 <div>المستأجر</div>
+                <div>العقار</div>
                 <div>الحالة</div>
-                <div>حالة إيجار</div>
+                <div>تاريخ الانتهاء</div>
                 <div>الإجراءات</div>
               </div>
 
-              {contracts.map((contract, index) => (
-                <div key={index} className={`${styles.tableRow} ${styles[contract.statusColor]}`}>
-                  <div className={styles.contractName}>{contract.name}</div>
-                  <div className={styles.tenantName}>{contract.tenant}</div>
-                  <div className={styles.contractStatus}>
-                    <span className={`${styles.statusBadge} ${styles[contract.statusColor]}`}>
-                      {contract.status}
-                    </span>
-                  </div>
-                  <div className={styles.leaseStatus}>{contract.leaseStatus}</div>
-                  <div className={styles.overallStatus}>
-                    <span className={`${styles.statusBadge} ${styles[contract.statusColor]}`}>
-                      {contract.overallStatus}
-                    </span>
-                  </div>
+              {loading ? (
+                <div className={styles.loadingState}>
+                  <p>جاري تحميل العقود...</p>
                 </div>
-              ))}
+              ) : filteredContracts.length > 0 ? (
+                filteredContracts.map((contract) => {
+                  const statusColor = getStatusColor(contract.status)
+                  return (
+                    <div key={contract.id} className={`${styles.tableRow} ${styles[statusColor]}`}>
+                      <div className={styles.contractName}>{contract.type}</div>
+                      <div className={styles.tenantName}>{getTenantName(contract)}</div>
+                      <div className={styles.propertyName}>
+                        {contract.property?.name || contract.property?.address || '-'}
+                      </div>
+                      <div className={styles.contractStatus}>
+                        <span className={`${styles.statusBadge} ${styles[statusColor]}`}>
+                          {contract.status}
+                        </span>
+                      </div>
+                      <div className={styles.endDate}>{formatDate(contract.endDate)}</div>
+                      <div className={styles.actions}>
+                        <button 
+                          className={styles.actionBtn}
+                          onClick={() => router.push(`/owner/property-details?contractId=${contract.id}`)}
+                          title="عرض التفاصيل"
+                        >
+                          👁️
+                        </button>
+                        <button 
+                          className={styles.actionBtn}
+                          onClick={() => router.push(`/owner/add-tenant?contractId=${contract.id}&edit=true`)}
+                          title="تعديل"
+                        >
+                          ✏️
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })
+              ) : (
+                <div className={styles.emptyState}>
+                  <p>
+                    {formData.searchQuery.trim() 
+                      ? 'لا توجد نتائج للبحث' 
+                      : activeTab === 'all'
+                      ? 'لا توجد عقود حالياً'
+                      : `لا توجد عقود ${activeTab === 'active' ? 'نشطة' : activeTab === 'expired' ? 'منتهية' : activeTab === 'pending' ? 'قيد التوقيع' : 'مسودات'}`}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Pagination */}
-            <div className={styles.pagination}>
-              <span className={styles.paginationInfo}>عرض 1-4 من 45 عقد</span>
-              <div className={styles.paginationButtons}>
-                <button className={styles.paginationBtn}>السابق</button>
-                <button className={styles.paginationBtn}>التالي</button>
+            {filteredContracts.length > 0 && (
+              <div className={styles.pagination}>
+                <span className={styles.paginationInfo}>
+                  عرض 1-{filteredContracts.length} من {contracts.length} عقد
+                </span>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Renewal Notifications Section */}
@@ -261,22 +439,36 @@ export default function ContractManagement() {
             <h2 className={styles.sectionTitle}>إشعارات التجديد</h2>
             
             <div className={styles.notificationsList}>
-              {renewalNotifications.map((notification, index) => (
-                <div key={index} className={`${styles.notificationCard} ${styles[notification.type]}`}>
-                  <div className={styles.notificationIcon}>{notification.icon}</div>
-                  <div className={styles.notificationContent}>
-                    <h3 className={styles.notificationTitle}>{notification.title}</h3>
-                    <p className={styles.notificationDescription}>{notification.description}</p>
-                    <div className={styles.notificationActions}>
-                      {notification.actions.map((action, actionIndex) => (
-                        <button key={actionIndex} className={styles.notificationAction}>
-                          {action}
-                        </button>
-                      ))}
+              {renewalNotifications.length > 0 ? (
+                renewalNotifications.map((notification, index) => (
+                  <div key={index} className={`${styles.notificationCard} ${styles[notification.type]}`}>
+                    <div className={styles.notificationIcon}>{notification.icon}</div>
+                    <div className={styles.notificationContent}>
+                      <h3 className={styles.notificationTitle}>{notification.title}</h3>
+                      <p className={styles.notificationDescription}>{notification.description}</p>
+                      <div className={styles.notificationActions}>
+                        {notification.actions.map((action, actionIndex) => (
+                          <button 
+                            key={actionIndex} 
+                            className={styles.notificationAction}
+                            onClick={() => {
+                              if (action === 'تجديد العقد' && notification.contractId) {
+                                router.push(`/owner/add-tenant?contractId=${notification.contractId}&renew=true`)
+                              }
+                            }}
+                          >
+                            {action}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className={styles.emptyNotifications}>
+                  <p>لا توجد إشعارات تجديد حالياً</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

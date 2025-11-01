@@ -346,7 +346,7 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  grid-template-columns: 1.5fr 1.5fr 1.5fr 1fr 1fr 1fr;
   gap: var(--spacing-md);
   padding: var(--spacing-md);
   background: var(--color-background-secondary);
@@ -358,7 +358,7 @@
 
 .tableRow {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  grid-template-columns: 1.5fr 1.5fr 1.5fr 1fr 1fr 1fr;
   gap: var(--spacing-md);
   padding: var(--spacing-md);
   background: var(--color-background-primary);
@@ -390,10 +390,32 @@
 
 .contractName,
 .tenantName,
-.leaseStatus {
+.propertyName,
+.leaseStatus,
+.endDate {
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: background 0.3s ease;
+}
+
+.actionBtn:hover {
+  background: var(--color-border);
 }
 
 .contractStatus,
@@ -429,6 +451,23 @@
 .statusBadge.draft {
   background: #f3f4f6;
   color: #374151;
+}
+
+.loadingState,
+.emptyState,
+.emptyNotifications {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-primary);
+  grid-column: 1 / -1;
+}
+
+.loadingState p,
+.emptyState p,
+.emptyNotifications p {
+  margin: 0;
 }
 
 /* Pagination */
