@@ -168,6 +168,25 @@ export default function AddProperty() {
         rooms: formData.rooms || null,
         bathrooms: formData.bathrooms || null,
         constructionYear: formData.constructionYear || null,
+        // Location details
+        unitNumber: formData.unitNumber || null,
+        postalCode: formData.postalCode || null,
+        country: formData.country || 'المملكة العربية السعودية',
+        // Property subtype
+        propertySubType: formData.propertySubType || null,
+        // Features (as object, will be converted to JSON in API)
+        features: formData.features,
+        // Pricing
+        monthlyRent: formData.monthlyRent ? parseFloat(formData.monthlyRent) : null,
+        insurance: formData.insurance ? parseFloat(formData.insurance) : null,
+        availableFrom: formData.availableFrom || null,
+        minRentalPeriod: formData.minRentalPeriod || null,
+        publicDisplay: formData.publicDisplay || false,
+        // Payment system
+        paymentEmail: formData.paymentEmail || null,
+        supportPhone: formData.supportPhone || null,
+        paymentAccount: formData.paymentAccount || null,
+        // Additional details
         description: formData.description || null,
         images: formData.images.length > 0 ? JSON.stringify(formData.images) : null,
       }

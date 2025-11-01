@@ -64,6 +64,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         constructionYear,
         description,
         images,
+        // Location details
+        unitNumber,
+        postalCode,
+        country,
+        // Property subtype
+        propertySubType,
+        // Features
+        features,
+        // Pricing
+        monthlyRent,
+        insurance,
+        availableFrom,
+        minRentalPeriod,
+        publicDisplay,
+        // Payment system
+        paymentEmail,
+        supportPhone,
+        paymentAccount,
       } = req.body
 
       if (!ownerId || !name || !type || !address || !city) {
@@ -84,8 +102,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           rooms,
           bathrooms,
           constructionYear,
-          description,
-          images: images ? JSON.stringify(images) : null,
+          // Location details
+          unitNumber: unitNumber || null,
+          postalCode: postalCode || null,
+          country: country || 'المملكة العربية السعودية',
+          // Property subtype
+          propertySubType: propertySubType || null,
+          // Features (convert object to JSON string)
+          features: features ? JSON.stringify(features) : null,
+          // Pricing
+          monthlyRent: monthlyRent ? parseFloat(monthlyRent) : null,
+          insurance: insurance ? parseFloat(insurance) : null,
+          availableFrom: availableFrom ? new Date(availableFrom) : null,
+          minRentalPeriod: minRentalPeriod || null,
+          publicDisplay: publicDisplay === true || publicDisplay === 'true',
+          // Payment system
+          paymentEmail: paymentEmail || null,
+          supportPhone: supportPhone || null,
+          paymentAccount: paymentAccount || null,
+          // Additional details
+          description: description || null,
+          images: images ? (typeof images === 'string' ? images : JSON.stringify(images)) : null,
           status: 'متاح',
         },
         include: {

@@ -62,17 +62,41 @@ model Property {
   constructionYear  String?
   status            String    @default("متاح") // متاح، مؤجر، صيانة
   
+  // Location details
+  unitNumber        String?   @map("unit_number")
+  postalCode        String?   @map("postal_code")
+  country           String?   @default("المملكة العربية السعودية")
+  
+  // Property subtype (for apartments)
+  propertySubType   String?   @map("property_sub_type")
+  
+  // Features (stored as JSON)
+  features          String?   // JSON: parking, garden, balcony, pool, elevator, gym, security, wifi, ac, jacuzzi
+  
+  // Pricing
+  monthlyRent       Float?    @map("monthly_rent")
+  insurance         Float?
+  availableFrom     DateTime? @map("available_from")
+  minRentalPeriod   String?   @map("min_rental_period")
+  publicDisplay     Boolean   @default(false) @map("public_display")
+  
+  // Payment system
+  paymentEmail      String?   @map("payment_email")
+  supportPhone      String?   @map("support_phone")
+  paymentAccount    String?   @map("payment_account")
+  
   // Additional details
   description       String?
   images            String?   // JSON array of image URLs
   
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
   
   units             Unit[]
   contracts         Contract[]
   maintenanceRequests MaintenanceRequest[]
   
+  @@map("properties")
   @@index([ownerId])
 }
 
