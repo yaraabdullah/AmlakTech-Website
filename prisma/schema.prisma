@@ -59,7 +59,7 @@ model Property {
   area              Float?    // المساحة بالمتر المربع
   rooms             String?   // عدد الغرف
   bathrooms         String?   // عدد الحمامات
-  constructionYear  String?
+  constructionYear  String?   @map("construction_year")
   status            String    @default("متاح") // متاح، مؤجر، صيانة
   
   // Location details
