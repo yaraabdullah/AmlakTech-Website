@@ -10,9 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'ownerId is required' })
       }
 
+      const ownerIdBigInt = BigInt(ownerId as string)
       const maintenance = await prisma.maintenanceRequest.findMany({
         where: {
-          ownerId: ownerId as string,
+          ownerId: ownerIdBigInt,
           ...(status && { status: status as string }),
           ...(propertyId && { propertyId: propertyId as string }),
         },
@@ -56,10 +57,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Missing required fields' })
       }
 
+      const ownerIdBigInt = BigInt(ownerId)
       const maintenance = await prisma.maintenanceRequest.create({
         data: {
           propertyId,
-          ownerId,
+          ownerId: ownerIdBigInt,
           unit,
           type,
           priority: priority || 'medium',

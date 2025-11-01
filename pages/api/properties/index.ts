@@ -10,9 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'ownerId is required' })
       }
 
+      const ownerIdBigInt = BigInt(ownerId as string)
       const properties = await prisma.property.findMany({
         where: {
-          ownerId: ownerId as string,
+          ownerId: ownerIdBigInt,
         },
         include: {
           units: true,
@@ -60,9 +61,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Missing required fields' })
       }
 
+      // Convert ownerId string to BigInt
+      const ownerIdBigInt = BigInt(ownerId)
+
       const property = await prisma.property.create({
         data: {
-          ownerId,
+          ownerId: ownerIdBigInt,
           name,
           type,
           address,

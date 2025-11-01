@@ -10,9 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'ownerId is required' })
       }
 
+      const ownerIdBigInt = BigInt(ownerId as string)
       const contracts = await prisma.contract.findMany({
         where: {
-          ownerId: ownerId as string,
+          ownerId: ownerIdBigInt,
           ...(status && { status: status as string }),
         },
         include: {
@@ -68,11 +69,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Missing required fields' })
       }
 
+      const ownerIdBigInt = BigInt(ownerId)
       const contract = await prisma.contract.create({
         data: {
           propertyId,
           unitId: unitId || null,
-          ownerId,
+          ownerId: ownerIdBigInt,
           tenantName,
           tenantEmail,
           tenantPhone,

@@ -498,3 +498,15 @@
     align-self: flex-end;
   }
 }
+
+/* Error Message */
+.errorMessage {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
+  text-align: center;
+}

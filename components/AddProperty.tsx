@@ -120,7 +120,7 @@ export default function AddProperty() {
         throw new Error('Failed to get owner information')
       }
       const owner = await ownerResponse.json()
-      const ownerId = owner.id
+      const ownerId = owner.id // This is now a string representation of BigInt
       
       // Build address string
       const address = `${formData.streetName}${formData.unitNumber ? `, ${formData.unitNumber}` : ''}${formData.postalCode ? `, ${formData.postalCode}` : ''}`

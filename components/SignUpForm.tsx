@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import styles from '../styles/SignUpForm.module.css'
 
 export default function SignUpForm() {
@@ -8,6 +9,7 @@ export default function SignUpForm() {
     firstName: '',
     lastName: '',
     email: '',
+    nationalId: '',
     mobile: '',
     city: '',
     neighborhood: '',
@@ -71,10 +73,86 @@ export default function SignUpForm() {
     setCurrentStep(1)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Handle form submission here
+    setError(null)
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('كلمات المرور غير متطابقة')
+      return
+    }
+
+    // Validate required fields
+    if (!formData.nationalId) {
+      setError('رقم الهوية الوطنية مطلوب')
+      return
+    }
+
+    if (!formData.mobile) {
+      setError('رقم الجوال مطلوب')
+      return
+    }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل')
+      return
+    }
+
+    // Check terms accepted
+    if (!formData.termsAccepted) {
+      setError('يجب الموافقة على الشروط والأحكام')
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      // Build phone with country code (remove leading 0 if exists)
+      const phone = formData.mobile ? `966${formData.mobile.replace(/^0+/, '')}` : null
+
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          nationalId: formData.nationalId,
+          phone: phone,
+          password: formData.password,
+          userType: selectedUserType,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'حدث خطأ أثناء إنشاء الحساب')
+      }
+
+      // Success - redirect based on user type
+      const userTypeMap: { [key: string]: string } = {
+        'مالك عقار': '/owner/dashboard',
+        'مستأجر': '/', // TODO: Add tenant dashboard
+        'مزود خدمة': '/', // TODO: Add service provider dashboard
+        'مدير عقارات': '/', // TODO: Add property manager dashboard
+      }
+
+      const redirectPath = userTypeMap[selectedUserType] || '/'
+      router.push(redirectPath)
+    } catch (error: any) {
+      console.error('Error creating account:', error)
+      setError(error.message || 'حدث خطأ أثناء إنشاء الحساب. يرجى المحاولة مرة أخرى.')
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -200,6 +278,22 @@ export default function SignUpForm() {
                     required
                   />
                 </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>رقم الهوية الوطنية</label>
+                  <input
+                    type="text"
+                    name="nationalId"
+                    value={formData.nationalId}
+                    onChange={handleInputChange}
+                    placeholder="1234567890"
+                    className={styles.fieldInput}
+                    maxLength={20}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
                   <label className={styles.fieldLabel}>رقم الجوال</label>
                   <div className={styles.mobileInput}>
@@ -385,10 +479,27 @@ export default function SignUpForm() {
               </label>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div className={styles.errorMessage}>
+                {error}
+              </div>
+            )}
+
             {/* Submit Button */}
-            <button type="submit" className={styles.submitButton}>
-              <span className={styles.submitIcon}>←</span>
-              انشاء
+            <button 
+              type="submit" 
+              className={styles.submitButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                'جاري الإنشاء...'
+              ) : (
+                <>
+                  <span className={styles.submitIcon}>←</span>
+                  انشاء
+                </>
+              )}
             </button>
           </form>
         )}

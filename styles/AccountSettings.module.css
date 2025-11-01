@@ -844,3 +844,32 @@ input:checked + .slider:before {
 .cancelBtn:hover {
   background: var(--color-border);
 }
+
+/* Messages */
+.successMessage {
+  background: #d1fae5;
+  color: #065f46;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
+}
+
+.errorMessage {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
+}
+
+.loadingMessage {
+  text-align: center;
+  padding: var(--spacing-3xl);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  font-family: var(--font-family-primary);
+}

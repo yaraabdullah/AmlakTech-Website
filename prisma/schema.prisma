@@ -6,32 +6,47 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id                String    @id @default(cuid())
-  email             String    @unique
-  firstName         String
-  lastName          String
-  phone             String?
-  address           String?
-  password          String
-  userType          String    // "مالك عقار", "مستأجر", "مزود خدمة", "مدير عقارات"
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+// Users Model - matches Supabase table structure
+model Users {
+  id              BigInt    @id @default(autoincrement())
+  first_name      String    @db.VarChar(100)
+  last_name       String    @db.VarChar(100)
+  email           String    @unique @db.VarChar(255)
+  phone_number    String    @unique @db.VarChar(20)
+  password_hash   String    @db.Text
+  national_id     String    @unique @db.VarChar(20)
+  user_type       String    @db.Text // 'owner', 'tenant', 'service_provider', 'property_manager'
+  profile_image   String?   @db.Text
+  is_verified     Boolean   @default(false)
+  last_login      DateTime? @db.Timestamptz
+  created_at      DateTime  @default(now()) @db.Timestamptz
+  updated_at      DateTime  @updatedAt @db.Timestamptz
   
-  properties        Property[]
-  contracts         Contract[]
-  maintenanceRequests MaintenanceRequest[]
-  payments          Payment[]
+  // Owner relationships (only for owners)
+  owner_properties        Property[]          @relation("OwnerProperties")
+  owner_contracts         Contract[]          @relation("OwnerContracts")
+  owner_maintenanceRequests MaintenanceRequest[] @relation("OwnerMaintenance")
+  owner_payments          Payment[]           @relation("OwnerPayments")
+  
+  @@map("users")
+  @@index([email])
+  @@index([phone_number])
+  @@index([national_id])
+  @@index([user_type])
 }
+
+// Legacy Owner model kept for backward compatibility - will map to Users table
+// For now, using direct Users table
 
 model Property {
   id                String    @id @default(cuid())
-  ownerId           String
-  owner             User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId           BigInt    @map("owner_id")
+  owner             Users     @relation("OwnerProperties", fields: [ownerId], references: [id], onDelete: Cascade)
   
   name              String
   type              String    // شقة، منزل، فيلا، مكتب، متجر، أرض
@@ -81,8 +96,8 @@ model Contract {
   property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   unitId           String?
   unit             Unit?     @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  ownerId          String
-  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId          BigInt
+  owner            Users     @relation("OwnerContracts", fields: [ownerId], references: [id], onDelete: Cascade)
   
   tenantName       String
   tenantEmail      String?
@@ -110,8 +125,8 @@ model MaintenanceRequest {
   id                String    @id @default(cuid())
   propertyId       String
   property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  ownerId          String
-  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId          BigInt
+  owner            Users     @relation("OwnerMaintenance", fields: [ownerId], references: [id], onDelete: Cascade)
   
   unit             String?
   type             String    // كهربائي، سباكة، تكييف، عام
@@ -138,8 +153,8 @@ model Payment {
   id                String    @id @default(cuid())
   contractId       String?
   contract         Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
-  ownerId          String
-  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId          BigInt
+  owner            Users     @relation("OwnerPayments", fields: [ownerId], references: [id], onDelete: Cascade)
   
   type             String    // إيجار، صيانة، أخرى
   amount           Float

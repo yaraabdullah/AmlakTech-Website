@@ -13,9 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'ownerId is required' })
     }
 
+    const ownerIdBigInt = BigInt(ownerId as string)
+    
     // Get all properties
     const properties = await prisma.property.findMany({
-      where: { ownerId: ownerId as string },
+      where: { ownerId: ownerIdBigInt },
       include: {
         units: true,
         contracts: {
@@ -26,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get all contracts
     const contracts = await prisma.contract.findMany({
-      where: { ownerId: ownerId as string },
+      where: { ownerId: ownerIdBigInt },
     })
 
     // Get active contracts
@@ -34,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get payments
     const payments = await prisma.payment.findMany({
-      where: { ownerId: ownerId as string },
+      where: { ownerId: ownerIdBigInt },
       include: {
         contract: true,
       },
@@ -42,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get maintenance requests
     const maintenance = await prisma.maintenanceRequest.findMany({
-      where: { ownerId: ownerId as string },
+      where: { ownerId: ownerIdBigInt },
       include: {
         property: true,
       },

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -9,18 +9,20 @@ import styles from '../styles/AccountSettings.module.css'
 export default function AccountSettings() {
   const [activeSection, setActiveSection] = useState('personal')
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
   
-  const handleLogout = () => {
-    // In a real app, this would clear authentication state
-    router.push('/')
-  }
   const [formData, setFormData] = useState({
     // Personal Information
-    firstName: 'أحمد',
-    lastName: 'الغامدي',
-    email: 'ahmed@example.com',
-    phone: '966501234567',
-    address: 'الرياض، المملكة العربية السعودية',
+    firstName: '',
+    lastName: '',
+    email: '',
+    nationalId: '',
+    phone: '',
+    address: '',
     
     // Security
     currentPassword: '',
@@ -60,6 +62,40 @@ export default function AccountSettings() {
     { id: 'logout', title: 'تسجيل الخروج', active: activeSection === 'logout' }
   ]
 
+  useEffect(() => {
+    fetchUserData()
+  }, [])
+
+  const fetchUserData = async () => {
+    try {
+      // Get owner ID
+      const ownerResponse = await fetch('/api/user/get-owner-id')
+      if (ownerResponse.ok) {
+        const owner = await ownerResponse.json()
+        setUserId(owner.id)
+        
+        // Fetch full user data
+        const userResponse = await fetch(`/api/user/${owner.id}`)
+        if (userResponse.ok) {
+          const userData = await userResponse.json()
+          setFormData(prev => ({
+            ...prev,
+            firstName: userData.firstName || '',
+            lastName: userData.lastName || '',
+            email: userData.email || '',
+            nationalId: userData.nationalId || '',
+            phone: userData.phone || '',
+            address: userData.address || '',
+          }))
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
     setFormData(prev => ({
@@ -68,10 +104,89 @@ export default function AccountSettings() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent, section: string) => {
+  const handleSubmit = async (e: React.FormEvent, section: string) => {
     e.preventDefault()
-    console.log(`${section} updated:`, formData)
-    // Handle form submission here
+    setSuccessMessage(null)
+    setErrorMessage(null)
+    setSaving(true)
+
+    try {
+      if (section === 'personal') {
+        // Update personal information
+        const response = await fetch('/api/user/update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            nationalId: formData.nationalId || null,
+            phone: formData.phone,
+            address: formData.address,
+          }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'فشل تحديث المعلومات')
+        }
+
+        setSuccessMessage('تم تحديث المعلومات الشخصية بنجاح')
+      } else if (section === 'security') {
+        // Update password
+        if (formData.newPassword !== formData.confirmPassword) {
+          setErrorMessage('كلمات المرور غير متطابقة')
+          setSaving(false)
+          return
+        }
+
+        if (!formData.currentPassword) {
+          setErrorMessage('يجب إدخال كلمة المرور الحالية')
+          setSaving(false)
+          return
+        }
+
+        const response = await fetch('/api/user/update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            newPassword: formData.newPassword,
+            currentPassword: formData.currentPassword,
+          }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'فشل تحديث كلمة المرور')
+        }
+
+        setSuccessMessage('تم تحديث كلمة المرور بنجاح')
+        setFormData(prev => ({
+          ...prev,
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        }))
+      }
+    } catch (error: any) {
+      console.error(`Error updating ${section}:`, error)
+      setErrorMessage(error.message || 'حدث خطأ أثناء الحفظ')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleLogout = () => {
+    // In a real app, this would clear authentication state
+    router.push('/')
   }
 
   const removePaymentMethod = (id: number) => {
@@ -134,6 +249,10 @@ export default function AccountSettings() {
 
             {/* Main Content Area */}
             <div className={styles.contentArea}>
+              {loading ? (
+                <div className={styles.loadingMessage}>جاري التحميل...</div>
+              ) : (
+                <>
               {/* Personal Information Section */}
               {activeSection === 'personal' && (
                 <div className={styles.section}>
@@ -186,6 +305,19 @@ export default function AccountSettings() {
                       </div>
                       
                       <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>رقم الهوية الوطنية</label>
+                        <input
+                          type="text"
+                          name="nationalId"
+                          value={formData.nationalId}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="1234567890"
+                          maxLength={10}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>رقم الهاتف</label>
                         <input
                           type="tel"
@@ -208,8 +340,20 @@ export default function AccountSettings() {
                       </div>
                     </div>
 
-                    <button type="submit" className={styles.saveBtn}>
-                      حفظ التغييرات
+                    {/* Messages */}
+                    {successMessage && activeSection === 'personal' && (
+                      <div className={styles.successMessage}>{successMessage}</div>
+                    )}
+                    {errorMessage && activeSection === 'personal' && (
+                      <div className={styles.errorMessage}>{errorMessage}</div>
+                    )}
+
+                    <button 
+                      type="submit" 
+                      className={styles.saveBtn}
+                      disabled={saving || loading}
+                    >
+                      {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
                     </button>
                   </form>
                 </div>
@@ -221,6 +365,20 @@ export default function AccountSettings() {
                   <h2 className={styles.sectionTitle}>الأمان وكلمة المرور</h2>
                   
                   <form onSubmit={(e) => handleSubmit(e, 'security')} className={styles.form}>
+                    <div className={styles.formGrid}>
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>كلمة المرور الحالية</label>
+                        <input
+                          type="password"
+                          name="currentPassword"
+                          value={formData.currentPassword}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="••••••••"
+                        />
+                      </div>
+                    </div>
+                    
                     <div className={styles.formGrid}>
                       <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>كلمة المرور الجديدة</label>
@@ -272,8 +430,20 @@ export default function AccountSettings() {
                       </div>
                     </div>
 
-                    <button type="submit" className={styles.saveBtn}>
-                      تحديث كلمة المرور
+                    {/* Messages */}
+                    {successMessage && activeSection === 'security' && (
+                      <div className={styles.successMessage}>{successMessage}</div>
+                    )}
+                    {errorMessage && activeSection === 'security' && (
+                      <div className={styles.errorMessage}>{errorMessage}</div>
+                    )}
+
+                    <button 
+                      type="submit" 
+                      className={styles.saveBtn}
+                      disabled={saving || loading}
+                    >
+                      {saving ? 'جاري التحديث...' : 'تحديث كلمة المرور'}
                     </button>
                   </form>
                 </div>
@@ -499,6 +669,8 @@ export default function AccountSettings() {
                     </div>
                   </div>
                 </div>
+              )}
+              </>
               )}
             </div>
           </div>

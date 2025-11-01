@@ -7,25 +7,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Get the first owner user (for demo purposes)
-    // In production, this would come from authentication
-    const owner = await prisma.user.findFirst({
+    // Get the first owner (for demo purposes)
+    // In production, this would come from authentication/session
+    const user = await prisma.users.findFirst({
       where: {
-        userType: 'مالك عقار',
+        user_type: 'owner',
       },
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
+        first_name: true,
+        last_name: true,
         email: true,
+      },
+      orderBy: {
+        created_at: 'desc',
       },
     })
 
-    if (!owner) {
+    if (!user) {
       return res.status(404).json({ error: 'No owner found' })
     }
 
-    return res.status(200).json(owner)
+    // Map to camelCase for frontend
+    return res.status(200).json({
+      id: user.id.toString(),
+      firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
+    })
   } catch (error) {
     console.error('Error fetching owner:', error)
     return res.status(500).json({ error: 'Failed to fetch owner' })
