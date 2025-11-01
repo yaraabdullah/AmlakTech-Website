@@ -15,7 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email,
       nationalId,
       phone,
-      address,
+      city,
+      neighborhood,
+      postalCode,
       newPassword,
       currentPassword,
     } = req.body
@@ -101,6 +103,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       updateData.phone_number = phone || null
     }
+    if (city !== undefined) updateData.city = city || null
+    if (neighborhood !== undefined) updateData.neighborhood = neighborhood || null
+    if (postalCode !== undefined) updateData.postal_code = postalCode || null
     if (newPassword) {
       updateData.password_hash = await bcrypt.hash(newPassword, 10)
     }
@@ -116,6 +121,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         national_id: true,
         phone_number: true,
         user_type: true,
+        city: true,
+        neighborhood: true,
+        postal_code: true,
         updated_at: true,
       },
     })
@@ -131,6 +139,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         nationalId: updatedUser.national_id,
         phone: updatedUser.phone_number,
         userType: updatedUser.user_type,
+        city: updatedUser.city,
+        neighborhood: updatedUser.neighborhood,
+        postalCode: updatedUser.postal_code,
         updatedAt: updatedUser.updated_at,
       },
     })

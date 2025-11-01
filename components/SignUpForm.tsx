@@ -129,6 +129,9 @@ export default function SignUpForm() {
           phone: phone,
           password: formData.password,
           userType: selectedUserType,
+          city: formData.city,
+          neighborhood: formData.neighborhood,
+          postalCode: formData.postalCode,
         }),
       })
 

@@ -16,6 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       phone,
       password,
       userType,
+      city,
+      neighborhood,
+      postalCode,
     } = req.body
 
     // Validate required fields
@@ -84,6 +87,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         password_hash: passwordHash,
         national_id: nationalId,
         user_type: dbUserType,
+        city: city || null,
+        neighborhood: neighborhood || null,
+        postal_code: postalCode || null,
         is_verified: false,
       },
       select: {
@@ -94,6 +100,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         phone_number: true,
         national_id: true,
         user_type: true,
+        city: true,
+        neighborhood: true,
+        postal_code: true,
         is_verified: true,
         created_at: true,
       },
@@ -108,6 +117,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       phone: user.phone_number,
       nationalId: user.national_id,
       userType: user.user_type,
+      city: user.city,
+      neighborhood: user.neighborhood,
+      postalCode: user.postal_code,
       isVerified: user.is_verified,
       createdAt: user.created_at,
     }

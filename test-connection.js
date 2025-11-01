@@ -41,15 +41,31 @@ async function testConnection() {
       console.log('   ✅ This is normal if you haven\'t created any accounts yet\n');
     }
     
-    // Test 3: Try a simple query
+    // Test 3: Try a simple query with new fields
     const testQuery = await prisma.users.findFirst({
       where: {
         user_type: 'owner',
       },
+      select: {
+        id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        city: true,
+        neighborhood: true,
+        postal_code: true,
+      },
     });
     
     if (testQuery) {
-      console.log(`✅ Query test successful (found owner user)\n`);
+      console.log(`✅ Query test successful (found owner user)`);
+      if (testQuery.city || testQuery.neighborhood || testQuery.postal_code) {
+        console.log(`   City: ${testQuery.city || 'Not set'}`);
+        console.log(`   Neighborhood: ${testQuery.neighborhood || 'Not set'}`);
+        console.log(`   Postal Code: ${testQuery.postal_code || 'Not set'}\n`);
+      } else {
+        console.log(`   Location fields available but not set yet\n`);
+      }
     }
     
     console.log('🎉 All tests passed!');

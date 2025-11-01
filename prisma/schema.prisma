@@ -11,6 +11,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+
 // Users Model - matches Supabase table structure
 model Users {
   id              BigInt    @id @default(autoincrement())
@@ -21,6 +22,9 @@ model Users {
   password_hash   String    @db.Text
   national_id     String    @unique @db.VarChar(20)
   user_type       String    @db.Text // 'owner', 'tenant', 'service_provider', 'property_manager'
+  city            String?   @db.VarChar(100)
+  neighborhood    String?   @db.VarChar(100)
+  postal_code     String?   @db.VarChar(20)
   profile_image   String?   @db.Text
   is_verified     Boolean   @default(false)
   last_login      DateTime? @db.Timestamptz
