@@ -49,11 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               },
             },
           },
-          payments: {
-            orderBy: {
-              dueDate: 'desc',
-            },
-          },
+          // payments: {
+          //   orderBy: {
+          //     dueDate: 'desc',
+          //   },
+          // },
         },
         orderBy: {
           createdAt: 'desc',
