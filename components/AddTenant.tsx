@@ -10,6 +10,8 @@ export default function AddTenant() {
   const [loading, setLoading] = useState(false)
   const [properties, setProperties] = useState<any[]>([])
   const [ownerId, setOwnerId] = useState<string | null>(null)
+  const [propertyData, setPropertyData] = useState<any>(null)
+  const [loadingProperty, setLoadingProperty] = useState(false)
   
   const [formData, setFormData] = useState({
     propertyId: propertyId as string || '',
@@ -58,12 +60,45 @@ export default function AddTenant() {
     fetchOwnerId()
   }, [])
 
-  // Set property ID from query parameter
+  // Set property ID from query parameter and fetch property data
   useEffect(() => {
     if (propertyId && typeof propertyId === 'string') {
       setFormData(prev => ({ ...prev, propertyId: propertyId as string }))
+      fetchPropertyData(propertyId as string)
     }
   }, [propertyId])
+
+  // Fetch property data from database
+  const fetchPropertyData = async (propId: string) => {
+    if (!propId) return
+    
+    try {
+      setLoadingProperty(true)
+      const response = await fetch(`/api/properties/${propId}`)
+      
+      if (response.ok) {
+        const property = await response.json()
+        setPropertyData(property)
+        
+        // Auto-fill form fields with property data
+        setFormData(prev => ({
+          ...prev,
+          // Auto-fill monthly rent if available
+          monthlyRent: property.monthlyRent ? property.monthlyRent.toString() : prev.monthlyRent,
+          // Set contract type based on property type
+          contractType: property.type === 'متجر' || property.type === 'مكتب' ? 'إيجار تجاري' : 'إيجار سكني',
+          // Set start date to availableFrom if available
+          startDate: property.availableFrom ? property.availableFrom.split('T')[0] : prev.startDate,
+        }))
+      } else {
+        console.error('Failed to fetch property data')
+      }
+    } catch (error) {
+      console.error('Error fetching property data:', error)
+    } finally {
+      setLoadingProperty(false)
+    }
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -194,8 +229,16 @@ export default function AddTenant() {
         <div className={styles.container}>
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>إضافة مستأجر جديد</h1>
-            <p className={styles.pageDescription}>أضف مستأجراً جديداً وأنشئ عقد إيجار له</p>
+            <p className={styles.pageDescription}>
+              {propertyData 
+                ? `إضافة مستأجر لعقار: ${propertyData.name || propertyData.address || 'العقار المحدد'}`
+                : 'أضف مستأجراً جديداً وأنشئ عقد إيجار له'}
+            </p>
           </div>
+
+          {loadingProperty && (
+            <div className={styles.loadingMessage}>جاري تحميل بيانات العقار...</div>
+          )}
 
           <form onSubmit={handleSubmit} className={styles.tenantForm}>
             {/* Tenant Information */}
@@ -395,11 +438,16 @@ export default function AddTenant() {
                     value={formData.monthlyRent}
                     onChange={handleInputChange}
                     className={styles.input}
-                    placeholder="0"
+                    placeholder={propertyData?.monthlyRent ? propertyData.monthlyRent.toString() : "0"}
                     min="0"
                     step="0.01"
                     required
                   />
+                  {propertyData?.monthlyRent && (
+                    <small className={styles.hint}>
+                      (من بيانات العقار: {propertyData.monthlyRent} ريال)
+                    </small>
+                  )}
                 </div>
               </div>
               <div className={styles.formRow}>

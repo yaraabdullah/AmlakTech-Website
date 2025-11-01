@@ -36,6 +36,16 @@
   color: var(--color-text-secondary);
 }
 
+.loadingMessage {
+  text-align: center;
+  padding: 1rem;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 1.5rem;
+  font-size: var(--font-size-base);
+}
+
 .tenantForm {
   background: white;
   border-radius: var(--border-radius-lg);
@@ -113,6 +123,14 @@
 
 .input::placeholder {
   color: var(--color-text-secondary);
+}
+
+.hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
 }
 
 .select {
