@@ -303,7 +303,17 @@ export default function PropertyDetails() {
               >
                 تعديل العقار
               </button>
-              <button className={styles.addTenantBtn}>
+              <button 
+                className={styles.addTenantBtn}
+                onClick={() => {
+                  const propertyToUse = selectedProperty || properties[0]
+                  if (propertyToUse?.id) {
+                    router.push(`/owner/add-tenant?propertyId=${propertyToUse.id}`)
+                  } else {
+                    router.push('/owner/add-tenant')
+                  }
+                }}
+              >
                 <span className={styles.addIcon}>+</span>
                 إضافة مستأجر
               </button>

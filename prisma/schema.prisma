@@ -11,200 +11,241 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-
 // Users Model - matches Supabase table structure
 model Users {
-  id              BigInt    @id @default(autoincrement())
-  first_name      String    @db.VarChar(100)
-  last_name       String    @db.VarChar(100)
-  email           String    @unique @db.VarChar(255)
-  phone_number    String    @unique @db.VarChar(20)
-  password_hash   String    @db.Text
-  national_id     String    @unique @db.VarChar(20)
-  user_type       String    @db.Text // 'owner', 'tenant', 'service_provider', 'property_manager'
-  city            String?   @db.VarChar(100)
-  neighborhood    String?   @db.VarChar(100)
-  postal_code     String?   @db.VarChar(20)
-  profile_image   String?   @db.Text
-  is_verified     Boolean   @default(false)
-  last_login      DateTime? @db.Timestamptz
-  created_at      DateTime  @default(now()) @db.Timestamptz
-  updated_at      DateTime  @updatedAt @db.Timestamptz
-  
+  id            BigInt    @id @default(autoincrement())
+  first_name    String    @db.VarChar(100)
+  last_name     String    @db.VarChar(100)
+  email         String    @unique @db.VarChar(255)
+  phone_number  String    @unique @db.VarChar(20)
+  password_hash String    @db.Text
+  national_id   String    @unique @db.VarChar(20)
+  user_type     String    @db.Text // 'owner', 'tenant', 'service_provider', 'property_manager'
+  city          String?   @db.VarChar(100)
+  neighborhood  String?   @db.VarChar(100)
+  postal_code   String?   @db.VarChar(20)
+  profile_image String?   @db.Text
+  is_verified   Boolean   @default(false)
+  last_login    DateTime? @db.Timestamptz
+  created_at    DateTime  @default(now()) @db.Timestamptz
+  updated_at    DateTime  @updatedAt @db.Timestamptz
+
   // Owner relationships (only for owners)
-  owner_properties        Property[]          @relation("OwnerProperties")
-  owner_contracts         Contract[]          @relation("OwnerContracts")
+  owner_properties          Property[]           @relation("OwnerProperties")
+  owner_contracts           Contract[]           @relation("OwnerContracts")
   owner_maintenanceRequests MaintenanceRequest[] @relation("OwnerMaintenance")
-  owner_payments          Payment[]           @relation("OwnerPayments")
-  
-  @@map("users")
+  owner_payments            Payment[]            @relation("OwnerPayments")
+
+  // Tenant relationship (if user is also a tenant)
+  tenant_profile Tenant? @relation("TenantUser")
+
   @@index([email])
   @@index([phone_number])
   @@index([national_id])
   @@index([user_type])
+  @@map("users")
 }
 
 // Legacy Owner model kept for backward compatibility - will map to Users table
 // For now, using direct Users table
 
 model Property {
-  id                String    @id @default(cuid())
-  ownerId           BigInt    @map("owner_id")
-  owner             Users     @relation("OwnerProperties", fields: [ownerId], references: [id], onDelete: Cascade)
-  
-  name              String
-  type              String    // شقة، منزل، فيلا، مكتب، متجر، أرض
-  address           String
-  city              String
-  area              Float?    // المساحة بالمتر المربع
-  rooms             String?   // عدد الغرف
-  bathrooms         String?   // عدد الحمامات
-  constructionYear  String?   @map("construction_year")
-  status            String    @default("متاح") // متاح، مؤجر، صيانة
-  
+  id      String @id @default(cuid())
+  ownerId BigInt @map("owner_id")
+  owner   Users  @relation("OwnerProperties", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  name             String
+  type             String // شقة، منزل، فيلا، مكتب، متجر، أرض
+  address          String
+  city             String
+  area             Float? // المساحة بالمتر المربع
+  rooms            String? // عدد الغرف
+  bathrooms        String? // عدد الحمامات
+  constructionYear String? @map("construction_year")
+  status           String  @default("متاح") // متاح، مؤجر، صيانة
+
   // Location details
-  unitNumber        String?   @map("unit_number")
-  postalCode        String?   @map("postal_code")
-  country           String?   @default("المملكة العربية السعودية")
-  
+  unitNumber String? @map("unit_number")
+  postalCode String? @map("postal_code")
+  country    String? @default("المملكة العربية السعودية")
+
   // Property subtype (for apartments)
-  propertySubType   String?   @map("property_sub_type")
-  
+  propertySubType String? @map("property_sub_type")
+
   // Features (stored as JSON)
-  features          String?   // JSON: parking, garden, balcony, pool, elevator, gym, security, wifi, ac, jacuzzi
-  
+  features String? // JSON: parking, garden, balcony, pool, elevator, gym, security, wifi, ac, jacuzzi
+
   // Pricing
-  monthlyRent       Float?    @map("monthly_rent")
-  insurance         Float?
-  availableFrom     DateTime? @map("available_from")
-  minRentalPeriod   String?   @map("min_rental_period")
-  publicDisplay     Boolean   @default(false) @map("public_display")
-  
+  monthlyRent     Float?    @map("monthly_rent")
+  insurance       Float?
+  availableFrom   DateTime? @map("available_from")
+  minRentalPeriod String?   @map("min_rental_period")
+  publicDisplay   Boolean   @default(false) @map("public_display")
+
   // Payment system
-  paymentEmail      String?   @map("payment_email")
-  supportPhone      String?   @map("support_phone")
-  paymentAccount    String?   @map("payment_account")
-  
+  paymentEmail   String? @map("payment_email")
+  supportPhone   String? @map("support_phone")
+  paymentAccount String? @map("payment_account")
+
   // Additional details
-  description       String?
-  images            String?   // JSON array of image URLs
-  
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
-  
-  units             Unit[]
-  contracts         Contract[]
+  description String?
+  images      String? // JSON array of image URLs
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  units               Unit[]
+  contracts           Contract[]
   maintenanceRequests MaintenanceRequest[]
-  
-  @@map("properties")
+
   @@index([ownerId])
+  @@map("properties")
 }
 
 model Unit {
-  id                String    @id @default(cuid())
-  propertyId       String    @map("property_id")
-  property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  
-  unitNumber        String    @map("unit_number")
-  type             String?   // استوديو، 1 bedroom, etc.
-  area             Float?
-  status           String    @default("متاح") // متاح، مؤجر
-  
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  
-  contracts        Contract[]
-  
-  @@map("units")
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  unitNumber String  @map("unit_number")
+  type       String? // استوديو، 1 bedroom, etc.
+  area       Float?
+  status     String  @default("متاح") // متاح، مؤجر
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  contracts Contract[]
+
   @@index([propertyId])
+  @@map("units")
+}
+
+model Tenant {
+  id     String  @id @default(cuid())
+  userId BigInt? @unique @map("user_id") // Optional: if tenant has an account
+  user   Users?  @relation("TenantUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  // Basic information
+  firstName   String  @map("first_name")
+  lastName    String  @map("last_name")
+  email       String? @unique
+  phoneNumber String  @unique @map("phone_number")
+  nationalId  String? @unique @map("national_id")
+
+  // Additional information
+  city             String?
+  address          String?
+  emergencyContact String? @map("emergency_contact")
+  emergencyPhone   String? @map("emergency_phone")
+
+  // Status
+  status String  @default("نشط") // نشط، غير نشط
+  notes  String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  contracts Contract[]
+
+  @@index([userId])
+  @@index([email])
+  @@index([phoneNumber])
+  @@index([nationalId])
+  @@map("tenants")
 }
 
 model Contract {
-  id                String    @id @default(cuid())
-  propertyId       String    @map("property_id")
-  property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  unitId           String?   @map("unit_id")
-  unit             Unit?     @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  ownerId          BigInt    @map("owner_id")
-  owner            Users     @relation("OwnerContracts", fields: [ownerId], references: [id], onDelete: Cascade)
-  
-  tenantName       String    @map("tenant_name")
-  tenantEmail      String?   @map("tenant_email")
-  tenantPhone      String?   @map("tenant_phone")
-  
-  type             String    // إيجار سكني، إيجار تجاري، بيع
-  startDate        DateTime  @map("start_date")
-  endDate          DateTime  @map("end_date")
-  monthlyRent      Float     @map("monthly_rent")
-  deposit          Float?
-  
-  status           String    @default("نشط") // نشط، منتهي، معلق
-  notes            String?
-  
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  
-  payments         Payment[]
-  
-  @@map("contracts")
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  unitId     String?  @map("unit_id")
+  unit       Unit?    @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  ownerId    BigInt   @map("owner_id")
+  owner      Users    @relation("OwnerContracts", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  tenantId String? @map("tenant_id")
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+
+  // Legacy fields (for backward compatibility)
+  tenantName  String? @map("tenant_name")
+  tenantEmail String? @map("tenant_email")
+  tenantPhone String? @map("tenant_phone")
+
+  type        String // إيجار سكني، إيجار تجاري، بيع
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  monthlyRent Float    @map("monthly_rent")
+  deposit     Float?
+
+  status String  @default("نشط") // نشط، منتهي، معلق
+  notes  String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  payments Payment[]
+
   @@index([propertyId])
   @@index([ownerId])
+  @@index([tenantId])
+  @@map("contracts")
 }
 
 model MaintenanceRequest {
-  id                String    @id @default(cuid())
-  propertyId       String    @map("property_id")
-  property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  ownerId          BigInt    @map("owner_id")
-  owner            Users     @relation("OwnerMaintenance", fields: [ownerId], references: [id], onDelete: Cascade)
-  
-  unit             String?
-  type             String    // كهربائي، سباكة، تكييف، عام
-  priority         String    @default("medium") // low, medium, high, urgent
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  ownerId    BigInt   @map("owner_id")
+  owner      Users    @relation("OwnerMaintenance", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  unit               String?
+  type               String // كهربائي، سباكة، تكييف، عام
+  priority           String  @default("medium") // low, medium, high, urgent
   problemDescription String  @map("problem_description")
-  
-  contactName      String?   @map("contact_name")
-  contactPhone     String?   @map("contact_phone")
-  notifyTenant     Boolean   @default(false) @map("notify_tenant")
-  scheduledDate    DateTime? @map("scheduled_date")
-  timePeriod       String?   @map("time_period") // morning, afternoon, evening
-  status           String    @default("قيد الانتظار") // قيد الانتظار، مجدولة، مكتملة، ملغاة
-  
-  cost             Float?
-  notes            String?
-  
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  
-  @@map("maintenance_requests")
+
+  contactName   String?   @map("contact_name")
+  contactPhone  String?   @map("contact_phone")
+  notifyTenant  Boolean   @default(false) @map("notify_tenant")
+  scheduledDate DateTime? @map("scheduled_date")
+  timePeriod    String?   @map("time_period") // morning, afternoon, evening
+  status        String    @default("قيد الانتظار") // قيد الانتظار، مجدولة، مكتملة، ملغاة
+
+  cost  Float?
+  notes String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@index([propertyId])
   @@index([ownerId])
   @@index([status])
+  @@map("maintenance_requests")
 }
 
 model Payment {
-  id                String    @id @default(cuid())
-  contractId       String?   @map("contract_id")
-  contract         Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
-  ownerId          BigInt    @map("owner_id")
-  owner            Users     @relation("OwnerPayments", fields: [ownerId], references: [id], onDelete: Cascade)
-  
-  type             String    // إيجار، صيانة، أخرى
-  amount           Float
-  dueDate          DateTime  @map("due_date")
-  paidDate         DateTime? @map("paid_date")
-  status           String    @default("مستحقة") // مستحقة، مدفوعة، متأخرة
-  
-  paymentMethod    String?   @map("payment_method")
-  notes            String?
-  
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  
-  @@map("payments")
+  id         String    @id @default(cuid())
+  contractId String?   @map("contract_id")
+  contract   Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  ownerId    BigInt    @map("owner_id")
+  owner      Users     @relation("OwnerPayments", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  type     String // إيجار، صيانة، أخرى
+  amount   Float
+  dueDate  DateTime  @map("due_date")
+  paidDate DateTime? @map("paid_date")
+  status   String    @default("مستحقة") // مستحقة، مدفوعة، متأخرة
+
+  paymentMethod String? @map("payment_method")
+  notes         String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@index([contractId])
   @@index([ownerId])
   @@index([status])
   @@index([dueDate])
+  @@map("payments")
 }
-
