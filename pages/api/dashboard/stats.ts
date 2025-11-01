@@ -26,29 +26,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     })
 
-    // Get all contracts
-    const contracts = await prisma.contract.findMany({
-      where: { ownerId: ownerIdBigInt },
-    })
+    // Get all contracts (handle case where table doesn't exist)
+    let contracts: any[] = []
+    try {
+      contracts = await prisma.contract.findMany({
+        where: { ownerId: ownerIdBigInt },
+      })
+    } catch (dbError: any) {
+      if (dbError.code === 'P2021') {
+        console.warn('Contracts table does not exist yet. Using empty array.')
+        contracts = []
+      } else {
+        throw dbError
+      }
+    }
 
     // Get active contracts
     const activeContracts = contracts.filter(c => c.status === 'نشط')
 
-    // Get payments
-    const payments = await prisma.payment.findMany({
-      where: { ownerId: ownerIdBigInt },
-      include: {
-        contract: true,
-      },
-    })
+    // Get payments (handle case where table doesn't exist)
+    let payments: any[] = []
+    try {
+      payments = await prisma.payment.findMany({
+        where: { ownerId: ownerIdBigInt },
+        include: {
+          contract: true,
+        },
+      })
+    } catch (dbError: any) {
+      if (dbError.code === 'P2021') {
+        console.warn('Payments table does not exist yet. Using empty array.')
+        payments = []
+      } else {
+        throw dbError
+      }
+    }
 
-    // Get maintenance requests
-    const maintenance = await prisma.maintenanceRequest.findMany({
-      where: { ownerId: ownerIdBigInt },
-      include: {
-        property: true,
-      },
-    })
+    // Get maintenance requests (handle case where table doesn't exist)
+    let maintenance: any[] = []
+    try {
+      maintenance = await prisma.maintenanceRequest.findMany({
+        where: { ownerId: ownerIdBigInt },
+        include: {
+          property: true,
+        },
+      })
+    } catch (dbError: any) {
+      if (dbError.code === 'P2021') {
+        console.warn('Maintenance requests table does not exist yet. Using empty array.')
+        maintenance = []
+      } else {
+        throw dbError
+      }
+    }
 
     // Calculate KPIs
     const totalProperties = properties.length

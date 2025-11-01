@@ -102,76 +102,79 @@ model Property {
 
 model Unit {
   id                String    @id @default(cuid())
-  propertyId       String
+  propertyId       String    @map("property_id")
   property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   
-  unitNumber        String
+  unitNumber        String    @map("unit_number")
   type             String?   // استوديو، 1 bedroom, etc.
   area             Float?
   status           String    @default("متاح") // متاح، مؤجر
   
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   
   contracts        Contract[]
   
+  @@map("units")
   @@index([propertyId])
 }
 
 model Contract {
   id                String    @id @default(cuid())
-  propertyId       String
+  propertyId       String    @map("property_id")
   property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  unitId           String?
+  unitId           String?   @map("unit_id")
   unit             Unit?     @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  ownerId          BigInt
+  ownerId          BigInt    @map("owner_id")
   owner            Users     @relation("OwnerContracts", fields: [ownerId], references: [id], onDelete: Cascade)
   
-  tenantName       String
-  tenantEmail      String?
-  tenantPhone      String?
+  tenantName       String    @map("tenant_name")
+  tenantEmail      String?   @map("tenant_email")
+  tenantPhone      String?   @map("tenant_phone")
   
   type             String    // إيجار سكني، إيجار تجاري، بيع
-  startDate        DateTime
-  endDate          DateTime
-  monthlyRent      Float
+  startDate        DateTime  @map("start_date")
+  endDate          DateTime  @map("end_date")
+  monthlyRent      Float     @map("monthly_rent")
   deposit          Float?
   
   status           String    @default("نشط") // نشط، منتهي، معلق
   notes            String?
   
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   
   payments         Payment[]
   
+  @@map("contracts")
   @@index([propertyId])
   @@index([ownerId])
 }
 
 model MaintenanceRequest {
   id                String    @id @default(cuid())
-  propertyId       String
+  propertyId       String    @map("property_id")
   property         Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  ownerId          BigInt
+  ownerId          BigInt    @map("owner_id")
   owner            Users     @relation("OwnerMaintenance", fields: [ownerId], references: [id], onDelete: Cascade)
   
   unit             String?
   type             String    // كهربائي، سباكة، تكييف، عام
   priority         String    @default("medium") // low, medium, high, urgent
-  problemDescription String
+  problemDescription String  @map("problem_description")
   
-  contactName      String?
-  contactPhone     String?
-  scheduledDate    DateTime?
+  contactName      String?   @map("contact_name")
+  contactPhone     String?   @map("contact_phone")
+  scheduledDate    DateTime? @map("scheduled_date")
   status           String    @default("قيد الانتظار") // قيد الانتظار، مجدولة، مكتملة، ملغاة
   
   cost             Float?
   notes            String?
   
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   
+  @@map("maintenance_requests")
   @@index([propertyId])
   @@index([ownerId])
   @@index([status])
@@ -179,23 +182,24 @@ model MaintenanceRequest {
 
 model Payment {
   id                String    @id @default(cuid())
-  contractId       String?
+  contractId       String?   @map("contract_id")
   contract         Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
-  ownerId          BigInt
+  ownerId          BigInt    @map("owner_id")
   owner            Users     @relation("OwnerPayments", fields: [ownerId], references: [id], onDelete: Cascade)
   
   type             String    // إيجار، صيانة، أخرى
   amount           Float
-  dueDate          DateTime
-  paidDate         DateTime?
+  dueDate          DateTime  @map("due_date")
+  paidDate         DateTime? @map("paid_date")
   status           String    @default("مستحقة") // مستحقة، مدفوعة، متأخرة
   
-  paymentMethod    String?
+  paymentMethod    String?   @map("payment_method")
   notes            String?
   
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   
+  @@map("payments")
   @@index([contractId])
   @@index([ownerId])
   @@index([status])

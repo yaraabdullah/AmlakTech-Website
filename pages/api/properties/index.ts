@@ -25,18 +25,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               phone_number: true,
             },
           },
-          units: true,
-          contracts: {
-            where: {
-              status: 'نشط',
-            },
-          },
-          _count: {
-            select: {
-              units: true,
-              maintenanceRequests: true,
-            },
-          },
+          // units: true,  // Comment out if units table doesn't exist
+          // contracts: {  // Comment out if contracts table doesn't exist
+          //   where: {
+          //     status: 'نشط',
+          //   },
+          // },
+          // _count: {  // Comment out if related tables don't exist
+          //   select: {
+          //     units: true,
+          //     maintenanceRequests: true,
+          //   },
+          // },
         },
         orderBy: {
           createdAt: 'desc',
@@ -135,7 +135,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               phone_number: true,
             },
           },
-          units: true,
+          // Don't include units if table doesn't exist yet
+          // units: true,
         },
       })
 

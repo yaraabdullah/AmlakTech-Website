@@ -11,27 +11,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const ownerIdBigInt = BigInt(ownerId as string)
-      const maintenance = await prisma.maintenanceRequest.findMany({
-        where: {
-          ownerId: ownerIdBigInt,
-          ...(status && { status: status as string }),
-          ...(propertyId && { propertyId: propertyId as string }),
-        },
-        include: {
-          property: {
-            select: {
-              id: true,
-              name: true,
-              address: true,
+      
+      try {
+        const maintenance = await prisma.maintenanceRequest.findMany({
+          where: {
+            ownerId: ownerIdBigInt,
+            ...(status && { status: status as string }),
+            ...(propertyId && { propertyId: propertyId as string }),
+          },
+          include: {
+            property: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+              },
             },
           },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      })
+          orderBy: {
+            createdAt: 'desc',
+          },
+        })
 
-      return res.status(200).json(maintenance)
+        return res.status(200).json(maintenance)
+      } catch (dbError: any) {
+        // If table doesn't exist, return empty array
+        if (dbError.code === 'P2021') {
+          console.warn('Maintenance requests table does not exist yet. Returning empty array.')
+          return res.status(200).json([])
+        }
+        throw dbError
+      }
     } catch (error) {
       console.error('Error fetching maintenance requests:', error)
       return res.status(500).json({ error: 'Failed to fetch maintenance requests' })
@@ -58,25 +68,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const ownerIdBigInt = BigInt(ownerId)
-      const maintenance = await prisma.maintenanceRequest.create({
-        data: {
-          propertyId,
-          ownerId: ownerIdBigInt,
-          unit,
-          type,
-          priority: priority || 'medium',
-          problemDescription,
-          contactName,
-          contactPhone,
-          scheduledDate: scheduledDate ? new Date(scheduledDate) : null,
-          status: scheduledDate ? 'مجدولة' : 'قيد الانتظار',
-        },
-        include: {
-          property: true,
-        },
-      })
+      
+      try {
+        const maintenance = await prisma.maintenanceRequest.create({
+          data: {
+            propertyId,
+            ownerId: ownerIdBigInt,
+            unit,
+            type,
+            priority: priority || 'medium',
+            problemDescription,
+            contactName,
+            contactPhone,
+            scheduledDate: scheduledDate ? new Date(scheduledDate) : null,
+            status: scheduledDate ? 'مجدولة' : 'قيد الانتظار',
+          },
+          include: {
+            property: true,
+          },
+        })
 
-      return res.status(201).json(maintenance)
+        return res.status(201).json(maintenance)
+      } catch (dbError: any) {
+        // If table doesn't exist, return error message
+        if (dbError.code === 'P2021') {
+          console.error('Maintenance requests table does not exist. Please create the table first.')
+          return res.status(503).json({ 
+            error: 'Maintenance requests table does not exist. Please run CREATE_ALL_TABLES.sql in Supabase.' 
+          })
+        }
+        throw dbError
+      }
     } catch (error) {
       console.error('Error creating maintenance request:', error)
       return res.status(500).json({ error: 'Failed to create maintenance request' })
