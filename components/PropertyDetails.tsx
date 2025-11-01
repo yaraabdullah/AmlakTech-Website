@@ -1,22 +1,96 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import OwnerNavigation from './OwnerNavigation'
 import Footer from './Footer'
 import styles from '../styles/PropertyDetails.module.css'
 
-export default function PropertyDetails() {
-  const [activeTab, setActiveTab] = useState('overview')
+interface Property {
+  id: string
+  name: string
+  type: string
+  address: string
+  city: string
+  area: number | null
+  rooms: string | null
+  bathrooms: string | null
+  monthlyRent: number | null
+  status: string
+  description: string | null
+  images: string | null
+  features: string | null
+  constructionYear: string | null
+  createdAt: string
+}
 
-  const propertyData = {
-    name: 'شقة الرياض الفاخرة',
-    location: 'في الترجس، الرياض المملكة العربية السعودية',
-    status: 'مؤجر',
-    type: 'شقة سكنية',
-    area: '120 متر مربع',
-    rooms: '3 غرف',
-    bathrooms: '2',
-    purchaseDate: '15 يناير 2022',
-    propertyValue: '750,000 ريال'
+export default function PropertyDetails() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [properties, setProperties] = useState<Property[]>([])
+  const [ownerId, setOwnerId] = useState<string | null>(null)
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
+
+  useEffect(() => {
+    fetchOwnerId()
+  }, [])
+
+  useEffect(() => {
+    if (ownerId) {
+      fetchProperties()
+    }
+  }, [ownerId])
+
+  const fetchOwnerId = async () => {
+    try {
+      // Try to get user ID from localStorage (from login)
+      if (typeof window !== 'undefined') {
+        const userId = localStorage.getItem('userId')
+        const userType = localStorage.getItem('userType')
+        
+        // Only allow owners to access this page
+        if (userId && userType === 'owner') {
+          setOwnerId(userId)
+          return
+        }
+      }
+
+      // Fallback: Get first owner (for demo/testing)
+      const response = await fetch('/api/user/get-owner-id')
+      if (response.ok) {
+        const owner = await response.json()
+        setOwnerId(owner.id)
+      } else {
+        // No user found, redirect to login
+        router.push('/login')
+      }
+    } catch (error) {
+      console.error('Error fetching owner ID:', error)
+      setLoading(false)
+      router.push('/login')
+    }
+  }
+
+  const fetchProperties = async () => {
+    if (!ownerId) return
+
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/properties?ownerId=${ownerId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setProperties(data)
+        // Auto-select first property if available
+        if (data.length > 0) {
+          setSelectedProperty(data[0])
+        }
+      } else {
+        console.error('Failed to fetch properties')
+      }
+    } catch (error) {
+      console.error('Error fetching properties:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const occupancyData = {
@@ -105,6 +179,47 @@ export default function PropertyDetails() {
     }
   ]
 
+  if (loading || !ownerId) {
+    return (
+      <div className={styles.propertyDetailsPage}>
+        <OwnerNavigation currentPage="property-details" />
+        <main className={styles.mainContent}>
+          <div className={styles.container}>
+            <p>جاري التحميل...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  if (properties.length === 0) {
+    return (
+      <div className={styles.propertyDetailsPage}>
+        <OwnerNavigation currentPage="property-details" />
+        <main className={styles.mainContent}>
+          <div className={styles.container}>
+            <div className={styles.emptyState}>
+              <h2>لا توجد عقارات</h2>
+              <p>لم تقم بإضافة أي عقارات بعد</p>
+              <Link href="/owner/add-property">
+                <button className={styles.addPropertyBtn}>
+                  إضافة عقار جديد
+                </button>
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  // Use selected property or first property
+  const propertyData = selectedProperty || properties[0]
+  const propertyImages = propertyData.images ? JSON.parse(propertyData.images) : []
+  const propertyFeatures = propertyData.features ? JSON.parse(propertyData.features) : {}
+
   return (
     <div className={styles.propertyDetailsPage}>
       {/* Header */}
@@ -112,13 +227,35 @@ export default function PropertyDetails() {
 
       {/* Main Content */}
       <main className={styles.mainContent}>
-        <div className={styles.container}>
-          {/* Property Header */}
-          <div className={styles.propertyHeader}>
+        <div className={`${styles.container} ${properties.length > 1 ? styles.hasSidebar : ''}`}>
+          {/* Properties List Sidebar */}
+          {properties.length > 1 && (
+            <div className={styles.propertiesList}>
+              <h3 className={styles.listTitle}>عقاراتك</h3>
+              <div className={styles.propertiesListItems}>
+                {properties.map((property) => (
+                  <div
+                    key={property.id}
+                    className={`${styles.propertyListItem} ${selectedProperty?.id === property.id ? styles.active : ''}`}
+                    onClick={() => setSelectedProperty(property)}
+                  >
+                    <div className={styles.listItemName}>{property.name}</div>
+                    <div className={styles.listItemLocation}>{property.city}</div>
+                    <div className={styles.listItemStatus}>{property.status}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Main Content Area */}
+          <div className={properties.length > 1 ? styles.mainContentArea : ''}>
+            {/* Property Header */}
+            <div className={styles.propertyHeader}>
             <div className={styles.propertyInfo}>
               <div className={styles.propertyTitle}>
                 <h1 className={styles.propertyName}>{propertyData.name}</h1>
-                <p className={styles.propertyLocation}>{propertyData.location}</p>
+                <p className={styles.propertyLocation}>{propertyData.address}, {propertyData.city}</p>
               </div>
             </div>
             
@@ -147,26 +284,36 @@ export default function PropertyDetails() {
                   <span className={styles.detailLabel}>نوع العقار:</span>
                   <span className={styles.detailValue}>{propertyData.type}</span>
                 </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>المساحة:</span>
-                  <span className={styles.detailValue}>{propertyData.area}</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>عدد الغرف:</span>
-                  <span className={styles.detailValue}>{propertyData.rooms}</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>الحمامات:</span>
-                  <span className={styles.detailValue}>{propertyData.bathrooms}</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>تاريخ الشراء:</span>
-                  <span className={styles.detailValue}>{propertyData.purchaseDate}</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>قيمة العقار:</span>
-                  <span className={styles.detailValue}>{propertyData.propertyValue}</span>
-                </div>
+                {propertyData.area && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>المساحة:</span>
+                    <span className={styles.detailValue}>{propertyData.area} متر مربع</span>
+                  </div>
+                )}
+                {propertyData.rooms && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>عدد الغرف:</span>
+                    <span className={styles.detailValue}>{propertyData.rooms}</span>
+                  </div>
+                )}
+                {propertyData.bathrooms && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>الحمامات:</span>
+                    <span className={styles.detailValue}>{propertyData.bathrooms}</span>
+                  </div>
+                )}
+                {propertyData.constructionYear && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>سنة البناء:</span>
+                    <span className={styles.detailValue}>{propertyData.constructionYear}</span>
+                  </div>
+                )}
+                {propertyData.monthlyRent && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>الإيجار الشهري:</span>
+                    <span className={styles.detailValue}>{propertyData.monthlyRent.toLocaleString('ar-SA')} ر.س</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -198,26 +345,32 @@ export default function PropertyDetails() {
               <h2 className={styles.cardTitle}>ملخص مالي</h2>
               
               <div className={styles.financialDetails}>
-                <div className={styles.financialItem}>
-                  <span className={styles.financialLabel}>الإيجار الشهري:</span>
-                  <span className={styles.financialValue}>{financialData.monthlyRent}</span>
-                </div>
-                <div className={styles.financialItem}>
-                  <span className={styles.financialLabel}>الدخل السنوي</span>
-                  <span className={styles.financialValue}>{financialData.annualIncome}</span>
-                </div>
+                {propertyData.monthlyRent && (
+                  <>
+                    <div className={styles.financialItem}>
+                      <span className={styles.financialLabel}>الإيجار الشهري:</span>
+                      <span className={styles.financialValue}>{propertyData.monthlyRent.toLocaleString('ar-SA')} ر.س</span>
+                    </div>
+                    <div className={styles.financialItem}>
+                      <span className={styles.financialLabel}>الدخل السنوي</span>
+                      <span className={styles.financialValue}>{(propertyData.monthlyRent * 12).toLocaleString('ar-SA')} ر.س</span>
+                    </div>
+                  </>
+                )}
                 <div className={styles.financialItem}>
                   <span className={styles.financialLabel}>تكاليف الصيانة</span>
-                  <span className={styles.financialValue}>{financialData.maintenanceCosts}</span>
+                  <span className={styles.financialValue}>-</span>
                 </div>
                 <div className={styles.financialItem}>
                   <span className={styles.financialLabel}>الضرائب والرسوم</span>
-                  <span className={styles.financialValue}>{financialData.taxesFees}</span>
+                  <span className={styles.financialValue}>-</span>
                 </div>
-                <div className={styles.financialItem}>
-                  <span className={styles.financialLabel}>صافي الربح.</span>
-                  <span className={styles.financialValue}>{financialData.netProfit}</span>
-                </div>
+                {propertyData.monthlyRent && (
+                  <div className={styles.financialItem}>
+                    <span className={styles.financialLabel}>صافي الربح.</span>
+                    <span className={styles.financialValue}>{(propertyData.monthlyRent * 12).toLocaleString('ar-SA')} ر.س</span>
+                  </div>
+                )}
               </div>
               
               <button className={styles.reportBtn}>
@@ -378,6 +531,7 @@ export default function PropertyDetails() {
                 </div>
               ))}
             </div>
+          </div>
           </div>
         </div>
       </main>

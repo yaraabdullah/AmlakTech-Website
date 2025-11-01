@@ -18,7 +18,6 @@ export default function AddProperty() {
     
     // Step 2: Location
     streetName: '',
-    unitNumber: '',
     city: '',
     postalCode: '',
     country: 'المملكة العربية السعودية',
@@ -314,9 +313,6 @@ export default function AddProperty() {
       
       // Build address string
       const addressParts = [formData.streetName]
-      if (formData.unitNumber) {
-        addressParts.push(`الوحدة ${formData.unitNumber}`)
-      }
       if (formData.postalCode) {
         addressParts.push(`الرمز البريدي: ${formData.postalCode}`)
       }
@@ -333,7 +329,6 @@ export default function AddProperty() {
         bathrooms: formData.bathrooms || null,
         constructionYear: formData.constructionYear || null,
         // Location details
-        unitNumber: formData.unitNumber || null,
         postalCode: formData.postalCode || null,
         country: formData.country || 'المملكة العربية السعودية',
         // Property subtype
@@ -575,19 +570,6 @@ export default function AddProperty() {
                           onChange={handleInputChange}
                           onKeyDown={handleKeyDown}
                           placeholder="مثال: شارع الملك فهد، رقم 123"
-                          className={styles.fieldInput}
-                        />
-                      </div>
-                      
-                      <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>رقم الوحدة الإدارية</label>
-                        <input
-                          type="text"
-                          name="unitNumber"
-                          value={formData.unitNumber}
-                          onChange={handleInputChange}
-                          onKeyDown={handleKeyDown}
-                          placeholder="مثال: 101"
                           className={styles.fieldInput}
                         />
                       </div>

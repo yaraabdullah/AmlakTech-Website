@@ -99,6 +99,129 @@
   padding: 0 var(--spacing-lg);
 }
 
+.container.hasSidebar {
+  display: flex;
+  gap: var(--spacing-xl);
+  align-items: flex-start;
+}
+
+/* Properties List Sidebar */
+.propertiesList {
+  width: 280px;
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: var(--spacing-2xl);
+  max-height: calc(100vh - var(--spacing-4xl));
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.listTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.propertiesListItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.propertyListItem {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--color-background-primary);
+}
+
+.propertyListItem:hover {
+  border-color: var(--color-primary);
+  background: var(--color-blue-light);
+}
+
+.propertyListItem.active {
+  border-color: var(--color-primary);
+  background: var(--color-blue-light);
+}
+
+.listItemName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+}
+
+.listItemLocation {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+}
+
+.listItemStatus {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-primary);
+}
+
+/* Main Content Area */
+.mainContentArea {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-xl);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.emptyState h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.emptyState p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+  font-family: var(--font-family-primary);
+}
+
+.addPropertyBtn {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.addPropertyBtn:hover {
+  background: var(--color-secondary);
+  transform: translateY(-1px);
+}
+
 /* Property Header */
 .propertyHeader {
   display: flex;
@@ -844,6 +967,16 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .propertiesList {
+    width: 100%;
+    position: relative;
+    max-height: none;
+  }
+  
   .headerTop {
     flex-direction: column;
     gap: var(--spacing-md);
