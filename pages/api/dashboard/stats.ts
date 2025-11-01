@@ -15,15 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const ownerIdBigInt = BigInt(ownerId as string)
     
-    // Get all properties
+    // Get all properties (without units/contracts as tables don't exist yet)
     const properties = await prisma.property.findMany({
       where: { ownerId: ownerIdBigInt },
-      include: {
-        units: true,
-        contracts: {
-          where: { status: 'نشط' },
-        },
-      },
     })
 
     // Get all contracts (handle case where table doesn't exist)
@@ -41,8 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // Get active contracts
-    const activeContracts = contracts.filter(c => c.status === 'نشط')
+    // Get active contracts (or count occupied properties if contracts don't exist)
+    const activeContracts = contracts.length > 0 
+      ? contracts.filter(c => c.status === 'نشط')
+      : properties.filter(p => p.status === 'مؤجر')
 
     // Get payments (handle case where table doesn't exist)
     let payments: any[] = []
@@ -83,12 +79,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Calculate KPIs
     const totalProperties = properties.length
     
-    // Calculate occupancy rate
-    const totalUnits = properties.reduce((sum, p) => sum + p.units.length, 0)
-    const occupiedUnits = properties.reduce((sum, p) => {
-      return sum + p.units.filter(u => u.status === 'مؤجر').length
-    }, 0)
-    const occupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0
+    // Calculate occupancy rate based on property status
+    // Since units table doesn't exist, calculate based on property status
+    const occupiedProperties = properties.filter(p => p.status === 'مؤجر').length
+    const occupancyRate = totalProperties > 0 
+      ? Math.round((occupiedProperties / totalProperties) * 100) 
+      : 0
 
     // Calculate collected rents (paid payments)
     const collectedRents = payments
@@ -100,8 +96,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .filter(m => m.status === 'مكتملة' && m.cost)
       .reduce((sum, m) => sum + (m.cost || 0), 0)
 
-    // Calculate monthly revenue (from active contracts)
-    const monthlyRevenue = activeContracts.reduce((sum, c) => sum + c.monthlyRent, 0)
+    // Calculate monthly revenue (from properties with monthly rent)
+    const monthlyRevenue = properties
+      .filter(p => p.status === 'مؤجر' && p.monthlyRent)
+      .reduce((sum, p) => sum + (Number(p.monthlyRent) || 0), 0)
 
     // Get urgent maintenance
     const urgentMaintenance = maintenance.filter(m => 
@@ -163,24 +161,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get properties overview
     const propertiesOverview = properties.map(property => {
-      const occupiedUnits = property.units.filter(u => u.status === 'مؤجر').length
-      const occupancy = property.units.length > 0 
-        ? Math.round((occupiedUnits / property.units.length) * 100) 
-        : 0
+      // Since units table doesn't exist, use property status
+      const isOccupied = property.status === 'مؤجر'
+      const occupancy = isOccupied ? 100 : 0
       
-      const propertyRevenue = property.contracts.reduce((sum, c) => sum + c.monthlyRent, 0)
+      // Calculate revenue from monthly rent if available
+      const propertyRevenue = property.monthlyRent ? Number(property.monthlyRent) : 0
       
       let status = 'متوسط'
-      if (occupancy >= 95) status = 'ممتاز'
-      else if (occupancy >= 80) status = 'جيد'
-      else if (occupancy >= 60) status = 'متوسط'
+      if (isOccupied) status = 'مؤجر'
+      else if (property.status === 'متاح') status = 'متاح'
+      else if (property.status === 'صيانة') status = 'صيانة'
       
       return {
-        id: property.id,
+        id: property.id.toString(),
         name: property.name,
-        units: `${property.units.length} وحدات`,
+        units: '1 وحدة', // Default to 1 since units table doesn't exist
         occupancy: `${occupancy}%`,
-        monthlyRevenue: `${propertyRevenue.toLocaleString('ar-SA')} ر.س`,
+        monthlyRevenue: propertyRevenue > 0 
+          ? `${propertyRevenue.toLocaleString('ar-SA')} ر.س` 
+          : '0 ر.س',
         status,
       }
     })
@@ -205,7 +205,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         net: Number(item.net) || 0,
       })),
       propertiesOverview,
-      activeContracts: activeContracts.length,
+      activeContracts: Array.isArray(activeContracts) ? activeContracts.length : 0,
     }
 
     return res.status(200).json(response)
