@@ -295,8 +295,9 @@ export default function PropertyDetails() {
               <button 
                 className={styles.editBtn}
                 onClick={() => {
-                  if (selectedProperty?.id) {
-                    router.push(`/owner/edit-property?id=${selectedProperty.id}`)
+                  const propertyToEdit = selectedProperty || properties[0]
+                  if (propertyToEdit?.id) {
+                    router.push(`/owner/edit-property?id=${propertyToEdit.id}`)
                   }
                 }}
               >

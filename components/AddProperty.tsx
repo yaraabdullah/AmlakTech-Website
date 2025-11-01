@@ -10,9 +10,15 @@ export default function AddProperty() {
   const { id } = router.query
   const isEditMode = !!id
   
+  // Get property ID from query
+  const getPropertyIdFromQuery = () => {
+    if (!id) return null
+    return Array.isArray(id) ? id[0] : id
+  }
+  
   const [loading, setLoading] = useState(isEditMode)
   const [currentStep, setCurrentStep] = useState(1)
-  const [propertyId, setPropertyId] = useState<string | null>(isEditMode ? id as string : null)
+  const [propertyId, setPropertyId] = useState<string | null>(getPropertyIdFromQuery() as string | null)
   const [formData, setFormData] = useState({
     // Step 1: Basic Details
     propertyType: 'شقة',
@@ -73,17 +79,23 @@ export default function AddProperty() {
 
   // Fetch property data if in edit mode
   useEffect(() => {
-    if (isEditMode && router.isReady && id && typeof id === 'string') {
-      fetchPropertyData(id)
+    if (isEditMode && router.isReady && id) {
+      const propId = Array.isArray(id) ? id[0] : id
+      if (propId && typeof propId === 'string') {
+        setPropertyId(propId)
+        fetchPropertyData(propId)
+      }
     }
   }, [isEditMode, router.isReady, id])
 
   const fetchPropertyData = async (propertyId: string) => {
     try {
       setLoading(true)
+      console.log('Fetching property data for ID:', propertyId)
       const response = await fetch(`/api/properties/${propertyId}`)
       if (response.ok) {
         const property = await response.json()
+        console.log('Property data fetched:', property)
         setPropertyId(property.id)
         
         // Parse address to extract street name and postal code
@@ -127,7 +139,7 @@ export default function AddProperty() {
         const nameParts = property.name ? property.name.split(' - ') : []
         const propertyTypeFromName = nameParts.length > 0 ? nameParts[0] : property.type || 'شقة'
         
-        setFormData({
+        const newFormData = {
           propertyType: propertyTypeFromName,
           rooms: property.rooms || '1',
           bathrooms: property.bathrooms || '1',
@@ -149,7 +161,9 @@ export default function AddProperty() {
           paymentEmail: property.paymentEmail || '',
           supportPhone: property.supportPhone || '',
           paymentAccount: property.paymentAccount || 'لا يوجد'
-        })
+        }
+        console.log('Setting form data:', newFormData)
+        setFormData(newFormData)
       } else {
         console.error('Failed to fetch property')
         router.push('/owner/property-details')
@@ -447,10 +461,13 @@ export default function AddProperty() {
       }
 
       // Use PUT for edit mode, POST for create mode
-      const url = isEditMode && propertyId 
-        ? `/api/properties/${propertyId}`
+      const propId = propertyId || getPropertyIdFromQuery()
+      const url = isEditMode && propId 
+        ? `/api/properties/${propId}`
         : '/api/properties'
-      const method = isEditMode && propertyId ? 'PUT' : 'POST'
+      const method = isEditMode && propId ? 'PUT' : 'POST'
+      
+      console.log(`${method} request to ${url}`, propertyData)
       
       const response = await fetch(url, {
         method,
@@ -463,8 +480,11 @@ export default function AddProperty() {
       const data = await response.json()
 
       if (!response.ok) {
+        console.error('Error response:', data)
         throw new Error(data.error || (isEditMode ? 'فشل في تعديل العقار' : 'فشل في إضافة العقار'))
       }
+      
+      console.log('Success response:', data)
 
       // Success - show success message and redirect
       setSubmitSuccess(true)
