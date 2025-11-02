@@ -25,11 +25,13 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
       // Only show user info if user is logged in as tenant
       if (storedUserId && (userType === 'tenant' || userType === 'مستأجر')) {
         setUserId(storedUserId)
-        setUserName(storedUserName || '')
-        setUserEmail(storedUserEmail || '')
         
-        // Fetch user data if not in localStorage
-        if (!storedUserName && storedUserId) {
+        // If we have userName in localStorage, use it; otherwise fetch from API
+        if (storedUserName) {
+          setUserName(storedUserName)
+          setUserEmail(storedUserEmail || '')
+        } else {
+          // Fetch user data from API
           fetchUserData(storedUserId)
         }
       }
@@ -121,7 +123,7 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
         </nav>
 
         <div className={styles.authButtons}>
-          {userId && userName ? (
+          {userId ? (
             <div className={styles.userMenuContainer}>
               <button
                 className={styles.userButton}
@@ -129,11 +131,13 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
                 onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
               >
                 <div className={styles.userAvatar}>
-                  {userName.charAt(0).toUpperCase()}
+                  {userName ? userName.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className={styles.userInfo}>
-                  <span className={styles.userName}>{userName}</span>
-                  <span className={styles.userEmail}>{userEmail}</span>
+                  <span className={styles.userName}>{userName || 'المستخدم'}</span>
+                  {userEmail && (
+                    <span className={styles.userEmail}>{userEmail}</span>
+                  )}
                 </div>
                 <span className={styles.dropdownIcon}>▼</span>
               </button>
