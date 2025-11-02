@@ -37,33 +37,6 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
     }
   ]
 
-  const secondaryNavigationItems = [
-    {
-      id: 'home',
-      title: 'الرئيسية',
-      href: '/'
-    },
-    {
-      id: 'features',
-      title: 'المميزات',
-      href: '/#features'
-    },
-    {
-      id: 'subscriptions',
-      title: 'الاشتراكات',
-      href: '/#pricing'
-    },
-    {
-      id: 'support',
-      title: 'الدعم',
-      href: '/#contact' // TODO: Create support page
-    }
-  ]
-
-  const handleLogin = () => {
-    router.push('/login')
-  }
-
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -73,9 +46,9 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
           <span>Amlak Tech</span>
         </Link>
         
-        {/* Primary Navigation (Left side) */}
-        <nav className={styles.primaryNav}>
-          <ul className={styles.primaryNavList}>
+        {/* Navigation */}
+        <nav className={styles.nav}>
+          <ul className={styles.navList}>
             {primaryNavigationItems.map((item) => (
               <li key={item.id}>
                 <Link
@@ -89,29 +62,8 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
           </ul>
         </nav>
 
-        {/* Secondary Navigation and Login Button (Right side) */}
-        <div className={styles.rightSection}>
-          <nav className={styles.secondaryNav}>
-            <ul className={styles.secondaryNavList}>
-              {secondaryNavigationItems.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    href={item.href}
-                    className={`${styles.navLink} ${currentPage === item.id ? styles.active : ''}`}
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <button 
-            className={styles.loginBtn}
-            onClick={handleLogin}
-          >
-            تسجيل الدخول
-          </button>
+        <div className={styles.authButtons}>
+          {/* Empty for now - can add user info or logout button later */}
         </div>
 
         <button 
