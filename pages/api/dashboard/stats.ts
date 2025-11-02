@@ -79,9 +79,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Calculate KPIs
     const totalProperties = properties.length
     
-    // Calculate occupancy rate based on property status
-    // Since units table doesn't exist, calculate based on property status
-    const occupiedProperties = properties.filter(p => p.status === 'مؤجر').length
+    // Calculate occupancy rate based on active contracts, not property status
+    const occupiedProperties = properties.filter(p => {
+      // Property is occupied if it has at least one active contract
+      return contracts.some(c => c.propertyId === p.id && c.status === 'نشط')
+    }).length
     const occupancyRate = totalProperties > 0 
       ? Math.round((occupiedProperties / totalProperties) * 100) 
       : 0
@@ -96,10 +98,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .filter(m => m.status === 'مكتملة' && m.cost)
       .reduce((sum, m) => sum + (m.cost || 0), 0)
 
-    // Calculate monthly revenue (from properties with monthly rent)
-    const monthlyRevenue = properties
-      .filter(p => p.status === 'مؤجر' && p.monthlyRent)
-      .reduce((sum, p) => sum + (Number(p.monthlyRent) || 0), 0)
+    // Calculate monthly revenue (from active contracts)
+    const monthlyRevenue = contracts
+      .filter(c => c.status === 'نشط' && c.monthlyRent)
+      .reduce((sum, c) => sum + (Number(c.monthlyRent) || 0), 0)
 
     // Get urgent maintenance
     const urgentMaintenance = maintenance.filter(m => 
@@ -161,17 +163,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get properties overview
     const propertiesOverview = properties.map(property => {
-      // Since units table doesn't exist, use property status
-      const isOccupied = property.status === 'مؤجر'
+      // Check if property has active contracts
+      const propertyActiveContracts = contracts.filter(c => 
+        c.propertyId === property.id && c.status === 'نشط'
+      )
+      
+      // Property is occupied if it has active contracts
+      const isOccupied = propertyActiveContracts.length > 0
       const occupancy = isOccupied ? 100 : 0
       
-      // Calculate revenue from monthly rent if available
-      const propertyRevenue = property.monthlyRent ? Number(property.monthlyRent) : 0
+      // Calculate revenue from active contracts or property monthly rent
+      let propertyRevenue = 0
+      if (propertyActiveContracts.length > 0) {
+        // Sum revenue from active contracts
+        propertyRevenue = propertyActiveContracts.reduce((sum, c) => 
+          sum + (Number(c.monthlyRent) || 0), 0
+        )
+      } else if (property.monthlyRent) {
+        // Fallback to property monthly rent if no contracts
+        propertyRevenue = Number(property.monthlyRent)
+      }
       
-      let status = 'متوسط'
-      if (isOccupied) status = 'مؤجر'
-      else if (property.status === 'متاح') status = 'متاح'
-      else if (property.status === 'صيانة') status = 'صيانة'
+      // Determine status based on active contracts, not property.status
+      let status = 'متاح'
+      if (isOccupied) {
+        status = 'مؤجر'
+      } else if (property.status === 'صيانة') {
+        status = 'صيانة'
+      } else {
+        status = 'متاح'
+      }
       
       return {
         id: property.id.toString(),
