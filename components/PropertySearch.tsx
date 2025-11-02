@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
-import Header from './Header'
+import TenantNavigation from './TenantNavigation'
 import Footer from './Footer'
 import styles from '../styles/PropertySearch.module.css'
 
@@ -207,7 +207,7 @@ export default function PropertySearch() {
 
   return (
     <div className={styles.propertySearchPage}>
-      <Header />
+      <TenantNavigation currentPage="search-properties" />
       
       <main className={styles.mainContent}>
         {/* Banner Section */}
