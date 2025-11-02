@@ -14,10 +14,31 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const { ownerId } = req.query
+      const { ownerId, publicDisplay } = req.query
 
+      // If publicDisplay is true, return all public properties (for tenant search)
+      if (publicDisplay === 'true') {
+        const properties = await prisma.property.findMany({
+          where: {
+            publicDisplay: true,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        })
+
+        // Convert BigInt values to strings for JSON serialization
+        const propertiesWithStrings = properties.map(property => ({
+          ...property,
+          ownerId: property.ownerId.toString(),
+        }))
+
+        return res.status(200).json(propertiesWithStrings)
+      }
+
+      // Otherwise, require ownerId for owner-specific properties
       if (!ownerId) {
-        return res.status(400).json({ error: 'ownerId is required' })
+        return res.status(400).json({ error: 'ownerId is required or set publicDisplay=true' })
       }
 
       const ownerIdBigInt = BigInt(ownerId as string)
