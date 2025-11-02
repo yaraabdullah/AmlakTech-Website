@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import TenantNavigation from './TenantNavigation'
 import Footer from './Footer'
 import styles from '../styles/AccountSettings.module.css'
@@ -33,16 +34,34 @@ export default function TenantAccountSettings() {
     
     // Notifications
     emailNotifications: true,
-    contractNotifications: true,
-    maintenanceNotifications: true,
-    paymentNotifications: true,
+    blogNotifications: true,
+    realEstateNotifications: true,
+    userNotifications: false,
     aiNotifications: true,
+    
+    // Payment Methods
+    paymentMethods: [
+      {
+        id: 1,
+        type: 'visa',
+        lastFour: '4567',
+        expiry: '10/2025',
+        isDefault: true
+      }
+    ],
+    
+    // AI Analytics
+    aiAnalytics: false
   })
 
   const settingsSections = [
     { id: 'personal', title: 'المعلومات الشخصية', icon: '/icons/Personal info.svg', active: activeSection === 'personal' },
     { id: 'security', title: 'الأمان وكلمة المرور', icon: '/icons/Passowrd.svg', active: activeSection === 'security' },
     { id: 'notifications', title: 'الإشعارات', icon: '/icons/Notifications.svg', active: activeSection === 'notifications' },
+    { id: 'payment', title: 'طرق الدفع', icon: '/icons/payment-management.svg', active: activeSection === 'payment' },
+    { id: 'favorites', title: 'الاشتراك', icon: '/icons/Subscription.svg', active: activeSection === 'favorites' },
+    { id: 'privacy', title: 'الخصوصية', icon: '/icons/Privacy.svg', active: activeSection === 'privacy' },
+    { id: 'logout', title: 'تسجيل الخروج', active: activeSection === 'logout' }
   ]
 
   useEffect(() => {
@@ -189,18 +208,24 @@ export default function TenantAccountSettings() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className={styles.accountSettingsPage}>
-        <TenantNavigation currentPage="account-settings" />
-        <main className={styles.mainContent}>
-          <div className={styles.container}>
-            <p>جاري التحميل...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    )
+  const handleLogout = () => {
+    // Clear localStorage (login session)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('userType')
+      localStorage.removeItem('userName')
+      localStorage.removeItem('userEmail')
+    }
+    // Redirect to homepage
+    router.push('/')
+  }
+
+  const removePaymentMethod = (id: number) => {
+    setFormData(prev => ({
+      ...prev,
+      paymentMethods: prev.paymentMethods.filter(method => method.id !== id)
+    }))
   }
 
   return (
@@ -226,262 +251,501 @@ export default function TenantAccountSettings() {
                 {settingsSections.map((section) => (
                   <button
                     key={section.id}
-                    className={`${styles.settingsNavItem} ${section.active ? styles.active : ''}`}
+                    className={`${styles.navItem} ${section.active ? styles.active : ''}`}
                     onClick={() => setActiveSection(section.id)}
                   >
                     {section.icon && (
-                      <Image
-                        src={section.icon}
-                        alt={section.title}
-                        width={20}
-                        height={20}
-                        className={styles.navIcon}
-                      />
+                      <span className={styles.navIcon}>
+                        <Image 
+                          src={section.icon}
+                          alt={section.title}
+                          width={24}
+                          height={24}
+                        />
+                      </span>
                     )}
-                    <span>{section.title}</span>
+                    <span className={styles.navTitle}>{section.title}</span>
                   </button>
                 ))}
               </nav>
+
+              {/* AI Analytics Section */}
+              <div className={styles.aiSection}>
+                <div className={styles.aiIcon}>🤖</div>
+                <h3 className={styles.aiTitle}>تحليلات الذكاء الاصطناعي</h3>
+                <button className={styles.aiButton}>
+                  تفعيل تحليلات الذكاء الاصطناعي
+                </button>
+              </div>
             </aside>
 
-            {/* Content */}
-            <div className={styles.settingsContent}>
-              {successMessage && (
-                <div className={styles.successMessage}>
-                  ✓ {successMessage}
-                </div>
-              )}
-
-              {errorMessage && (
-                <div className={styles.errorMessage}>
-                  ✕ {errorMessage}
-                </div>
-              )}
-
+            {/* Main Content Area */}
+            <div className={styles.contentArea}>
+              {loading ? (
+                <div className={styles.loadingMessage}>جاري التحميل...</div>
+              ) : (
+                <>
               {/* Personal Information Section */}
               {activeSection === 'personal' && (
-                <form onSubmit={(e) => handleSubmit(e, 'personal')} className={styles.settingsForm}>
+                <div className={styles.section}>
                   <h2 className={styles.sectionTitle}>المعلومات الشخصية</h2>
                   
-                  <div className={styles.formGrid}>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="firstName">الاسم الأول</label>
-                      <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        required
-                      />
+                  <form onSubmit={(e) => handleSubmit(e, 'personal')} className={styles.form}>
+                    {/* Profile Picture */}
+                    <div className={styles.profilePictureSection}>
+                      <div className={styles.profilePicture}>
+                        <img src="/icons/profile-placeholder.svg" alt="Profile" className={styles.profileImage} />
+                      </div>
+                      <button type="button" className={styles.changePictureBtn}>
+                        تغيير الصورة الشخصية
+                      </button>
                     </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="lastName">الاسم الأخير</label>
-                      <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        required
-                      />
+                    {/* Form Fields */}
+                    <div className={styles.formGrid}>
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الاسم الأول</label>
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>اسم العائلة</label>
+                        <input
+                          type="text"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>البريد الإلكتروني</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>رقم الهوية الوطنية</label>
+                        <input
+                          type="text"
+                          name="nationalId"
+                          value={formData.nationalId}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="1234567890"
+                          maxLength={10}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>رقم الهاتف</label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>المدينة</label>
+                        <select
+                          name="city"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        >
+                          <option value="">اختر المدينة</option>
+                          <option value="الرياض">الرياض</option>
+                          <option value="جدة">جدة</option>
+                          <option value="الدمام">الدمام</option>
+                          <option value="مكة">مكة</option>
+                          <option value="المدينة المنورة">المدينة المنورة</option>
+                          <option value="الطائف">الطائف</option>
+                          <option value="بريدة">بريدة</option>
+                          <option value="خميس مشيط">خميس مشيط</option>
+                          <option value="حفر الباطن">حفر الباطن</option>
+                          <option value="الجبيل">الجبيل</option>
+                        </select>
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الحي</label>
+                        <input
+                          type="text"
+                          name="neighborhood"
+                          value={formData.neighborhood}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="ادخل اسم الحي"
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الرمز البريدي</label>
+                        <input
+                          type="text"
+                          name="postalCode"
+                          value={formData.postalCode}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="ادخل الرمز البريدي"
+                          maxLength={10}
+                        />
+                      </div>
                     </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="email">البريد الإلكتروني</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
+                    {/* Messages */}
+                    {successMessage && activeSection === 'personal' && (
+                      <div className={styles.successMessage}>{successMessage}</div>
+                    )}
+                    {errorMessage && activeSection === 'personal' && (
+                      <div className={styles.errorMessage}>{errorMessage}</div>
+                    )}
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="nationalId">رقم الهوية الوطنية</label>
-                      <input
-                        type="text"
-                        id="nationalId"
-                        name="nationalId"
-                        value={formData.nationalId}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label htmlFor="phone">رقم الجوال</label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label htmlFor="city">المدينة</label>
-                      <select
-                        id="city"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">اختر المدينة</option>
-                        <option value="الرياض">الرياض</option>
-                        <option value="جدة">جدة</option>
-                        <option value="الدمام">الدمام</option>
-                        <option value="مكة">مكة</option>
-                      </select>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label htmlFor="neighborhood">الحي</label>
-                      <input
-                        type="text"
-                        id="neighborhood"
-                        name="neighborhood"
-                        value={formData.neighborhood}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label htmlFor="postalCode">الرمز البريدي</label>
-                      <input
-                        type="text"
-                        id="postalCode"
-                        name="postalCode"
-                        value={formData.postalCode}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-
-                  <button type="submit" className={styles.saveButton} disabled={saving}>
-                    {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
-                  </button>
-                </form>
+                    <button 
+                      type="submit" 
+                      className={styles.saveBtn}
+                      disabled={saving || loading}
+                    >
+                      {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
+                    </button>
+                  </form>
+                </div>
               )}
 
               {/* Security Section */}
               {activeSection === 'security' && (
-                <form onSubmit={(e) => handleSubmit(e, 'security')} className={styles.settingsForm}>
+                <div className={styles.section}>
                   <h2 className={styles.sectionTitle}>الأمان وكلمة المرور</h2>
                   
-                  <div className={styles.formGrid}>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="currentPassword">كلمة المرور الحالية</label>
-                      <input
-                        type="password"
-                        id="currentPassword"
-                        name="currentPassword"
-                        value={formData.currentPassword}
-                        onChange={handleInputChange}
-                        required
-                      />
+                  <form onSubmit={(e) => handleSubmit(e, 'security')} className={styles.form}>
+                    <div className={styles.formGrid}>
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>كلمة المرور الحالية</label>
+                        <input
+                          type="password"
+                          name="currentPassword"
+                          value={formData.currentPassword}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="••••••••"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className={styles.formGrid}>
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>كلمة المرور الجديدة</label>
+                        <input
+                          type="password"
+                          name="newPassword"
+                          value={formData.newPassword}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="••••••••"
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>تأكيد كلمة المرور الجديدة</label>
+                        <input
+                          type="password"
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                          placeholder="••••••••"
+                        />
+                      </div>
                     </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="newPassword">كلمة المرور الجديدة</label>
-                      <input
-                        type="password"
-                        id="newPassword"
-                        name="newPassword"
-                        value={formData.newPassword}
-                        onChange={handleInputChange}
-                        minLength={6}
-                        required
-                      />
+                    <div className={styles.forgotPassword}>
+                      <a href="#" className={styles.forgotLink}>نسيت كلمة المرور؟</a>
                     </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="confirmPassword">تأكيد كلمة المرور</label>
-                      <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                        minLength={6}
-                        required
-                      />
+                    {/* Two-Factor Authentication */}
+                    <div className={styles.twoFactorSection}>
+                      <div className={styles.toggleSection}>
+                        <div className={styles.toggleInfo}>
+                          <h3 className={styles.toggleTitle}>التحقق بخطوتين</h3>
+                          <p className={styles.toggleDescription}>
+                            أضف طبقة أمان إضافية لحسابك
+                          </p>
+                        </div>
+                        <label className={styles.toggleSwitch}>
+                          <input
+                            type="checkbox"
+                            name="twoFactorAuth"
+                            checked={formData.twoFactorAuth}
+                            onChange={handleInputChange}
+                          />
+                          <span className={styles.slider}></span>
+                        </label>
+                      </div>
                     </div>
-                  </div>
 
-                  <button type="submit" className={styles.saveButton} disabled={saving}>
-                    {saving ? 'جاري الحفظ...' : 'تحديث كلمة المرور'}
-                  </button>
-                </form>
+                    {/* Messages */}
+                    {successMessage && activeSection === 'security' && (
+                      <div className={styles.successMessage}>{successMessage}</div>
+                    )}
+                    {errorMessage && activeSection === 'security' && (
+                      <div className={styles.errorMessage}>{errorMessage}</div>
+                    )}
+
+                    <button 
+                      type="submit" 
+                      className={styles.saveBtn}
+                      disabled={saving || loading}
+                    >
+                      {saving ? 'جاري التحديث...' : 'تحديث كلمة المرور'}
+                    </button>
+                  </form>
+                </div>
               )}
 
               {/* Notifications Section */}
               {activeSection === 'notifications' && (
-                <div className={styles.settingsForm}>
-                  <h2 className={styles.sectionTitle}>الإشعارات</h2>
+                <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>إعدادات الإشعارات</h2>
                   
-                  <div className={styles.checkboxGroup}>
-                    <label className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        name="emailNotifications"
-                        checked={formData.emailNotifications}
-                        onChange={handleInputChange}
-                      />
-                      <span>الإشعارات عبر البريد الإلكتروني</span>
-                    </label>
+                  <form onSubmit={(e) => handleSubmit(e, 'notifications')} className={styles.form}>
+                    <div className={styles.notificationsList}>
+                      <div className={styles.notificationItem}>
+                        <div className={styles.notificationInfo}>
+                          <h3 className={styles.notificationTitle}>إشعارات البريد الإلكتروني</h3>
+                          <p className={styles.notificationDescription}>
+                            استقبل إشعارات عبر البريد الإلكتروني
+                          </p>
+                        </div>
+                        <label className={styles.toggleSwitch}>
+                          <input
+                            type="checkbox"
+                            name="emailNotifications"
+                            checked={formData.emailNotifications}
+                            onChange={handleInputChange}
+                          />
+                          <span className={`${styles.slider} ${formData.emailNotifications ? styles.active : ''}`}></span>
+                        </label>
+                      </div>
 
-                    <label className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        name="contractNotifications"
-                        checked={formData.contractNotifications}
-                        onChange={handleInputChange}
-                      />
-                      <span>إشعارات العقود</span>
-                    </label>
+                      <div className={styles.notificationItem}>
+                        <div className={styles.notificationInfo}>
+                          <h3 className={styles.notificationTitle}>إشعارات المدونات</h3>
+                          <p className={styles.notificationDescription}>
+                            إشعارات حول المدونات والمقالات
+                          </p>
+                        </div>
+                        <label className={styles.toggleSwitch}>
+                          <input
+                            type="checkbox"
+                            name="blogNotifications"
+                            checked={formData.blogNotifications}
+                            onChange={handleInputChange}
+                          />
+                          <span className={`${styles.slider} ${formData.blogNotifications ? styles.active : ''}`}></span>
+                        </label>
+                      </div>
 
-                    <label className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        name="maintenanceNotifications"
-                        checked={formData.maintenanceNotifications}
-                        onChange={handleInputChange}
-                      />
-                      <span>إشعارات الصيانة</span>
-                    </label>
+                      <div className={styles.notificationItem}>
+                        <div className={styles.notificationInfo}>
+                          <h3 className={styles.notificationTitle}>إشعارات العقارات</h3>
+                          <p className={styles.notificationDescription}>
+                            إشعارات حول العقارات والعملاء
+                          </p>
+                        </div>
+                        <label className={styles.toggleSwitch}>
+                          <input
+                            type="checkbox"
+                            name="realEstateNotifications"
+                            checked={formData.realEstateNotifications}
+                            onChange={handleInputChange}
+                          />
+                          <span className={`${styles.slider} ${formData.realEstateNotifications ? styles.active : ''}`}></span>
+                        </label>
+                      </div>
 
-                    <label className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        name="paymentNotifications"
-                        checked={formData.paymentNotifications}
-                        onChange={handleInputChange}
-                      />
-                      <span>إشعارات المدفوعات</span>
-                    </label>
+                      <div className={styles.notificationItem}>
+                        <div className={styles.notificationInfo}>
+                          <h3 className={styles.notificationTitle}>إشعارات المستخدمين</h3>
+                          <p className={styles.notificationDescription}>
+                            إشعارات حول المستخدمين والمتابعين
+                          </p>
+                        </div>
+                        <label className={styles.toggleSwitch}>
+                          <input
+                            type="checkbox"
+                            name="userNotifications"
+                            checked={formData.userNotifications}
+                            onChange={handleInputChange}
+                          />
+                          <span className={`${styles.slider} ${formData.userNotifications ? styles.active : ''}`}></span>
+                        </label>
+                      </div>
 
-                    <label className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        name="aiNotifications"
-                        checked={formData.aiNotifications}
-                        onChange={handleInputChange}
-                      />
-                      <span>إشعارات المساعد الذكي</span>
-                    </label>
+                      <div className={styles.notificationItem}>
+                        <div className={styles.notificationInfo}>
+                          <h3 className={styles.notificationTitle}>إشعارات الذكاء الاصطناعي</h3>
+                          <p className={styles.notificationDescription}>
+                            تنبيهات وتحديثات ذات صلة بتحليلات الذكاء الاصطناعي
+                          </p>
+                        </div>
+                        <label className={styles.toggleSwitch}>
+                          <input
+                            type="checkbox"
+                            name="aiNotifications"
+                            checked={formData.aiNotifications}
+                            onChange={handleInputChange}
+                          />
+                          <span className={`${styles.slider} ${formData.aiNotifications ? styles.active : ''}`}></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <button type="submit" className={styles.saveBtn}>
+                      حفظ الإعدادات
+                    </button>
+                  </form>
+                </div>
+              )}
+
+              {/* Payment Methods Section */}
+              {activeSection === 'payment' && (
+                <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>طرق الدفع</h2>
+                  
+                  <div className={styles.paymentMethods}>
+                    {formData.paymentMethods.map((method) => (
+                      <div key={method.id} className={styles.paymentMethod}>
+                        <div className={styles.paymentInfo}>
+                          <div className={styles.cardIcon}>💳</div>
+                          <div className={styles.cardDetails}>
+                            <div className={styles.cardType}>بطاقة تنتهي بـ **** {method.lastFour}</div>
+                            <div className={styles.cardExpiry}>تنتهي في {method.expiry}</div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removePaymentMethod(method.id)}
+                          className={styles.removeBtn}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button type="button" className={styles.addPaymentBtn}>
+                    + إضافة طريقة دفع جديدة
+                  </button>
+                </div>
+              )}
+
+              {/* AI Analytics Section */}
+              {activeSection === 'ai' && (
+                <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>تحليلات الذكاء الاصطناعي</h2>
+                  
+                  <div className={styles.aiAnalyticsSection}>
+                    <div className={styles.aiDescription}>
+                      <p>
+                        استفد من قوة الذكاء الاصطناعي في تحسين إدارة عملياتك واتخاذ القرارات بناءً على البيانات والتحليلات المتقدمة
+                      </p>
+                    </div>
+
+                    <div className={styles.aiFeatures}>
+                      <div className={styles.aiFeature}>
+                        <div className={styles.featureIcon}>🤖</div>
+                        <div className={styles.featureContent}>
+                          <h3 className={styles.featureTitle}>تحليل الأسعار</h3>
+                          <p className={styles.featureDescription}>
+                            تحليل مالي للأسعار والتغيرات في السوق
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className={styles.aiFeature}>
+                        <div className={styles.featureIcon}>🤖</div>
+                        <div className={styles.featureContent}>
+                          <h3 className={styles.featureTitle}>توقع العوائد</h3>
+                          <p className={styles.featureDescription}>
+                            توقع اعتبارات الدخل المحتملة
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className={styles.aiFeature}>
+                        <div className={styles.featureIcon}>🤖</div>
+                        <div className={styles.featureContent}>
+                          <h3 className={styles.featureTitle}>فهم المستخدمين</h3>
+                          <p className={styles.featureDescription}>
+                            تحليل سلوك المستخدمين واهتماماتهم
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button className={styles.activateAiBtn}>
+                      تفعيل تحليلات الذكاء الاصطناعي
+                    </button>
                   </div>
                 </div>
+              )}
+
+              {/* Logout Section */}
+              {activeSection === 'logout' && (
+                <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>تسجيل الخروج</h2>
+                  
+                  <div className={styles.logoutSection}>
+                    <div className={styles.logoutWarning}>
+                      <div className={styles.warningIcon}>⚠️</div>
+                      <div className={styles.warningContent}>
+                        <h3 className={styles.warningTitle}>هل أنت متأكد من تسجيل الخروج؟</h3>
+                        <p className={styles.warningDescription}>
+                          سيتم تسجيل خروجك من حسابك وسيتم إعادة توجيهك إلى الصفحة الرئيسية.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.logoutActions}>
+                      <button 
+                        className={styles.logoutBtn}
+                        onClick={handleLogout}
+                      >
+                        تسجيل الخروج
+                      </button>
+                      <button 
+                        className={styles.cancelBtn}
+                        onClick={() => setActiveSection('personal')}
+                      >
+                        إلغاء
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              </>
               )}
             </div>
           </div>
         </div>
       </main>
 
+      {/* Footer */}
       <Footer />
     </div>
   )
