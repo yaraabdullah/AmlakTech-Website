@@ -14,7 +14,8 @@
   padding: var(--spacing-4xl) var(--spacing-xl);
   text-align: center;
   color: var(--color-text-white);
-  margin-bottom: var(--spacing-3xl);
+  margin-bottom: 0;
+  position: relative;
 }
 
 .bannerContent {
@@ -41,13 +42,16 @@
   max-width: 1200px;
   margin: 0 auto var(--spacing-3xl);
   padding: 0 var(--spacing-xl);
+  position: relative;
+  margin-top: -60px;
+  z-index: 10;
 }
 
 .searchCard {
   background: var(--color-background-primary);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-2xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
 }
 
 .searchHeader {
