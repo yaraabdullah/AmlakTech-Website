@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styles from '../styles/TenantNavigation.module.css'
@@ -8,6 +9,63 @@ interface TenantNavigationProps {
 
 export default function TenantNavigation({ currentPage }: TenantNavigationProps) {
   const router = useRouter()
+  const [userName, setUserName] = useState<string>('')
+  const [userEmail, setUserEmail] = useState<string>('')
+  const [userId, setUserId] = useState<string | null>(null)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+
+  useEffect(() => {
+    // Get user info from localStorage or fetch from API
+    if (typeof window !== 'undefined') {
+      const storedUserId = localStorage.getItem('userId')
+      const storedUserName = localStorage.getItem('userName')
+      const storedUserEmail = localStorage.getItem('userEmail')
+      const userType = localStorage.getItem('userType')
+
+      // Only show user info if user is logged in as tenant
+      if (storedUserId && (userType === 'tenant' || userType === 'مستأجر')) {
+        setUserId(storedUserId)
+        setUserName(storedUserName || '')
+        setUserEmail(storedUserEmail || '')
+        
+        // Fetch user data if not in localStorage
+        if (!storedUserName && storedUserId) {
+          fetchUserData(storedUserId)
+        }
+      }
+    }
+  }, [])
+
+  const fetchUserData = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/user/${userId}`)
+      if (response.ok) {
+        const userData = await response.json()
+        setUserName(`${userData.firstName || ''} ${userData.lastName || ''}`.trim())
+        setUserEmail(userData.email || '')
+        
+        // Store in localStorage
+        const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim()
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('userName', fullName)
+          localStorage.setItem('userEmail', userData.email || '')
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userId')
+      localStorage.removeItem('userType')
+      localStorage.removeItem('userName')
+      localStorage.removeItem('userEmail')
+      localStorage.removeItem('user')
+    }
+    router.push('/login')
+  }
 
   const primaryNavigationItems = [
     {
@@ -63,7 +121,51 @@ export default function TenantNavigation({ currentPage }: TenantNavigationProps)
         </nav>
 
         <div className={styles.authButtons}>
-          {/* Empty for now - can add user info or logout button later */}
+          {userId && userName ? (
+            <div className={styles.userMenuContainer}>
+              <button
+                className={styles.userButton}
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
+              >
+                <div className={styles.userAvatar}>
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <div className={styles.userInfo}>
+                  <span className={styles.userName}>{userName}</span>
+                  <span className={styles.userEmail}>{userEmail}</span>
+                </div>
+                <span className={styles.dropdownIcon}>▼</span>
+              </button>
+              
+              {showUserMenu && (
+                <div className={styles.userMenu}>
+                  <Link 
+                    href="/tenant/account-settings"
+                    className={styles.menuItem}
+                    onClick={() => setShowUserMenu(false)}
+                  >
+                    <span className={styles.menuIcon}>⚙️</span>
+                    إعدادات الحساب
+                  </Link>
+                  <button 
+                    className={styles.menuItem}
+                    onClick={handleLogout}
+                  >
+                    <span className={styles.menuIcon}>🚪</span>
+                    تسجيل الخروج
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button 
+              className={styles.loginBtn}
+              onClick={() => router.push('/login')}
+            >
+              تسجيل الدخول
+            </button>
+          )}
         </div>
 
         <button 
