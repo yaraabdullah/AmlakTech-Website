@@ -24,7 +24,7 @@
 
 .bannerTitle {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   margin-bottom: var(--spacing-md);
   font-family: var(--font-family-primary);
 }
@@ -33,6 +33,7 @@
   font-size: var(--font-size-lg);
   opacity: 0.95;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 /* Search Section */
