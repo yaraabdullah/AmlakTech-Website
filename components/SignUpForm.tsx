@@ -141,10 +141,18 @@ export default function SignUpForm() {
         throw new Error(data.error || 'حدث خطأ أثناء إنشاء الحساب')
       }
 
+      // Save user info to localStorage for auto-login
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('userId', data.user.id)
+        localStorage.setItem('userType', data.user.userType === 'tenant' ? 'tenant' : selectedUserType)
+        localStorage.setItem('userEmail', data.user.email)
+        localStorage.setItem('userName', `${data.user.firstName} ${data.user.lastName}`)
+      }
+
       // Success - redirect based on user type
       const userTypeMap: { [key: string]: string } = {
         'مالك عقار': '/owner/dashboard',
-        'مستأجر': '/', // TODO: Add tenant dashboard
+        'مستأجر': '/search-properties',
         'مزود خدمة': '/', // TODO: Add service provider dashboard
         'مدير عقارات': '/', // TODO: Add property manager dashboard
       }

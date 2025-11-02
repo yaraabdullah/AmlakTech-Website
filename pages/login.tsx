@@ -51,7 +51,7 @@ export default function Login() {
       // Redirect based on user type
       const userTypeRoutes: { [key: string]: string } = {
         owner: '/owner/dashboard',
-        tenant: '/', // TODO: Add tenant dashboard
+        tenant: '/search-properties',
         service_provider: '/', // TODO: Add service provider dashboard
         property_manager: '/', // TODO: Add property manager dashboard
       }
