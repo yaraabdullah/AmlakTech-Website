@@ -29,7 +29,7 @@ export default function PropertySearch() {
   const [loading, setLoading] = useState(true)
   const [properties, setProperties] = useState<Property[]>([])
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([])
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false)
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(true)
   const [sortBy, setSortBy] = useState('newest')
   
   // Search filters
@@ -279,96 +279,92 @@ export default function PropertySearch() {
                   </select>
                 </div>
 
-                {showAdvancedSearch && (
-                  <>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="priceFrom">نطاق السعر - من</label>
-                      <input
-                        type="number"
-                        id="priceFrom"
-                        value={filters.priceFrom}
-                        onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
-                        placeholder="0"
-                      />
-                    </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="priceFrom">نطاق السعر - من</label>
+                  <input
+                    type="number"
+                    id="priceFrom"
+                    value={filters.priceFrom}
+                    onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
+                    placeholder="من"
+                  />
+                </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="priceTo">نطاق السعر - إلى</label>
-                      <input
-                        type="number"
-                        id="priceTo"
-                        value={filters.priceTo}
-                        onChange={(e) => handleFilterChange('priceTo', e.target.value)}
-                        placeholder="لا يوجد حد"
-                      />
-                    </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="priceTo">نطاق السعر - إلى</label>
+                  <input
+                    type="number"
+                    id="priceTo"
+                    value={filters.priceTo}
+                    onChange={(e) => handleFilterChange('priceTo', e.target.value)}
+                    placeholder="إلى"
+                  />
+                </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="areaFrom">المساحة (م²) - من</label>
-                      <input
-                        type="number"
-                        id="areaFrom"
-                        value={filters.areaFrom}
-                        onChange={(e) => handleFilterChange('areaFrom', e.target.value)}
-                        placeholder="0"
-                      />
-                    </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="areaFrom">المساحة (م²) - من</label>
+                  <input
+                    type="number"
+                    id="areaFrom"
+                    value={filters.areaFrom}
+                    onChange={(e) => handleFilterChange('areaFrom', e.target.value)}
+                    placeholder="من"
+                  />
+                </div>
 
-                    <div className={styles.formGroup}>
-                      <label htmlFor="areaTo">المساحة (م²) - إلى</label>
-                      <input
-                        type="number"
-                        id="areaTo"
-                        value={filters.areaTo}
-                        onChange={(e) => handleFilterChange('areaTo', e.target.value)}
-                        placeholder="لا يوجد حد"
-                      />
-                    </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="areaTo">المساحة (م²) - إلى</label>
+                  <input
+                    type="number"
+                    id="areaTo"
+                    value={filters.areaTo}
+                    onChange={(e) => handleFilterChange('areaTo', e.target.value)}
+                    placeholder="إلى"
+                  />
+                </div>
 
-                    <div className={styles.formGroup}>
-                      <label>الحالة</label>
-                      <div className={styles.radioGroup}>
-                        <label>
-                          <input
-                            type="radio"
-                            name="furnished"
-                            value="all"
-                            checked={filters.furnished === 'all'}
-                            onChange={(e) => handleFilterChange('furnished', e.target.value)}
-                          />
-                          الكل
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="furnished"
-                            value="furnished"
-                            checked={filters.furnished === 'furnished'}
-                            onChange={(e) => handleFilterChange('furnished', e.target.value)}
-                          />
-                          مفروش
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="furnished"
-                            value="unfurnished"
-                            checked={filters.furnished === 'unfurnished'}
-                            onChange={(e) => handleFilterChange('furnished', e.target.value)}
-                          />
-                          غير مفروش
-                        </label>
-                      </div>
-                    </div>
-                  </>
-                )}
+                <div className={styles.formGroup}>
+                  <label>الحالة</label>
+                  <div className={styles.radioGroup}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="furnished"
+                        value="all"
+                        checked={filters.furnished === 'all'}
+                        onChange={(e) => handleFilterChange('furnished', e.target.value)}
+                      />
+                      الكل
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="furnished"
+                        value="furnished"
+                        checked={filters.furnished === 'furnished'}
+                        onChange={(e) => handleFilterChange('furnished', e.target.value)}
+                      />
+                      مفروش
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="furnished"
+                        value="unfurnished"
+                        checked={filters.furnished === 'unfurnished'}
+                        onChange={(e) => handleFilterChange('furnished', e.target.value)}
+                      />
+                      غير مفروش
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <div className={styles.searchActions}>
                 <button type="submit" className={styles.searchBtn}>
                   🔍 بحث
                 </button>
-                {(filters.city || filters.propertyType || filters.priceFrom) && (
+                {(filters.city || filters.propertyType || filters.priceFrom || filters.areaFrom || filters.furnished !== 'all') && (
                   <button 
                     type="button" 
                     className={styles.clearBtn}
@@ -378,12 +374,6 @@ export default function PropertySearch() {
                   </button>
                 )}
               </div>
-
-              {showAdvancedSearch && (
-                <p className={styles.aiHint}>
-                  💡 بحث ذكي مدعوم بالذكاء الاصطناعي
-                </p>
-              )}
             </form>
           </div>
         </div>
