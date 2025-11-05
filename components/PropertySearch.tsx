@@ -235,6 +235,7 @@ export default function PropertySearch() {
 
             <form onSubmit={handleSearch} className={styles.searchForm}>
               <div className={styles.searchGrid}>
+                {/* First Row */}
                 <div className={styles.formGroup}>
                   <label htmlFor="city">المدينة</label>
                   <select
@@ -249,6 +250,27 @@ export default function PropertySearch() {
                   </select>
                 </div>
 
+                <div className={styles.formGroup}>
+                  <label htmlFor="priceRange">نطاق السعر</label>
+                  <div className={styles.rangeInputs}>
+                    <input
+                      type="number"
+                      id="priceFrom"
+                      value={filters.priceFrom}
+                      onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
+                      placeholder="من"
+                    />
+                    <input
+                      type="number"
+                      id="priceTo"
+                      value={filters.priceTo}
+                      onChange={(e) => handleFilterChange('priceTo', e.target.value)}
+                      placeholder="إلى"
+                    />
+                  </div>
+                </div>
+
+                {/* Second Row */}
                 <div className={styles.formGroup}>
                   <label htmlFor="propertyType">نوع العقار</label>
                   <select
@@ -280,49 +302,26 @@ export default function PropertySearch() {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="priceFrom">نطاق السعر - من</label>
-                  <input
-                    type="number"
-                    id="priceFrom"
-                    value={filters.priceFrom}
-                    onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
-                    placeholder="من"
-                  />
+                  <label htmlFor="area">المساحة (متر مربع)</label>
+                  <div className={styles.rangeInputs}>
+                    <input
+                      type="number"
+                      id="areaFrom"
+                      value={filters.areaFrom}
+                      onChange={(e) => handleFilterChange('areaFrom', e.target.value)}
+                      placeholder="من"
+                    />
+                    <input
+                      type="number"
+                      id="areaTo"
+                      value={filters.areaTo}
+                      onChange={(e) => handleFilterChange('areaTo', e.target.value)}
+                      placeholder="إلى"
+                    />
+                  </div>
                 </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="priceTo">نطاق السعر - إلى</label>
-                  <input
-                    type="number"
-                    id="priceTo"
-                    value={filters.priceTo}
-                    onChange={(e) => handleFilterChange('priceTo', e.target.value)}
-                    placeholder="إلى"
-                  />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="areaFrom">المساحة (م²) - من</label>
-                  <input
-                    type="number"
-                    id="areaFrom"
-                    value={filters.areaFrom}
-                    onChange={(e) => handleFilterChange('areaFrom', e.target.value)}
-                    placeholder="من"
-                  />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="areaTo">المساحة (م²) - إلى</label>
-                  <input
-                    type="number"
-                    id="areaTo"
-                    value={filters.areaTo}
-                    onChange={(e) => handleFilterChange('areaTo', e.target.value)}
-                    placeholder="إلى"
-                  />
-                </div>
-
+                {/* Third Row - Status */}
                 <div className={styles.formGroup}>
                   <label>الحالة</label>
                   <div className={styles.radioGroup}>
@@ -358,21 +357,23 @@ export default function PropertySearch() {
                     </label>
                   </div>
                 </div>
+
+                {/* Search Button */}
+                <div className={styles.formGroup}>
+                  <button type="submit" className={styles.searchBtn}>
+                    🔍 بحث
+                  </button>
+                </div>
               </div>
 
-              <div className={styles.searchActions}>
-                <button type="submit" className={styles.searchBtn}>
-                  🔍 بحث
-                </button>
-                {(filters.city || filters.propertyType || filters.priceFrom || filters.areaFrom || filters.furnished !== 'all') && (
-                  <button 
-                    type="button" 
-                    className={styles.clearBtn}
-                    onClick={clearFilters}
-                  >
-                    مسح الفلاتر
-                  </button>
-                )}
+              {/* Bottom Section */}
+              <div className={styles.searchFooter}>
+                <div className={styles.aiHint}>
+                  🤖 بحث ذكي مدعوم بالذكاء الاصطناعي
+                </div>
+                <div className={styles.advancedOptionsLink}>
+                  ⚙️ خيارات بحث متقدمة
+                </div>
               </div>
             </form>
           </div>

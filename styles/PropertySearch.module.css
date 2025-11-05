@@ -83,9 +83,37 @@
 
 .searchGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
+}
+
+.searchGrid > .formGroup:nth-child(1) {
+  grid-column: 1;
+}
+
+.searchGrid > .formGroup:nth-child(2) {
+  grid-column: 2 / 4;
+}
+
+.searchGrid > .formGroup:nth-child(3) {
+  grid-column: 1;
+}
+
+.searchGrid > .formGroup:nth-child(4) {
+  grid-column: 2;
+}
+
+.searchGrid > .formGroup:nth-child(5) {
+  grid-column: 3;
+}
+
+.searchGrid > .formGroup:nth-child(6) {
+  grid-column: 1;
+}
+
+.searchGrid > .formGroup:nth-child(7) {
+  grid-column: 2 / 4;
 }
 
 .formGroup {
@@ -110,6 +138,44 @@
   font-family: var(--font-family-primary);
   background: var(--color-background-primary);
   color: var(--color-text-primary);
+}
+
+.rangeInputs {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.rangeInputs input {
+  flex: 1;
+}
+
+.searchFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.advancedOptionsLink {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.advancedOptionsLink:hover {
+  text-decoration: underline;
+}
+
+.formGroup button.searchBtn {
+  width: 100%;
+  margin-top: 0;
 }
 
 .formGroup select:focus,
@@ -180,11 +246,12 @@
 }
 
 .aiHint {
-  text-align: center;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin-top: var(--spacing-md);
   font-family: var(--font-family-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 /* Results Section */
@@ -444,6 +511,16 @@
 
   .searchGrid {
     grid-template-columns: 1fr;
+  }
+
+  .searchGrid > .formGroup:nth-child(n) {
+    grid-column: 1;
+  }
+
+  .searchFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
   }
 
   .propertiesGrid {
