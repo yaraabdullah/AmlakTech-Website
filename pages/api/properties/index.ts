@@ -36,39 +36,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json(propertiesWithStrings)
       }
 
-      // Otherwise, require ownerId for owner-specific properties
-      if (!ownerId) {
-        return res.status(400).json({ error: 'ownerId is required or set publicDisplay=true' })
-      }
-
-      const ownerIdBigInt = BigInt(ownerId as string)
-      const properties = await prisma.property.findMany({
-        where: {
-          ownerId: ownerIdBigInt,
-        },
-        include: {
-          owner: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-              phone_number: true,
+      // If ownerId is provided, return owner-specific properties
+      if (ownerId) {
+        const ownerIdBigInt = BigInt(ownerId as string)
+        const properties = await prisma.property.findMany({
+          where: {
+            ownerId: ownerIdBigInt,
+          },
+          include: {
+            owner: {
+              select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+                email: true,
+                phone_number: true,
+              },
             },
           },
-          // units: true,  // Comment out if units table doesn't exist
-          // contracts: {  // Comment out if contracts table doesn't exist
-          //   where: {
-          //     status: 'نشط',
-          //   },
-          // },
-          // _count: {  // Comment out if related tables don't exist
-          //   select: {
-          //     units: true,
-          //     maintenanceRequests: true,
-          //   },
-          // },
-        },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        })
+
+        // Convert BigInt values to strings for JSON serialization
+        const propertiesWithStrings = properties.map(property => ({
+          ...property,
+          ownerId: property.ownerId.toString(),
+          owner: property.owner ? {
+            ...property.owner,
+            id: property.owner.id.toString(),
+          } : null,
+        }))
+
+        return res.status(200).json(propertiesWithStrings)
+      }
+
+      // If no specific query, return ALL properties from the database
+      const properties = await prisma.property.findMany({
         orderBy: {
           createdAt: 'desc',
         },
@@ -78,10 +83,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const propertiesWithStrings = properties.map(property => ({
         ...property,
         ownerId: property.ownerId.toString(),
-        owner: property.owner ? {
-          ...property.owner,
-          id: property.owner.id.toString(),
-        } : null,
       }))
 
       return res.status(200).json(propertiesWithStrings)

@@ -31,6 +31,8 @@ export default function PropertySearch() {
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([])
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(true)
   const [sortBy, setSortBy] = useState('newest')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
   
   // Search filters
   const [filters, setFilters] = useState({
@@ -50,15 +52,17 @@ export default function PropertySearch() {
 
   useEffect(() => {
     applyFilters()
+    setCurrentPage(1) // Reset to first page when filters change
   }, [properties, filters, sortBy])
 
   const fetchProperties = async () => {
     try {
       setLoading(true)
-      // Fetch all properties that are available for rent (public display)
-      const response = await fetch('/api/properties?publicDisplay=true')
+      // Fetch ALL properties from Supabase database
+      const response = await fetch('/api/properties')
       if (response.ok) {
         const data = await response.json()
+        console.log('Fetched properties:', data.length)
         setProperties(data)
         setFilteredProperties(data)
       } else {
@@ -200,6 +204,12 @@ export default function PropertySearch() {
       return 'قريباً'
     }
   }
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProperties.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedProperties = filteredProperties.slice(startIndex, endIndex)
 
   // Get unique values for filters
   const cities = Array.from(new Set(properties.map(p => p.city).filter(Boolean)))
@@ -407,72 +417,113 @@ export default function PropertySearch() {
             </div>
           ) : filteredProperties.length > 0 ? (
             <div className={styles.propertiesGrid}>
-              {filteredProperties.map((property) => (
-                <div key={property.id} className={styles.propertyCard}>
-                  <div className={styles.propertyImage}>
-                    <Image
-                      src={getPropertyImage(property)}
-                      alt={property.name}
-                      width={400}
-                      height={300}
-                      className={styles.image}
-                    />
-                    <div className={styles.propertyBadge}>
-                      {property.type === 'للبيع' ? 'للبيع' : 'للإيجار'}
+              {paginatedProperties.map((property) => {
+                const propertyType = property.type || 'للإيجار'
+                const isForSale = propertyType === 'للبيع'
+                const price = property.monthlyRent || property.price || 0
+                
+                return (
+                  <div key={property.id} className={styles.propertyCard}>
+                    <div className={styles.propertyImage}>
+                      <Image
+                        src={getPropertyImage(property)}
+                        alt={property.name || 'عقار'}
+                        width={400}
+                        height={300}
+                        className={styles.image}
+                      />
+                      <div className={styles.propertyBadge}>
+                        {isForSale ? 'للبيع' : 'للإيجار'}
+                      </div>
+                      <button className={styles.favoriteBtn}>♡</button>
                     </div>
-                    <button className={styles.favoriteBtn}>❤️</button>
+
+                    <div className={styles.propertyContent}>
+                      <div className={styles.propertyPrice}>
+                        {price > 0 
+                          ? `${price.toLocaleString('ar-SA')} ريال${isForSale ? '' : '/شهر'}`
+                          : 'السعر غير متوفر'
+                        }
+                      </div>
+
+                      <h3 className={styles.propertyName}>
+                        {property.name || property.address || 'عقار'}
+                      </h3>
+                      
+                      <div className={styles.propertyLocation}>
+                        📍 {property.address || property.city || 'غير محدد'} {property.city && property.address ? `، ${property.city}` : property.city || ''}
+                      </div>
+
+                      <div className={styles.propertyFeatures}>
+                        {property.area && (
+                          <span className={styles.feature}>
+                            📐 {property.area} م²
+                          </span>
+                        )}
+                        {property.bathrooms && (
+                          <span className={styles.feature}>
+                            🚿 {property.bathrooms} حمام
+                          </span>
+                        )}
+                        {property.rooms && (
+                          <span className={styles.feature}>
+                            🛏️ {property.rooms} غرف
+                          </span>
+                        )}
+                        {property.entrances && (
+                          <span className={styles.feature}>
+                            🚪 {property.entrances} مدخل
+                          </span>
+                        )}
+                        {property.streets && (
+                          <span className={styles.feature}>
+                            🛣️ {property.streets} شارعين
+                          </span>
+                        )}
+                        {property.direction && (
+                          <span className={styles.feature}>
+                            🧭 {property.direction}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className={styles.propertyMeta}>
+                        <div className={styles.metaLeft}>
+                          <span className={styles.metaIcon}>📅</span>
+                          <span className={styles.metaDate}>
+                            {formatDate(property.createdAt)}
+                          </span>
+                        </div>
+                        <div className={styles.metaRight}>
+                          {property.propertySubType && (
+                            <span className={styles.metaTypeIcon}>
+                              {property.propertySubType === 'مكتب' ? '🏢' : 
+                               property.propertySubType === 'أرض' ? '🏔️' : 
+                               property.status && property.status.includes('مفروش') ? '🛋️' : '🏠'}
+                            </span>
+                          )}
+                          {property.propertySubType && (
+                            <span className={styles.metaTag}>{property.propertySubType}</span>
+                          )}
+                          {property.status && property.status.includes('مفروش') && (
+                            <span className={styles.metaTag}>مفروش</span>
+                          )}
+                          {property.status && property.status.includes('غير مفروش') && (
+                            <span className={styles.metaTag}>غير مفروش</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        className={styles.viewDetailsBtn}
+                        onClick={() => router.push(`/property/${property.id}`)}
+                      >
+                        عرض التفاصيل
+                      </button>
+                    </div>
                   </div>
-
-                  <div className={styles.propertyContent}>
-                    <div className={styles.propertyPrice}>
-                      {property.monthlyRent 
-                        ? `${property.monthlyRent.toLocaleString('ar-SA')} ريال/شهر`
-                        : 'السعر غير متوفر'
-                      }
-                    </div>
-
-                    <h3 className={styles.propertyName}>{property.name}</h3>
-                    
-                    <div className={styles.propertyLocation}>
-                      في {property.city || 'غير محدد'}
-                    </div>
-
-                    <div className={styles.propertyFeatures}>
-                      {property.rooms && (
-                        <span className={styles.feature}>
-                          🛏️ {property.rooms} غرف
-                        </span>
-                      )}
-                      {property.bathrooms && (
-                        <span className={styles.feature}>
-                          🚿 {property.bathrooms} حمام
-                        </span>
-                      )}
-                      {property.area && (
-                        <span className={styles.feature}>
-                          📐 {property.area} م²
-                        </span>
-                      )}
-                    </div>
-
-                    <div className={styles.propertyMeta}>
-                      {property.propertySubType && (
-                        <span className={styles.metaTag}>{property.propertySubType}</span>
-                      )}
-                      <span className={styles.metaDate}>
-                        {formatDate(property.createdAt)}
-                      </span>
-                    </div>
-
-                    <button
-                      className={styles.viewDetailsBtn}
-                      onClick={() => router.push(`/property/${property.id}`)}
-                    >
-                      عرض التفاصيل
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           ) : (
             <div className={styles.emptyState}>
@@ -483,16 +534,57 @@ export default function PropertySearch() {
             </div>
           )}
 
-          {/* Pagination placeholder */}
-          {filteredProperties.length > 0 && (
+          {/* Pagination */}
+          {filteredProperties.length > 0 && totalPages > 1 && (
             <div className={styles.pagination}>
-              <button className={styles.paginationBtn}>السابق</button>
+              <button 
+                className={styles.paginationBtn}
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                السابق
+              </button>
               <div className={styles.paginationNumbers}>
-                <button className={`${styles.paginationNumber} ${styles.active}`}>1</button>
-                <button className={styles.paginationNumber}>2</button>
-                <button className={styles.paginationNumber}>3</button>
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  let pageNum
+                  if (totalPages <= 5) {
+                    pageNum = i + 1
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i
+                  } else {
+                    pageNum = currentPage - 2 + i
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      className={`${styles.paginationNumber} ${currentPage === pageNum ? styles.active : ''}`}
+                      onClick={() => setCurrentPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                })}
+                {totalPages > 5 && currentPage < totalPages - 2 && (
+                  <>
+                    <span className={styles.paginationEllipsis}>...</span>
+                    <button
+                      className={styles.paginationNumber}
+                      onClick={() => setCurrentPage(totalPages)}
+                    >
+                      {totalPages}
+                    </button>
+                  </>
+                )}
               </div>
-              <button className={styles.paginationBtn}>التالي</button>
+              <button 
+                className={styles.paginationBtn}
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+              >
+                التالي
+              </button>
             </div>
           )}
         </div>
