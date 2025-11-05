@@ -98,6 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ownerId,
         name,
         type,
+        listingType,
         address,
         city,
         area,
@@ -116,6 +117,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         features,
         // Pricing
         monthlyRent,
+        price,
         insurance,
         availableFrom,
         minRentalPeriod,
@@ -138,6 +140,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ownerId: ownerIdBigInt,
           name,
           type,
+          listingType: listingType || 'للإيجار',
           address,
           city,
           area: area ? parseFloat(area) : null,
@@ -154,6 +157,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           features: features ? JSON.stringify(features) : null,
           // Pricing
           monthlyRent: monthlyRent ? parseFloat(monthlyRent) : null,
+          price: price ? parseFloat(price) : null,
           insurance: insurance ? parseFloat(insurance) : null,
           availableFrom: availableFrom ? new Date(availableFrom) : null,
           minRentalPeriod: minRentalPeriod || null,

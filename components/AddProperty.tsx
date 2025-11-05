@@ -22,6 +22,7 @@ export default function AddProperty() {
   const [formData, setFormData] = useState({
     // Step 1: Basic Details
     propertyType: 'شقة',
+    listingType: 'للإيجار', // للبيع أو للإيجار
     rooms: '1',
     bathrooms: '1',
     area: '',
@@ -51,7 +52,8 @@ export default function AddProperty() {
     description: '',
     
     // Step 4: Pricing and Availability
-    monthlyRent: '',
+    monthlyRent: '', // For rent (للإيجار)
+    price: '', // For sale (للبيع)
     insurance: '',
     availableFrom: '',
     minRentalPeriod: 'شهر واحد',
@@ -182,6 +184,7 @@ export default function AddProperty() {
       
       const newFormData = {
         propertyType: propertyTypeFromName,
+        listingType: (property as any).listingType || 'للإيجار',
         rooms: property.rooms || '1',
         bathrooms: property.bathrooms || '1',
         area: property.area ? property.area.toString() : '',
@@ -195,6 +198,7 @@ export default function AddProperty() {
         features,
         description: property.description || '',
         monthlyRent: property.monthlyRent ? property.monthlyRent.toString() : '',
+        price: (property as any).price ? (property as any).price.toString() : '',
         insurance: property.insurance ? property.insurance.toString() : '',
         availableFrom: property.availableFrom ? new Date(property.availableFrom).toISOString().split('T')[0] : '',
         minRentalPeriod: property.minRentalPeriod || 'شهر واحد',
@@ -470,6 +474,7 @@ export default function AddProperty() {
         ownerId,
         name: `${formData.propertyType} - ${formData.city}`,
         type: formData.propertyType,
+        listingType: formData.listingType,
         address,
         city: formData.city,
         area: formData.area ? parseFloat(formData.area) : null,
@@ -484,7 +489,8 @@ export default function AddProperty() {
         // Features (as object, will be converted to JSON in API)
         features: formData.features,
         // Pricing
-        monthlyRent: formData.monthlyRent ? parseFloat(formData.monthlyRent) : null,
+        monthlyRent: formData.listingType === 'للإيجار' && formData.monthlyRent ? parseFloat(formData.monthlyRent) : null,
+        price: formData.listingType === 'للبيع' && formData.price ? parseFloat(formData.price) : null,
         insurance: formData.insurance ? parseFloat(formData.insurance) : null,
         availableFrom: formData.availableFrom || null,
         minRentalPeriod: formData.minRentalPeriod || null,
@@ -617,6 +623,26 @@ export default function AddProperty() {
             {/* Step 1: Basic Details */}
             {currentStep === 1 && (
               <div className={styles.stepContent}>
+                {/* Sale or Rent Selection */}
+                <div className={styles.section}>
+                  <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>نوع الإعلان</h2>
+                  </div>
+                  
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.fieldLabel}>هل تريد بيع أو إيجار العقار؟</label>
+                    <select
+                      name="listingType"
+                      value={formData.listingType}
+                      onChange={handleInputChange}
+                      className={styles.fieldInput}
+                    >
+                      <option value="للإيجار">للإيجار</option>
+                      <option value="للبيع">للبيع</option>
+                    </select>
+                  </div>
+                </div>
+
                 {/* Property Type */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
@@ -925,26 +951,49 @@ export default function AddProperty() {
                   </div>
                   
                   <div className={styles.pricingGrid}>
-                    <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>الإيجار الشهري</label>
-                      <div className={styles.currencyInput}>
-                        <input
-                          type="text"
-                          name="monthlyRent"
-                          value={formData.monthlyRent}
-                          onChange={handleInputChange}
-                          onKeyDown={(e) => {
-                            // Prevent form submission on Enter in step 4 fields
-                            if (e.key === 'Enter') {
-                              e.preventDefault()
-                            }
-                          }}
-                          placeholder="0"
-                          className={styles.fieldInput}
-                        />
-                        <span className={styles.currency}>ريال</span>
+                    {formData.listingType === 'للإيجار' ? (
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الإيجار الشهري</label>
+                        <div className={styles.currencyInput}>
+                          <input
+                            type="text"
+                            name="monthlyRent"
+                            value={formData.monthlyRent}
+                            onChange={handleInputChange}
+                            onKeyDown={(e) => {
+                              // Prevent form submission on Enter in step 4 fields
+                              if (e.key === 'Enter') {
+                                e.preventDefault()
+                              }
+                            }}
+                            placeholder="0"
+                            className={styles.fieldInput}
+                          />
+                          <span className={styles.currency}>ريال/شهر</span>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>سعر البيع</label>
+                        <div className={styles.currencyInput}>
+                          <input
+                            type="text"
+                            name="price"
+                            value={formData.price}
+                            onChange={handleInputChange}
+                            onKeyDown={(e) => {
+                              // Prevent form submission on Enter in step 4 fields
+                              if (e.key === 'Enter') {
+                                e.preventDefault()
+                              }
+                            }}
+                            placeholder="0"
+                            className={styles.fieldInput}
+                          />
+                          <span className={styles.currency}>ريال</span>
+                        </div>
+                      </div>
+                    )}
                     
                     <div className={styles.fieldGroup}>
                       <label className={styles.fieldLabel}>التأمين</label>

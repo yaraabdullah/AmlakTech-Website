@@ -56,6 +56,7 @@ model Property {
 
   name             String
   type             String // شقة، منزل، فيلا، مكتب، متجر، أرض
+  listingType      String  @default("للإيجار") @map("listing_type") // للبيع، للإيجار
   address          String
   city             String
   area             Float? // المساحة بالمتر المربع
@@ -76,7 +77,8 @@ model Property {
   features String? // JSON: parking, garden, balcony, pool, elevator, gym, security, wifi, ac, jacuzzi
 
   // Pricing
-  monthlyRent     Float?    @map("monthly_rent")
+  monthlyRent     Float?    @map("monthly_rent") // For rent properties (للإيجار)
+  price           Float?    // For sale properties (للبيع) - full price
   insurance       Float?
   availableFrom   DateTime? @map("available_from")
   minRentalPeriod String?   @map("min_rental_period")

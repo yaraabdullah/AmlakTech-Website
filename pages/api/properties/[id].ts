@@ -28,6 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           propertySubType: true,
           features: true,
           monthlyRent: true,
+          price: true,
           insurance: true,
           availableFrom: true,
           minRentalPeriod: true,
@@ -76,6 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const {
         name,
         type,
+        listingType,
         address,
         city,
         area,
@@ -90,6 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         propertySubType,
         features,
         monthlyRent,
+        price,
         insurance,
         availableFrom,
         minRentalPeriod,
@@ -103,6 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       if (name !== undefined) updateData.name = name
       if (type !== undefined) updateData.type = type
+      if (listingType !== undefined) updateData.listingType = listingType
       if (address !== undefined) updateData.address = address
       if (city !== undefined) updateData.city = city
       if (area !== undefined) updateData.area = area ? parseFloat(area) : null
@@ -117,6 +121,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (propertySubType !== undefined) updateData.propertySubType = propertySubType
       if (features !== undefined) updateData.features = features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null
       if (monthlyRent !== undefined) updateData.monthlyRent = monthlyRent ? parseFloat(monthlyRent) : null
+      if (price !== undefined) updateData.price = price ? parseFloat(price) : null
       if (insurance !== undefined) updateData.insurance = insurance ? parseFloat(insurance) : null
       if (availableFrom !== undefined) updateData.availableFrom = availableFrom ? new Date(availableFrom) : null
       if (minRentalPeriod !== undefined) updateData.minRentalPeriod = minRentalPeriod
@@ -148,6 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           propertySubType: true,
           features: true,
           monthlyRent: true,
+          price: true,
           insurance: true,
           availableFrom: true,
           minRentalPeriod: true,

@@ -10,12 +10,14 @@ interface Property {
   id: string
   name: string
   type: string
+  listingType?: string
   address: string
   city: string
   area: number | null
   rooms: string | null
   bathrooms: string | null
   monthlyRent: number | null
+  price?: number | null
   status: string
   description: string | null
   images: string | null
@@ -418,9 +420,9 @@ export default function PropertySearch() {
           ) : filteredProperties.length > 0 ? (
             <div className={styles.propertiesGrid}>
               {paginatedProperties.map((property) => {
-                const propertyType = property.type || 'للإيجار'
-                const isForSale = propertyType === 'للبيع'
-                const price = property.monthlyRent || property.price || 0
+                const listingType = property.listingType || 'للإيجار'
+                const isForSale = listingType === 'للبيع'
+                const price = isForSale ? (property.price || 0) : (property.monthlyRent || 0)
                 
                 return (
                   <div key={property.id} className={styles.propertyCard}>
@@ -470,19 +472,19 @@ export default function PropertySearch() {
                             🛏️ {property.rooms} غرف
                           </span>
                         )}
-                        {property.entrances && (
+                        {(property as any).entrances && (
                           <span className={styles.feature}>
-                            🚪 {property.entrances} مدخل
+                            🚪 {(property as any).entrances} مدخل
                           </span>
                         )}
-                        {property.streets && (
+                        {(property as any).streets && (
                           <span className={styles.feature}>
-                            🛣️ {property.streets} شارعين
+                            🛣️ {(property as any).streets} شارعين
                           </span>
                         )}
-                        {property.direction && (
+                        {(property as any).direction && (
                           <span className={styles.feature}>
-                            🧭 {property.direction}
+                            🧭 {(property as any).direction}
                           </span>
                         )}
                       </div>
