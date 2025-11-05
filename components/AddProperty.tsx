@@ -680,37 +680,42 @@ export default function AddProperty() {
                   </div>
                   
                   <div className={styles.detailsGrid}>
-                    <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>عدد الغرف</label>
-                      <select
-                        name="rooms"
-                        value={formData.rooms}
-                        onChange={handleInputChange}
-                        className={styles.fieldInput}
-                      >
-                        <option value="استوديو">استوديو</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5+">5+</option>
-                      </select>
-                    </div>
-                    
-                    <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>عدد الحمامات</label>
-                      <select
-                        name="bathrooms"
-                        value={formData.bathrooms}
-                        onChange={handleInputChange}
-                        className={styles.fieldInput}
-                      >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                      </select>
-                    </div>
+                    {/* Hide rooms and bathrooms for أرض، مكتب، متجر */}
+                    {formData.propertyType !== 'أرض' && formData.propertyType !== 'مكتب' && formData.propertyType !== 'متجر' && (
+                      <>
+                        <div className={styles.fieldGroup}>
+                          <label className={styles.fieldLabel}>عدد الغرف</label>
+                          <select
+                            name="rooms"
+                            value={formData.rooms}
+                            onChange={handleInputChange}
+                            className={styles.fieldInput}
+                          >
+                            <option value="استوديو">استوديو</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5+">5+</option>
+                          </select>
+                        </div>
+                        
+                        <div className={styles.fieldGroup}>
+                          <label className={styles.fieldLabel}>عدد الحمامات</label>
+                          <select
+                            name="bathrooms"
+                            value={formData.bathrooms}
+                            onChange={handleInputChange}
+                            className={styles.fieldInput}
+                          >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                          </select>
+                        </div>
+                      </>
+                    )}
                     
                     <div className={styles.fieldGroup}>
                       <label className={styles.fieldLabel}>المساحة (متر مربع)</label>
@@ -1030,20 +1035,23 @@ export default function AddProperty() {
                       </div>
                     </div>
                     
-                    <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>الحد الأدنى لمدة الإيجار</label>
-                      <select
-                        name="minRentalPeriod"
-                        value={formData.minRentalPeriod}
-                        onChange={handleInputChange}
-                        className={styles.fieldInput}
-                      >
-                        <option value="شهر واحد">شهر واحد</option>
-                        <option value="3 أشهر">3 أشهر</option>
-                        <option value="6 أشهر">6 أشهر</option>
-                        <option value="سنة واحدة">سنة واحدة</option>
-                      </select>
-                    </div>
+                    {/* Hide minimum rental period for sale properties */}
+                    {formData.listingType === 'للإيجار' && (
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الحد الأدنى لمدة الإيجار</label>
+                        <select
+                          name="minRentalPeriod"
+                          value={formData.minRentalPeriod}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        >
+                          <option value="شهر واحد">شهر واحد</option>
+                          <option value="3 أشهر">3 أشهر</option>
+                          <option value="6 أشهر">6 أشهر</option>
+                          <option value="سنة واحدة">سنة واحدة</option>
+                        </select>
+                      </div>
+                    )}
                   </div>
                   
                   <div className={styles.publicDisplaySection}>
