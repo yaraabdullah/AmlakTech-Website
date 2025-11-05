@@ -33,8 +33,17 @@ export default function ContractManagement() {
       trend: 'neutral',
     }
   ])
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false)
   const [formData, setFormData] = useState({
-    searchQuery: ''
+    searchQuery: '',
+    city: '',
+    propertyType: '',
+    rooms: '',
+    priceFrom: '',
+    priceTo: '',
+    areaFrom: '',
+    areaTo: '',
+    furnished: 'all'
   })
 
   // Fetch owner ID
@@ -145,8 +154,71 @@ export default function ContractManagement() {
       })
     }
 
+    // Filter by city
+    if (formData.city) {
+      filtered = filtered.filter(contract => 
+        contract.property?.city?.toLowerCase().includes(formData.city.toLowerCase())
+      )
+    }
+
+    // Filter by property type
+    if (formData.propertyType) {
+      filtered = filtered.filter(contract => 
+        contract.property?.type === formData.propertyType || 
+        contract.property?.propertySubType === formData.propertyType
+      )
+    }
+
+    // Filter by rooms
+    if (formData.rooms) {
+      filtered = filtered.filter(contract => 
+        contract.property?.rooms === formData.rooms
+      )
+    }
+
+    // Filter by price range
+    if (formData.priceFrom) {
+      const priceFrom = parseFloat(formData.priceFrom)
+      filtered = filtered.filter(contract => 
+        contract.property?.monthlyRent && contract.property.monthlyRent >= priceFrom
+      )
+    }
+    if (formData.priceTo) {
+      const priceTo = parseFloat(formData.priceTo)
+      filtered = filtered.filter(contract => 
+        contract.property?.monthlyRent && contract.property.monthlyRent <= priceTo
+      )
+    }
+
+    // Filter by area range
+    if (formData.areaFrom) {
+      const areaFrom = parseFloat(formData.areaFrom)
+      filtered = filtered.filter(contract => 
+        contract.property?.area && contract.property.area >= areaFrom
+      )
+    }
+    if (formData.areaTo) {
+      const areaTo = parseFloat(formData.areaTo)
+      filtered = filtered.filter(contract => 
+        contract.property?.area && contract.property.area <= areaTo
+      )
+    }
+
+    // Filter by furnished status
+    if (formData.furnished !== 'all') {
+      filtered = filtered.filter(contract => {
+        const propertyStatus = contract.property?.status?.toLowerCase() || ''
+        if (formData.furnished === 'furnished') {
+          return propertyStatus.includes('مفروش')
+        } else if (formData.furnished === 'unfurnished') {
+          return propertyStatus.includes('غير مفروش') || (!propertyStatus.includes('مفروش') && propertyStatus)
+        }
+        return true
+      })
+    }
+
     setFilteredContracts(filtered)
-  }, [contracts, activeTab, formData.searchQuery])
+  }, [contracts, activeTab, formData])
 
   // Calculate metrics
   useEffect(() => {
@@ -264,13 +336,38 @@ export default function ContractManagement() {
     { id: 'drafts', title: 'المسودات', active: activeTab === 'drafts' }
   ]
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
   }
+
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      furnished: e.target.value
+    }))
+  }
+
+  const clearFilters = () => {
+    setFormData({
+      searchQuery: '',
+      city: '',
+      propertyType: '',
+      rooms: '',
+      priceFrom: '',
+      priceTo: '',
+      areaFrom: '',
+      areaTo: '',
+      furnished: 'all'
+    })
+  }
+
+  // Get unique values for filters
+  const cities = Array.from(new Set(contracts.map(c => c.property?.city).filter(Boolean)))
+  const propertyTypes = Array.from(new Set(contracts.map(c => c.property?.type || c.property?.propertySubType).filter(Boolean)))
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId)
@@ -310,6 +407,175 @@ export default function ContractManagement() {
                 <span className={styles.addIcon}>+</span>
                 إنشاء عقد جديد
               </button>
+            </div>
+
+            {/* Advanced Search Form */}
+            <div className={styles.advancedSearchSection}>
+              <div className={styles.advancedSearchHeader}>
+                <h3 className={styles.advancedSearchTitle}>البحث المتقدم</h3>
+                <button 
+                  className={styles.toggleAdvancedBtn}
+                  onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
+                >
+                  {showAdvancedSearch ? '▲' : '▼'}
+                </button>
+              </div>
+
+              {showAdvancedSearch && (
+                <form className={styles.advancedSearchForm} onSubmit={(e) => e.preventDefault()}>
+                  <div className={styles.searchGrid}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="city">المدينة</label>
+                      <select
+                        id="city"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">جميع المدن</option>
+                        {cities.map(city => (
+                          <option key={city} value={city}>{city}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="propertyType">نوع العقار</label>
+                      <select
+                        id="propertyType"
+                        name="propertyType"
+                        value={formData.propertyType}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">جميع الأنواع</option>
+                        {propertyTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="rooms">عدد الغرف</label>
+                      <select
+                        id="rooms"
+                        name="rooms"
+                        value={formData.rooms}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">أي عدد</option>
+                        <option value="1">1 غرفة</option>
+                        <option value="2">2 غرف</option>
+                        <option value="3">3 غرف</option>
+                        <option value="4">4 غرف</option>
+                        <option value="5+">5+ غرف</option>
+                      </select>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="priceFrom">نطاق السعر - من</label>
+                      <input
+                        type="number"
+                        id="priceFrom"
+                        name="priceFrom"
+                        value={formData.priceFrom}
+                        onChange={handleInputChange}
+                        placeholder="من"
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="priceTo">نطاق السعر - إلى</label>
+                      <input
+                        type="number"
+                        id="priceTo"
+                        name="priceTo"
+                        value={formData.priceTo}
+                        onChange={handleInputChange}
+                        placeholder="إلى"
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="areaFrom">المساحة (م²) - من</label>
+                      <input
+                        type="number"
+                        id="areaFrom"
+                        name="areaFrom"
+                        value={formData.areaFrom}
+                        onChange={handleInputChange}
+                        placeholder="من"
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="areaTo">المساحة (م²) - إلى</label>
+                      <input
+                        type="number"
+                        id="areaTo"
+                        name="areaTo"
+                        value={formData.areaTo}
+                        onChange={handleInputChange}
+                        placeholder="إلى"
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label>الحالة</label>
+                      <div className={styles.radioGroup}>
+                        <label>
+                          <input
+                            type="radio"
+                            name="furnished"
+                            value="all"
+                            checked={formData.furnished === 'all'}
+                            onChange={handleRadioChange}
+                          />
+                          الكل
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="furnished"
+                            value="furnished"
+                            checked={formData.furnished === 'furnished'}
+                            onChange={handleRadioChange}
+                          />
+                          مفروش
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="furnished"
+                            value="unfurnished"
+                            checked={formData.furnished === 'unfurnished'}
+                            onChange={handleRadioChange}
+                          />
+                          غير مفروش
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.searchActions}>
+                    <button 
+                      type="button" 
+                      className={styles.searchBtn}
+                      onClick={() => setShowAdvancedSearch(false)}
+                    >
+                      🔍 بحث
+                    </button>
+                    {(formData.city || formData.propertyType || formData.priceFrom || formData.areaFrom || formData.furnished !== 'all') && (
+                      <button 
+                        type="button" 
+                        className={styles.clearBtn}
+                        onClick={clearFilters}
+                      >
+                        مسح الفلاتر
+                      </button>
+                    )}
+                  </div>
+                </form>
+              )}
             </div>
 
             {/* Contract Metrics */}
