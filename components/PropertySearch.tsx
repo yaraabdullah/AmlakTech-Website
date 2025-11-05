@@ -22,7 +22,6 @@ interface Property {
   description: string | null
   images: string | null
   features: string | null
-  propertySubType: string | null
   createdAt: string
 }
 
@@ -92,7 +91,7 @@ export default function PropertySearch() {
     // Filter by property type
     if (filters.propertyType) {
       filtered = filtered.filter(p => 
-        p.type === filters.propertyType || p.propertySubType === filters.propertyType
+        p.type === filters.propertyType
       )
     }
 
@@ -497,15 +496,8 @@ export default function PropertySearch() {
                           </span>
                         </div>
                         <div className={styles.metaRight}>
-                          {property.propertySubType && (
-                            <span className={styles.metaTypeIcon}>
-                              {property.propertySubType === 'مكتب' ? '🏢' : 
-                               property.propertySubType === 'أرض' ? '🏔️' : 
-                               property.status && property.status.includes('مفروش') ? '🛋️' : '🏠'}
-                            </span>
-                          )}
-                          {property.propertySubType && (
-                            <span className={styles.metaTag}>{property.propertySubType}</span>
+                          {property.status && property.status.includes('مفروش') && (
+                            <span className={styles.metaTypeIcon}>🛋️</span>
                           )}
                           {property.status && property.status.includes('مفروش') && (
                             <span className={styles.metaTag}>مفروش</span>

@@ -186,7 +186,7 @@ export default function ContractManagement() {
 
     if (formData.propertyType) {
       filtered = filtered.filter(p => 
-        p.type === formData.propertyType || p.propertySubType === formData.propertyType
+        p.type === formData.propertyType
       )
     }
 
@@ -281,8 +281,7 @@ export default function ContractManagement() {
     // Filter by property type
     if (formData.propertyType) {
       filtered = filtered.filter(contract => 
-        contract.property?.type === formData.propertyType || 
-        contract.property?.propertySubType === formData.propertyType
+        contract.property?.type === formData.propertyType
       )
     }
 
@@ -484,7 +483,7 @@ export default function ContractManagement() {
 
   // Get unique values for filters
   const cities = Array.from(new Set(properties.map(p => p.city).filter(Boolean)))
-  const propertyTypes = Array.from(new Set(properties.map(p => p.type || p.propertySubType).filter(Boolean)))
+  const propertyTypes = Array.from(new Set(properties.map(p => p.type).filter(Boolean)))
 
   // Get property image
   const getPropertyImage = (property: any) => {
@@ -854,9 +853,6 @@ export default function ContractManagement() {
                       </div>
 
                       <div className={styles.propertyMeta}>
-                        {property.propertySubType && (
-                          <span className={styles.metaTag}>{property.propertySubType}</span>
-                        )}
                         <span className={styles.metaDate}>
                           {formatPropertyDate(property.createdAt)}
                         </span>

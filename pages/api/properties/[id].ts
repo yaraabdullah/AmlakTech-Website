@@ -25,7 +25,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           unitNumber: true,
           postalCode: true,
           country: true,
-          propertySubType: true,
           features: true,
           monthlyRent: true,
           price: true,
@@ -89,7 +88,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         status,
         postalCode,
         country,
-        propertySubType,
         features,
         monthlyRent,
         price,
@@ -118,7 +116,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (status !== undefined) updateData.status = status
       if (postalCode !== undefined) updateData.postalCode = postalCode
       if (country !== undefined) updateData.country = country
-      if (propertySubType !== undefined) updateData.propertySubType = propertySubType
       if (features !== undefined) updateData.features = features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null
       if (monthlyRent !== undefined) updateData.monthlyRent = monthlyRent ? parseFloat(monthlyRent) : null
       if (price !== undefined) updateData.price = price ? parseFloat(price) : null
@@ -150,7 +147,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           unitNumber: true,
           postalCode: true,
           country: true,
-          propertySubType: true,
           features: true,
           monthlyRent: true,
           price: true,

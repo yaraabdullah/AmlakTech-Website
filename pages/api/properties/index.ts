@@ -107,12 +107,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         constructionYear,
         description,
         images,
+        status,
         // Location details
         unitNumber,
         postalCode,
         country,
-        // Property subtype
-        propertySubType,
         // Features
         features,
         // Pricing
@@ -151,8 +150,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           unitNumber: unitNumber || null,
           postalCode: postalCode || null,
           country: country || 'المملكة العربية السعودية',
-          // Property subtype
-          propertySubType: propertySubType || null,
           // Features (convert object to JSON string)
           features: features ? JSON.stringify(features) : null,
           // Pricing
@@ -169,7 +166,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           // Additional details
           description: description || null,
           images: images ? (typeof images === 'string' ? images : JSON.stringify(images)) : null,
-          status: 'متاح',
+          status: status || 'متاح',
         },
         include: {
           owner: {

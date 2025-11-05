@@ -23,14 +23,15 @@ export default function AddProperty() {
     // Step 1: Basic Details
     propertyType: 'شقة',
     listingType: 'للإيجار', // للبيع أو للإيجار
+    furnishedStatus: '', // مفروشة أو غير مفروشة (only for منزل، فيلا، شقة)
     rooms: '1',
     bathrooms: '1',
     area: '',
-    propertySubType: 'استوديو',
     constructionYear: '',
     
     // Step 2: Location
     streetName: '',
+    neighborhood: '',
     city: '',
     postalCode: '',
     country: 'المملكة العربية السعودية',
@@ -133,9 +134,18 @@ export default function AddProperty() {
       
       setPropertyId(property.id)
       
-      // Parse address to extract street name and postal code
+      // Parse address to extract street name, neighborhood, and postal code
       const addressParts = property.address ? property.address.split('، ') : []
       const streetName = addressParts[0] || ''
+      // Try to find neighborhood (usually after street name)
+      let neighborhood = ''
+      const neighborhoodIndex = addressParts.findIndex((part: string) => part.includes('الحي') || part.includes('حي'))
+      if (neighborhoodIndex > 0) {
+        neighborhood = addressParts[neighborhoodIndex].replace(/^(الحي|حي):?\s*/, '')
+      } else if (addressParts.length > 1 && !addressParts[1].includes('الرمز البريدي')) {
+        // If second part doesn't have postal code, it might be neighborhood
+        neighborhood = addressParts[1]
+      }
       const postalCodePart = addressParts.find((part: string) => part.includes('الرمز البريدي'))
       const postalCode = postalCodePart ? postalCodePart.replace('الرمز البريدي: ', '') : ''
       
@@ -182,15 +192,22 @@ export default function AddProperty() {
       const nameParts = property.name ? property.name.split(' - ') : []
       const propertyTypeFromName = nameParts.length > 0 ? nameParts[0] : property.type || 'شقة'
       
+      // Extract furnished status from property status
+      let furnishedStatus = ''
+      if (property.status && property.status.includes('مفروش')) {
+        furnishedStatus = property.status.includes('غير مفروش') ? 'غير مفروشة' : 'مفروشة'
+      }
+      
       const newFormData = {
         propertyType: propertyTypeFromName,
         listingType: (property as any).listingType || 'للإيجار',
+        furnishedStatus: furnishedStatus,
         rooms: property.rooms || '1',
         bathrooms: property.bathrooms || '1',
         area: property.area ? property.area.toString() : '',
-        propertySubType: property.propertySubType || 'استوديو',
         constructionYear: property.constructionYear || '',
         streetName,
+        neighborhood: neighborhood || '',
         city: property.city || '',
         postalCode,
         country: property.country || 'المملكة العربية السعودية',
@@ -429,8 +446,8 @@ export default function AddProperty() {
     }
 
     // Validate required fields
-    if (!formData.streetName || !formData.city) {
-      setSubmitError('يرجى إدخال اسم الشارع والمدينة')
+    if (!formData.streetName || !formData.neighborhood || !formData.city) {
+      setSubmitError('يرجى إدخال اسم الشارع والحي والمدينة')
       setCurrentStep(2)
       return
     }
@@ -465,10 +482,19 @@ export default function AddProperty() {
       
       // Build address string
       const addressParts = [formData.streetName]
+      if (formData.neighborhood) {
+        addressParts.push(`الحي: ${formData.neighborhood}`)
+      }
       if (formData.postalCode) {
         addressParts.push(`الرمز البريدي: ${formData.postalCode}`)
       }
       const address = addressParts.join('، ')
+      
+      // Build status field: include furnished status for منزل، فيلا، شقة
+      let status = 'متاح'
+      if ((formData.propertyType === 'منزل' || formData.propertyType === 'فيلا' || formData.propertyType === 'شقة') && formData.furnishedStatus) {
+        status = `متاح - ${formData.furnishedStatus}`
+      }
       
       const propertyData = {
         ownerId,
@@ -484,10 +510,10 @@ export default function AddProperty() {
         // Location details
         postalCode: formData.postalCode || null,
         country: formData.country || 'المملكة العربية السعودية',
-        // Property subtype
-        propertySubType: formData.propertySubType || null,
         // Features (as object, will be converted to JSON in API)
         features: formData.features,
+        // Status: include furnished status for residential properties
+        status: status,
         // Pricing
         monthlyRent: formData.listingType === 'للإيجار' && formData.monthlyRent ? parseFloat(formData.monthlyRent) : null,
         price: formData.listingType === 'للبيع' && formData.price ? parseFloat(formData.price) : null,
@@ -742,6 +768,23 @@ export default function AddProperty() {
                         className={styles.fieldInput}
                       />
                     </div>
+                    
+                    {/* Show furnished status only for منزل، فيلا، شقة */}
+                    {(formData.propertyType === 'منزل' || formData.propertyType === 'فيلا' || formData.propertyType === 'شقة') && (
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>حالة المفروشات</label>
+                        <select
+                          name="furnishedStatus"
+                          value={formData.furnishedStatus}
+                          onChange={handleInputChange}
+                          className={styles.fieldInput}
+                        >
+                          <option value="">اختر الحالة</option>
+                          <option value="مفروشة">مفروشة</option>
+                          <option value="غير مفروشة">غير مفروشة</option>
+                        </select>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -775,6 +818,19 @@ export default function AddProperty() {
                           onChange={handleInputChange}
                           onKeyDown={handleKeyDown}
                           placeholder="مثال: شارع الملك فهد، رقم 123"
+                          className={styles.fieldInput}
+                        />
+                      </div>
+                      
+                      <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>الحي</label>
+                        <input
+                          type="text"
+                          name="neighborhood"
+                          value={formData.neighborhood}
+                          onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
+                          placeholder="مثال: النخيل، العليا"
                           className={styles.fieldInput}
                         />
                       </div>

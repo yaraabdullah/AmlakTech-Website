@@ -70,9 +70,6 @@ model Property {
   postalCode String? @map("postal_code")
   country    String? @default("المملكة العربية السعودية")
 
-  // Property subtype (for apartments)
-  propertySubType String? @map("property_sub_type")
-
   // Features (stored as JSON)
   features String? // JSON: parking, garden, balcony, pool, elevator, gym, security, wifi, ac, jacuzzi
 
