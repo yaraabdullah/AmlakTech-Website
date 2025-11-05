@@ -13,6 +13,12 @@ export default function ContractManagement() {
   const [ownerId, setOwnerId] = useState<string | null>(null)
   const [contracts, setContracts] = useState<any[]>([])
   const [filteredContracts, setFilteredContracts] = useState<any[]>([])
+  const [properties, setProperties] = useState<any[]>([])
+  const [filteredProperties, setFilteredProperties] = useState<any[]>([])
+  const [showAIRecommendations, setShowAIRecommendations] = useState(true)
+  const [sortBy, setSortBy] = useState('newest')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
   const [contractMetrics, setContractMetrics] = useState([
     {
       title: 'العقود النشطة',
@@ -106,6 +112,24 @@ export default function ContractManagement() {
     }
   }
 
+  const formatPropertyDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffTime = Math.abs(now.getTime() - date.getTime())
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      
+      if (diffDays === 0) return 'اليوم'
+      if (diffDays === 1) return 'منذ يوم واحد'
+      if (diffDays < 7) return `منذ ${diffDays} أيام`
+      if (diffDays < 30) return `منذ ${Math.floor(diffDays / 7)} أسبوع`
+      if (diffDays < 365) return `منذ ${Math.floor(diffDays / 30)} شهر`
+      return `منذ ${Math.floor(diffDays / 365)} سنة`
+    } catch {
+      return 'قريباً'
+    }
+  }
+
   const getDaysUntilExpiry = (endDate: string) => {
     if (!endDate) return null
     try {
@@ -122,8 +146,101 @@ export default function ContractManagement() {
   useEffect(() => {
     if (ownerId) {
       fetchContracts()
+      fetchProperties()
     }
   }, [ownerId])
+
+  // Fetch properties
+  const fetchProperties = async () => {
+    if (!ownerId) return
+
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/properties?ownerId=${ownerId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setProperties(data)
+        setFilteredProperties(data)
+      } else {
+        console.error('Failed to fetch properties')
+        setProperties([])
+      }
+    } catch (error) {
+      console.error('Error fetching properties:', error)
+      setProperties([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Filter and sort properties
+  useEffect(() => {
+    let filtered = [...properties]
+
+    // Apply filters from formData
+    if (formData.city) {
+      filtered = filtered.filter(p => 
+        p.city?.toLowerCase().includes(formData.city.toLowerCase())
+      )
+    }
+
+    if (formData.propertyType) {
+      filtered = filtered.filter(p => 
+        p.type === formData.propertyType || p.propertySubType === formData.propertyType
+      )
+    }
+
+    if (formData.rooms) {
+      filtered = filtered.filter(p => 
+        p.rooms === formData.rooms
+      )
+    }
+
+    if (formData.priceFrom) {
+      const priceFrom = parseFloat(formData.priceFrom)
+      filtered = filtered.filter(p => 
+        p.monthlyRent && p.monthlyRent >= priceFrom
+      )
+    }
+
+    if (formData.priceTo) {
+      const priceTo = parseFloat(formData.priceTo)
+      filtered = filtered.filter(p => 
+        p.monthlyRent && p.monthlyRent <= priceTo
+      )
+    }
+
+    if (formData.areaFrom) {
+      const areaFrom = parseFloat(formData.areaFrom)
+      filtered = filtered.filter(p => 
+        p.area && p.area >= areaFrom
+      )
+    }
+
+    if (formData.areaTo) {
+      const areaTo = parseFloat(formData.areaTo)
+      filtered = filtered.filter(p => 
+        p.area && p.area <= areaTo
+      )
+    }
+
+    // Sort properties
+    filtered.sort((a, b) => {
+      if (sortBy === 'newest') {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      } else if (sortBy === 'oldest') {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      } else if (sortBy === 'price-low') {
+        return (a.monthlyRent || 0) - (b.monthlyRent || 0)
+      } else if (sortBy === 'price-high') {
+        return (b.monthlyRent || 0) - (a.monthlyRent || 0)
+      }
+      return 0
+    })
+
+    setFilteredProperties(filtered)
+    setCurrentPage(1) // Reset to first page when filters change
+  }, [properties, formData, sortBy])
 
   // Filter contracts based on active tab and search query
   useEffect(() => {
@@ -366,8 +483,31 @@ export default function ContractManagement() {
   }
 
   // Get unique values for filters
-  const cities = Array.from(new Set(contracts.map(c => c.property?.city).filter(Boolean)))
-  const propertyTypes = Array.from(new Set(contracts.map(c => c.property?.type || c.property?.propertySubType).filter(Boolean)))
+  const cities = Array.from(new Set(properties.map(p => p.city).filter(Boolean)))
+  const propertyTypes = Array.from(new Set(properties.map(p => p.type || p.propertySubType).filter(Boolean)))
+
+  // Get property image
+  const getPropertyImage = (property: any) => {
+    if (property.images) {
+      try {
+        const images = typeof property.images === 'string' 
+          ? JSON.parse(property.images) 
+          : property.images
+        if (Array.isArray(images) && images.length > 0) {
+          return images[0]
+        }
+      } catch (e) {
+        // Invalid JSON, use default
+      }
+    }
+    return '/placeholder-property.jpg'
+  }
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProperties.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedProperties = filteredProperties.slice(startIndex, endIndex)
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId)
@@ -385,6 +525,29 @@ export default function ContractManagement() {
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>إدارة العقود</h1>
           </div>
+
+          {/* AI Recommendations Box */}
+          {showAIRecommendations && (
+            <div className={styles.aiRecommendationsBox}>
+              <div className={styles.aiRecommendationsContent}>
+                <div className={styles.aiRecommendationsText}>
+                  <div className={styles.aiRecommendationsIcon}>💡</div>
+                  <div className={styles.aiRecommendationsInfo}>
+                    <h3 className={styles.aiRecommendationsTitle}>توصيات ذكية من أملاك تك</h3>
+                    <p className={styles.aiRecommendationsDescription}>
+                      انقر لعرض التوصيات النخيل والروضة بناءً على بحثك السابق. قد تهتم بالعقارات في منطقة
+                    </p>
+                  </div>
+                </div>
+                <button 
+                  className={styles.viewRecommendationsBtn}
+                  onClick={() => setShowAIRecommendations(false)}
+                >
+                  عرض التوصيات
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Contract Overview Section */}
           <div className={styles.contractOverviewSection}>
@@ -612,90 +775,163 @@ export default function ContractManagement() {
             </button>
           </div>
 
-          {/* Contracts List Section */}
-          <div className={styles.contractsListSection}>
-            {/* Tabs */}
-            <div className={styles.tabsContainer}>
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  className={`${styles.tab} ${tab.active ? styles.active : ''}`}
-                  onClick={() => handleTabChange(tab.id)}
+          {/* Properties List Section */}
+          <div className={styles.propertiesListSection}>
+            {/* Results Header */}
+            <div className={styles.resultsHeader}>
+              <h2 className={styles.resultsTitle}>
+                نتائج البحث ({filteredProperties.length} عقار)
+              </h2>
+              <div className={styles.sortGroup}>
+                <label htmlFor="sortBy">ترتيب حسب:</label>
+                <select
+                  id="sortBy"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className={styles.sortSelect}
                 >
-                  {tab.title}
-                </button>
-              ))}
+                  <option value="newest">الأحدث</option>
+                  <option value="oldest">الأقدم</option>
+                  <option value="price-low">السعر: من الأقل للأعلى</option>
+                  <option value="price-high">السعر: من الأعلى للأقل</option>
+                </select>
+              </div>
             </div>
 
-            {/* Contracts Table */}
-            <div className={styles.contractsTable}>
-              <div className={styles.tableHeader}>
-                <div>اسم العقد</div>
-                <div>المستأجر</div>
-                <div>العقار</div>
-                <div>الحالة</div>
-                <div>تاريخ الانتهاء</div>
-                <div>الإجراءات</div>
+            {/* Properties Grid */}
+            {loading ? (
+              <div className={styles.loadingState}>
+                <p>جاري تحميل العقارات...</p>
               </div>
-
-              {loading ? (
-                <div className={styles.loadingState}>
-                  <p>جاري تحميل العقود...</p>
-                </div>
-              ) : filteredContracts.length > 0 ? (
-                filteredContracts.map((contract) => {
-                  const statusColor = getStatusColor(contract.status)
-                  return (
-                    <div key={contract.id} className={`${styles.tableRow} ${styles[statusColor]}`}>
-                      <div className={styles.contractName}>{contract.type}</div>
-                      <div className={styles.tenantName}>{getTenantName(contract)}</div>
-                      <div className={styles.propertyName}>
-                        {contract.property?.name || contract.property?.address || '-'}
+            ) : paginatedProperties.length > 0 ? (
+              <div className={styles.propertiesGrid}>
+                {paginatedProperties.map((property) => (
+                  <div key={property.id} className={styles.propertyCard}>
+                    <div className={styles.propertyImage}>
+                      <Image
+                        src={getPropertyImage(property)}
+                        alt={property.name}
+                        width={400}
+                        height={300}
+                        className={styles.image}
+                      />
+                      <div className={styles.propertyBadge}>
+                        {property.type === 'للبيع' ? 'للبيع' : 'للإيجار'}
                       </div>
-                      <div className={styles.contractStatus}>
-                        <span className={`${styles.statusBadge} ${styles[statusColor]}`}>
-                          {contract.status}
+                      <button className={styles.favoriteBtn}>❤️</button>
+                    </div>
+
+                    <div className={styles.propertyContent}>
+                      <div className={styles.propertyPrice}>
+                        {property.monthlyRent 
+                          ? `${property.monthlyRent.toLocaleString('ar-SA')} ريال${property.type === 'للبيع' ? '' : '/شهر'}`
+                          : 'السعر غير متوفر'
+                        }
+                      </div>
+
+                      <h3 className={styles.propertyName}>{property.name}</h3>
+                      
+                      <div className={styles.propertyLocation}>
+                        📍 {property.city || 'غير محدد'} {property.address ? `، ${property.address}` : ''}
+                      </div>
+
+                      <div className={styles.propertyFeatures}>
+                        {property.area && (
+                          <span className={styles.feature}>
+                            📐 {property.area} م²
+                          </span>
+                        )}
+                        {property.bathrooms && (
+                          <span className={styles.feature}>
+                            🚿 {property.bathrooms} حمام
+                          </span>
+                        )}
+                        {property.rooms && (
+                          <span className={styles.feature}>
+                            🛏️ {property.rooms} غرف
+                          </span>
+                        )}
+                      </div>
+
+                      <div className={styles.propertyMeta}>
+                        {property.propertySubType && (
+                          <span className={styles.metaTag}>{property.propertySubType}</span>
+                        )}
+                        <span className={styles.metaDate}>
+                          {formatPropertyDate(property.createdAt)}
                         </span>
                       </div>
-                      <div className={styles.endDate}>{formatDate(contract.endDate)}</div>
-                      <div className={styles.actions}>
-                        <button 
-                          className={styles.actionBtn}
-                          onClick={() => router.push(`/owner/property-details?contractId=${contract.id}`)}
-                          title="عرض التفاصيل"
-                        >
-                          👁️
-                        </button>
-                        <button 
-                          className={styles.actionBtn}
-                          onClick={() => router.push(`/owner/add-tenant?contractId=${contract.id}&edit=true`)}
-                          title="تعديل"
-                        >
-                          ✏️
-                        </button>
-                      </div>
+
+                      <button
+                        className={styles.viewDetailsBtn}
+                        onClick={() => router.push(`/owner/property-details?id=${property.id}`)}
+                      >
+                        عرض التفاصيل
+                      </button>
                     </div>
-                  )
-                })
-              ) : (
-                <div className={styles.emptyState}>
-                  <p>
-                    {formData.searchQuery.trim() 
-                      ? 'لا توجد نتائج للبحث' 
-                      : activeTab === 'all'
-                      ? 'لا توجد عقود حالياً'
-                      : `لا توجد عقود ${activeTab === 'active' ? 'نشطة' : activeTab === 'expired' ? 'منتهية' : activeTab === 'pending' ? 'قيد التوقيع' : 'مسودات'}`}
-                  </p>
-                </div>
-              )}
-            </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>لا توجد عقارات متطابقة مع بحثك</p>
+                <button onClick={clearFilters} className={styles.clearBtn}>
+                  مسح الفلاتر
+                </button>
+              </div>
+            )}
 
             {/* Pagination */}
-            {filteredContracts.length > 0 && (
+            {filteredProperties.length > 0 && totalPages > 1 && (
               <div className={styles.pagination}>
-                <span className={styles.paginationInfo}>
-                  عرض 1-{filteredContracts.length} من {contracts.length} عقد
-                </span>
+                <button 
+                  className={styles.paginationBtn}
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  السابق
+                </button>
+                <div className={styles.paginationNumbers}>
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    let pageNum
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    return (
+                      <button
+                        key={pageNum}
+                        className={`${styles.paginationNumber} ${currentPage === pageNum ? styles.active : ''}`}
+                        onClick={() => setCurrentPage(pageNum)}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  })}
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <>
+                      <span className={styles.paginationEllipsis}>...</span>
+                      <button
+                        className={styles.paginationNumber}
+                        onClick={() => setCurrentPage(totalPages)}
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                </div>
+                <button 
+                  className={styles.paginationBtn}
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  التالي
+                </button>
               </div>
             )}
           </div>
