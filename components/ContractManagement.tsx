@@ -850,6 +850,11 @@ export default function ContractManagement() {
                             🛏️ {property.rooms} غرف
                           </span>
                         )}
+                        {property.status && property.status.includes('مفروش') && (
+                          <span className={styles.feature}>
+                            🛋️ {property.status.includes('غير مفروش') ? 'غير مفروشة' : 'مفروشة'}
+                          </span>
+                        )}
                       </div>
 
                       <div className={styles.propertyMeta}>

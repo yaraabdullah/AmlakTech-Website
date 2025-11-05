@@ -472,6 +472,11 @@ export default function PropertySearch() {
                             🛏️ {property.rooms} غرف
                           </span>
                         )}
+                        {property.status && property.status.includes('مفروش') && (
+                          <span className={styles.feature}>
+                            🛋️ {property.status.includes('غير مفروش') ? 'غير مفروشة' : 'مفروشة'}
+                          </span>
+                        )}
                         {(property as any).entrances && (
                           <span className={styles.feature}>
                             🚪 {(property as any).entrances} مدخل
@@ -497,15 +502,7 @@ export default function PropertySearch() {
                           </span>
                         </div>
                         <div className={styles.metaRight}>
-                          {property.status && property.status.includes('مفروش') && (
-                            <span className={styles.metaTypeIcon}>🛋️</span>
-                          )}
-                          {property.status && property.status.includes('مفروش') && (
-                            <span className={styles.metaTag}>مفروش</span>
-                          )}
-                          {property.status && property.status.includes('غير مفروش') && (
-                            <span className={styles.metaTag}>غير مفروش</span>
-                          )}
+                          {/* Furnished status is now shown in propertyFeatures section */}
                         </div>
                       </div>
 
