@@ -59,6 +59,7 @@ model Property {
   listingType      String  @default("للإيجار") @map("listing_type") // للبيع، للإيجار
   address          String
   city             String
+  neighborhood     String? // الحي
   area             Float? // المساحة بالمتر المربع
   rooms            String? // عدد الغرف
   bathrooms        String? // عدد الحمامات

@@ -17,6 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           type: true,
           address: true,
           city: true,
+          neighborhood: true,
           area: true,
           rooms: true,
           bathrooms: true,
@@ -79,6 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         listingType,
         address,
         city,
+        neighborhood,
         area,
         rooms,
         bathrooms,
@@ -107,6 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (listingType !== undefined) updateData.listingType = listingType
       if (address !== undefined) updateData.address = address
       if (city !== undefined) updateData.city = city
+      if (neighborhood !== undefined) updateData.neighborhood = neighborhood || null
       if (area !== undefined) updateData.area = area ? parseFloat(area) : null
       if (rooms !== undefined) updateData.rooms = rooms
       if (bathrooms !== undefined) updateData.bathrooms = bathrooms
@@ -139,6 +142,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           type: true,
           address: true,
           city: true,
+          neighborhood: true,
           area: true,
           rooms: true,
           bathrooms: true,

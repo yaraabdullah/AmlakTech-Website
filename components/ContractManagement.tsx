@@ -831,7 +831,7 @@ export default function ContractManagement() {
                       <h3 className={styles.propertyName}>{property.name}</h3>
                       
                       <div className={styles.propertyLocation}>
-                        📍 {property.city || 'غير محدد'} {property.address ? `، ${property.address}` : ''}
+                        📍 {(property as any).neighborhood ? `${(property as any).neighborhood}، ` : ''}{property.city || 'غير محدد'}
                       </div>
 
                       <div className={styles.propertyFeatures}>

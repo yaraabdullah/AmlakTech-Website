@@ -13,6 +13,7 @@ interface Property {
   listingType?: string
   address: string
   city: string
+  neighborhood?: string | null
   area: number | null
   rooms: string | null
   bathrooms: string | null
@@ -452,7 +453,7 @@ export default function PropertySearch() {
                       </h3>
                       
                       <div className={styles.propertyLocation}>
-                        📍 {property.address || property.city || 'غير محدد'} {property.city && property.address ? `، ${property.city}` : property.city || ''}
+                        📍 {property.neighborhood ? `${property.neighborhood}، ` : ''}{property.city || 'غير محدد'}
                       </div>
 
                       <div className={styles.propertyFeatures}>
