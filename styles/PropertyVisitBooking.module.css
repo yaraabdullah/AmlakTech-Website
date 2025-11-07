@@ -201,7 +201,7 @@
 }
 
 .calendarMonth {
-  font-weight: 700;
+  font-weight: var(--font-weight-normal);
   font-size: 18px;
   font-family: var(--font-family-primary);
 }
