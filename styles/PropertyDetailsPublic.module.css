@@ -184,10 +184,6 @@
   font-family: var(--font-family-primary);
 }
 
-.verificationIcon {
-  font-size: 18px;
-  font-family: var(--font-family-primary);
-}
 
 .contactForm {
   display: flex;
@@ -378,9 +374,10 @@
 
 .headerActionsRow {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 12px;
   flex-wrap: wrap;
+  flex-direction: row-reverse;
   font-family: var(--font-family-primary);
 }
 
@@ -690,6 +687,7 @@
 
   .headerActionsRow {
     justify-content: center;
+    flex-direction: row;
     font-family: var(--font-family-primary);
   }
 }

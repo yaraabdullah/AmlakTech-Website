@@ -440,7 +440,7 @@ export default function PropertyDetailsPublic() {
                 </div>
               </div>
               <div className={styles.verificationBox}>
-                <span className={styles.verificationIcon}>✅</span>
+                <span className={styles.checkmark}>✓</span>
                 <div className={styles.verificationText}>{landlordVerificationMessages.verified}</div>
               </div>
 
