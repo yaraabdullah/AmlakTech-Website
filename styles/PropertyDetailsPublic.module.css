@@ -179,7 +179,7 @@
 }
 
 .landlordName {
-  font-weight: 600;
+  font-weight: var(--font-weight-normal);
 }
 
 .landlordRole {
@@ -287,7 +287,6 @@
 
 .sectionTitle {
   font-size: 18px;
-  font-weight: 600;
   margin-bottom: 8px;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
@@ -327,7 +326,6 @@
 }
 
 .similarName {
-  font-weight: 600;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
 }
@@ -397,7 +395,7 @@
 .priceSuffix {
   font-size: 16px;
   color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: var(--font-weight-normal);
   font-family: var(--font-family-primary);
 }
 
@@ -610,7 +608,7 @@
   align-items: center;
   justify-content: center;
   color: var(--color-primary);
-  font-weight: 600;
+  font-weight: var(--font-weight-normal);
   font-family: var(--font-family-primary);
 }
 
@@ -657,12 +655,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .reviewerName {
-  font-weight: 600;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
 
