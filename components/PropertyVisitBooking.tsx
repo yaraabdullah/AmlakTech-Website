@@ -86,11 +86,13 @@ const PropertyVisitBooking: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
   const [selectedTime, setSelectedTime] = useState<string | null>('2:00 م')
   const [notes, setNotes] = useState('')
+  const [visitorId, setVisitorId] = useState<string | null>(null)
   const [visitorName, setVisitorName] = useState('')
   const [visitorEmail, setVisitorEmail] = useState('')
   const [visitorPhone, setVisitorPhone] = useState('')
   const [submissionError, setSubmissionError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isUserLoading, setIsUserLoading] = useState(true)
 
   useEffect(() => {
     if (!id) return
@@ -113,6 +115,54 @@ const PropertyVisitBooking: React.FC = () => {
 
     fetchProperty()
   }, [id])
+
+  useEffect(() => {
+    const loadVisitorInfo = async () => {
+      try {
+        setIsUserLoading(true)
+        let storedUserId: string | null = null
+        let storedName: string | null = null
+        let storedEmail: string | null = null
+
+        if (typeof window !== 'undefined') {
+          storedUserId = localStorage.getItem('userId')
+          storedName = localStorage.getItem('userName')
+          storedEmail = localStorage.getItem('userEmail')
+        }
+
+        if (storedName) {
+          setVisitorName(storedName)
+        }
+        if (storedEmail) {
+          setVisitorEmail(storedEmail)
+        }
+
+        if (!storedUserId) {
+          setSubmissionError('يرجى تسجيل الدخول لحجز زيارة للعقار.')
+          return
+        }
+
+        setVisitorId(storedUserId)
+        setSubmissionError(null)
+
+        const response = await fetch(`/api/user/${storedUserId}`)
+        if (response.ok) {
+          const userData = await response.json()
+          const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim()
+          setVisitorName(fullName || storedName || userData.email || '')
+          setVisitorEmail(userData.email || storedEmail || '')
+          setVisitorPhone(userData.phone || '')
+        }
+      } catch (err) {
+        console.error('Error loading visitor info:', err)
+        setSubmissionError('تعذر تحميل بيانات المستخدم. يرجى المحاولة لاحقاً.')
+      } finally {
+        setIsUserLoading(false)
+      }
+    }
+
+    loadVisitorInfo()
+  }, [])
 
   const daysMatrix = useMemo<Array<Array<Date | null>>>(() => {
     const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
@@ -152,8 +202,13 @@ const PropertyVisitBooking: React.FC = () => {
       return
     }
 
-    if (!visitorName.trim()) {
-      setSubmissionError('يرجى إدخال اسمك الكامل')
+    if (isUserLoading) {
+      setSubmissionError('جاري تحميل بيانات المستخدم، يرجى الانتظار.')
+      return
+    }
+
+    if (!visitorId) {
+      setSubmissionError('يرجى تسجيل الدخول لحجز زيارة للعقار.')
       return
     }
 
@@ -162,6 +217,8 @@ const PropertyVisitBooking: React.FC = () => {
       setSubmissionError('تعذر تحديد مالك العقار لإرسال الطلب.')
       return
     }
+
+    const normalizedVisitorName = visitorName.trim() || visitorEmail || 'مستخدم منصة أملاك تك'
 
     setSubmissionError(null)
     setIsSubmitting(true)
@@ -182,7 +239,8 @@ const PropertyVisitBooking: React.FC = () => {
         body: JSON.stringify({
           propertyId: property.id,
           ownerId: ownerIdentifier,
-          requesterName: visitorName.trim(),
+          requesterId: visitorId,
+          requesterName: normalizedVisitorName,
           requesterEmail: visitorEmail.trim() || null,
           requesterPhone: visitorPhone.trim() || null,
           visitType: visitSummary.visitType,
@@ -213,6 +271,7 @@ const PropertyVisitBooking: React.FC = () => {
   const propertyImages = parseImages(property?.images)
   const landlordName = property?.owner ? `${property.owner.first_name || ''} ${property.owner.last_name || ''}`.trim() : ''
   const displayVisitType = visitType === 'inPerson' ? 'زيارة شخصية' : 'جولة افتراضية'
+  const displayVisitorName = visitorName.trim() || visitorEmail || ''
 
   let content: React.ReactNode
 
@@ -226,9 +285,6 @@ const PropertyVisitBooking: React.FC = () => {
     content = (
       <div className={styles.bookingLayout}>
         <div className={styles.formColumn}>
-          <button type="button" className={styles.backButton} onClick={() => router.back()}>
-            العودة للخلف
-          </button>
           <header className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>حجز زيارة للعقار</h1>
             <p className={styles.pageSubtitle}>اختر نوع الزيارة والتاريخ والوقت المناسب لك</p>
@@ -345,32 +401,25 @@ const PropertyVisitBooking: React.FC = () => {
 
           <section className={styles.formSection}>
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>بيانات التواصل</h2>
-              <span className={styles.requiredMark}>*</span>
+              <h2 className={styles.sectionTitle}>بيانات الزائر</h2>
             </div>
-            <div className={styles.contactGrid}>
-              <input
-                className={styles.contactInput}
-                placeholder="الاسم الكامل"
-                value={visitorName}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setVisitorName(event.target.value)}
-                required
-              />
-              <input
-                className={styles.contactInput}
-                placeholder="البريد الإلكتروني"
-                value={visitorEmail}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setVisitorEmail(event.target.value)}
-                type="email"
-              />
-              <input
-                className={styles.contactInput}
-                placeholder="رقم الهاتف"
-                value={visitorPhone}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setVisitorPhone(event.target.value)}
-                type="tel"
-              />
+            <div className={styles.userDetails}>
+              <div>
+                <span className={styles.summaryLabel}>الاسم:</span>
+                <span>{isUserLoading ? 'جاري التحميل...' : displayVisitorName || 'غير متوفر'}</span>
+              </div>
+              <div>
+                <span className={styles.summaryLabel}>البريد الإلكتروني:</span>
+                <span>{isUserLoading ? 'جاري التحميل...' : visitorEmail || 'غير متوفر'}</span>
+              </div>
+              <div>
+                <span className={styles.summaryLabel}>رقم الهاتف:</span>
+                <span>{isUserLoading ? 'جاري التحميل...' : visitorPhone || 'غير متوفر'}</span>
+              </div>
             </div>
+            {!isUserLoading && !visitorId && (
+              <p className={styles.userWarning}>يرجى تسجيل الدخول لحجز زيارة للعقار.</p>
+            )}
           </section>
 
           <section className={styles.formSection}>
@@ -399,7 +448,7 @@ const PropertyVisitBooking: React.FC = () => {
           </div>
 
           <div className={styles.actionsRow}>
-            <button type="button" className={styles.confirmBtn} onClick={handleConfirm} disabled={isSubmitting}>
+            <button type="button" className={styles.confirmBtn} onClick={handleConfirm} disabled={isSubmitting || isUserLoading || !visitorId}>
               {isSubmitting ? 'جاري الإرسال...' : 'تأكيد الحجز'}
             </button>
             <button type="button" className={styles.cancelBtn} onClick={() => router.push(`/property/${property.id}`)}>
