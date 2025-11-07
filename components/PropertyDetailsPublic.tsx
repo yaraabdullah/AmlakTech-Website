@@ -31,6 +31,7 @@ interface PropertyDetails {
   description?: string | null
   images?: string | string[] | null
   features?: string | APIFeatures | null
+  constructionYear?: string | null
   createdAt?: string
   owner?: OwnerInfo | null
 }
@@ -262,7 +263,7 @@ export default function PropertyDetailsPublic() {
     property.constructionYear
       ? { icon: '📅', label: `ثبّت في ${property.constructionYear}` }
       : { icon: '📅', label: formatRelativeTime(property.createdAt) },
-    parseFeatures(property.features)?.parking
+    features.parking
       ? { icon: '🚗', label: 'موقف سيارة متوفر' }
       : null,
   ].filter(Boolean) as { icon: string; label: string }[]
