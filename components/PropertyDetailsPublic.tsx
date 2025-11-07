@@ -247,26 +247,41 @@ export default function PropertyDetailsPublic() {
 
   const formattedAddress = [property.neighborhood, property.city, 'المملكة العربية السعودية'].filter(Boolean).join(', ')
 
+  type QuickStat = {
+    icon: string
+    alt: string
+    label: string
+  }
+
   const quickStats = [
     {
-      icon: '🛏️',
+      icon: '/icons/bedroom.svg',
+      alt: 'غرف النوم',
       label: property.rooms ? `${property.rooms} غرف نوم` : 'غرف غير محددة',
     },
     {
-      icon: '🚿',
+      icon: '/icons/bathroom.svg',
+      alt: 'الحمامات',
       label: property.bathrooms ? `${property.bathrooms} حمامات` : 'حمامات غير محددة',
     },
     {
-      icon: '📐',
+      icon: '/icons/size.svg',
+      alt: 'المساحة',
       label: property.area ? `${property.area} متر مربع` : 'المساحة غير متوفرة',
     },
-    property.constructionYear
-      ? { icon: '📅', label: `ثبّت في ${property.constructionYear}` }
-      : { icon: '📅', label: formatRelativeTime(property.createdAt) },
+    {
+      icon: '/icons/date.svg',
+      alt: 'تاريخ الإضافة',
+      label: property.constructionYear ? `ثبّت في ${property.constructionYear}` : formatRelativeTime(property.createdAt),
+    },
     features.parking
-      ? { icon: '🚗', label: 'موقف سيارة متوفر' }
+      ? {
+          icon: '/icons/car.svg',
+          alt: 'موقف السيارة',
+          label: 'موقف سيارة متوفر',
+        }
       : null,
-  ].filter(Boolean) as { icon: string; label: string }[]
+  ].filter(Boolean) as QuickStat[]
 
   const headerActions = [
     { label: 'حفظ', icon: '/icons/save.svg' },
@@ -274,6 +289,11 @@ export default function PropertyDetailsPublic() {
     { label: 'طباعة', icon: '/icons/print.svg' },
     { label: 'إبلاغ', icon: '/icons/report.svg' },
   ]
+
+  const handleBookVisit = () => {
+    if (!property?.id) return
+    router.push(`/property/visit/${property.id}`)
+  }
 
   return (
     <div className={styles.pageWrapper}>
@@ -314,7 +334,9 @@ export default function PropertyDetailsPublic() {
               <div className={styles.statsRow}>
                 {quickStats.map((stat) => (
                   <div key={stat.label} className={styles.statItem}>
-                    <span className={styles.statIcon}>{stat.icon}</span>
+                    <span className={styles.statIcon}>
+                      <Image src={stat.icon} alt={stat.alt} width={20} height={20} />
+                    </span>
                     <span className={styles.statLabel}>{stat.label}</span>
                   </div>
                 ))}
@@ -449,7 +471,9 @@ export default function PropertyDetailsPublic() {
 
               <div className={styles.contactActions}>
                 <button className={styles.altAction}>عرض رقم الهاتف</button>
-                <button className={styles.altAction}>حجز موعد معاينة</button>
+                <button className={styles.altAction} onClick={handleBookVisit}>
+                  حجز موعد معاينة
+                </button>
               </div>
             </div>
 
