@@ -31,13 +31,17 @@ model Users {
   updated_at    DateTime  @updatedAt @db.Timestamptz
 
   // Owner relationships (only for owners)
-  owner_properties          Property[]           @relation("OwnerProperties")
-  owner_contracts           Contract[]           @relation("OwnerContracts")
-  owner_maintenanceRequests MaintenanceRequest[] @relation("OwnerMaintenance")
-  owner_payments            Payment[]            @relation("OwnerPayments")
+  owner_properties          Property[]                 @relation("OwnerProperties")
+  owner_contracts           Contract[]                 @relation("OwnerContracts")
+  owner_maintenanceRequests MaintenanceRequest[]       @relation("OwnerMaintenance")
+  owner_payments            Payment[]                  @relation("OwnerPayments")
+  owner_visitAppointments   PropertyVisitAppointment[] @relation("OwnerVisitAppointments")
 
   // Tenant relationship (if user is also a tenant)
   tenant_profile Tenant? @relation("TenantUser")
+
+  // Visit appointments requested by this user
+  requested_visitAppointments PropertyVisitAppointment[] @relation("RequesterVisitAppointments")
 
   @@index([email])
   @@index([phone_number])
@@ -97,6 +101,7 @@ model Property {
   units               Unit[]
   contracts           Contract[]
   maintenanceRequests MaintenanceRequest[]
+  visitAppointments   PropertyVisitAppointment[]
 
   @@index([ownerId])
   @@map("properties")
@@ -248,4 +253,30 @@ model Payment {
   @@index([status])
   @@index([dueDate])
   @@map("payments")
+}
+
+model PropertyVisitAppointment {
+  id            String   @id @default(cuid())
+  propertyId    String   @map("property_id")
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  ownerId       BigInt   @map("owner_id")
+  owner         Users    @relation("OwnerVisitAppointments", fields: [ownerId], references: [id], onDelete: Cascade)
+  requesterId   BigInt?  @map("requester_id")
+  requester     Users?   @relation("RequesterVisitAppointments", fields: [requesterId], references: [id], onDelete: SetNull)
+  requesterName String   @map("requester_name")
+  requesterEmail String? @map("requester_email")
+  requesterPhone String? @map("requester_phone")
+  visitType     String   @map("visit_type")
+  scheduledDate DateTime @map("scheduled_date")
+  timeSlot      String   @map("time_slot")
+  notes         String?
+  status        String   @default("قيد المراجعة")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([propertyId])
+  @@index([ownerId])
+  @@index([requesterId])
+  @@index([scheduledDate])
+  @@map("property_visit_appointments")
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import styles from '../styles/PropertyVisitBooking.module.css'
+import TenantNavigation from './TenantNavigation'
+import Footer from './Footer'
 
 interface OwnerInfo {
   first_name?: string | null
@@ -21,6 +23,7 @@ interface PropertyVisitDetails {
   listingType?: string | null
   images?: string[] | string | null
   type?: string | null
+  ownerId?: string | null
   owner?: OwnerInfo | null
 }
 
@@ -82,6 +85,11 @@ const PropertyVisitBooking: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
   const [selectedTime, setSelectedTime] = useState<string | null>('2:00 م')
   const [notes, setNotes] = useState('')
+  const [visitorName, setVisitorName] = useState('')
+  const [visitorEmail, setVisitorEmail] = useState('')
+  const [visitorPhone, setVisitorPhone] = useState('')
+  const [submissionError, setSubmissionError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -105,7 +113,7 @@ const PropertyVisitBooking: React.FC = () => {
     fetchProperty()
   }, [id])
 
-  const daysMatrix = useMemo(() => {
+  const daysMatrix = useMemo<Array<Array<Date | null>>>(() => {
     const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
     const endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
 
@@ -137,11 +145,25 @@ const PropertyVisitBooking: React.FC = () => {
     })
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!property || !selectedDate || !selectedTime) {
       setError('يرجى اختيار تاريخ ووقت للزيارة قبل المتابعة.')
       return
     }
+
+    if (!visitorName.trim()) {
+      setSubmissionError('يرجى إدخال اسمك الكامل')
+      return
+    }
+
+    const ownerIdentifier = property.ownerId || property.owner?.id
+    if (!ownerIdentifier) {
+      setSubmissionError('تعذر تحديد مالك العقار لإرسال الطلب.')
+      return
+    }
+
+    setSubmissionError(null)
+    setIsSubmitting(true)
 
     const visitSummary = {
       visitType: visitType === 'inPerson' ? 'زيارة شخصية' : 'جولة افتراضية',
@@ -150,9 +172,37 @@ const PropertyVisitBooking: React.FC = () => {
       notes: notes.trim() || 'لا توجد ملاحظات إضافية',
     }
 
-    console.log('Visit booking confirmed:', visitSummary)
-    alert('تم إرسال طلب حجز الزيارة بنجاح! سنتواصل معك لتأكيد الموعد.')
-    router.push(`/property/${property.id}`)
+    try {
+      const response = await fetch('/api/property-visit-appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          propertyId: property.id,
+          ownerId: ownerIdentifier,
+          requesterName: visitorName.trim(),
+          requesterEmail: visitorEmail.trim() || null,
+          requesterPhone: visitorPhone.trim() || null,
+          visitType: visitSummary.visitType,
+          scheduledDate: selectedDate.toISOString(),
+          timeSlot: selectedTime,
+          notes: notes.trim() || null,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create appointment')
+      }
+
+      alert('تم إرسال طلب حجز الزيارة بنجاح! سنتواصل معك لتأكيد الموعد.')
+      router.push(`/property/${property.id}`)
+    } catch (submissionErr) {
+      console.error(submissionErr)
+      setSubmissionError('حدث خطأ أثناء إرسال طلب الحجز. يرجى المحاولة مرة أخرى.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const formattedAddress = property
@@ -175,6 +225,9 @@ const PropertyVisitBooking: React.FC = () => {
     content = (
       <div className={styles.bookingLayout}>
         <div className={styles.formColumn}>
+          <button type="button" className={styles.backButton} onClick={() => router.back()}>
+            العودة للخلف
+          </button>
           <header className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>حجز زيارة للعقار</h1>
             <p className={styles.pageSubtitle}>اختر نوع الزيارة والتاريخ والوقت المناسب لك</p>
@@ -291,6 +344,36 @@ const PropertyVisitBooking: React.FC = () => {
 
           <section className={styles.formSection}>
             <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>بيانات التواصل</h2>
+              <span className={styles.requiredMark}>*</span>
+            </div>
+            <div className={styles.contactGrid}>
+              <input
+                className={styles.contactInput}
+                placeholder="الاسم الكامل"
+                value={visitorName}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setVisitorName(event.target.value)}
+                required
+              />
+              <input
+                className={styles.contactInput}
+                placeholder="البريد الإلكتروني"
+                value={visitorEmail}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setVisitorEmail(event.target.value)}
+                type="email"
+              />
+              <input
+                className={styles.contactInput}
+                placeholder="رقم الهاتف"
+                value={visitorPhone}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setVisitorPhone(event.target.value)}
+                type="tel"
+              />
+            </div>
+          </section>
+
+          <section className={styles.formSection}>
+            <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>ملاحظات إضافية</h2>
             </div>
             <textarea
@@ -298,9 +381,11 @@ const PropertyVisitBooking: React.FC = () => {
               placeholder="أضف أي ملاحظات أو استفسارات خاصة بالزيارة..."
               rows={4}
               value={notes}
-              onChange={(event) => setNotes(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(event.target.value)}
             />
           </section>
+
+          {submissionError && <div className={styles.submissionError}>{submissionError}</div>}
 
           <div className={styles.assistantCard}>
             <div className={styles.assistantIcon}>🤖</div>
@@ -313,8 +398,8 @@ const PropertyVisitBooking: React.FC = () => {
           </div>
 
           <div className={styles.actionsRow}>
-            <button type="button" className={styles.confirmBtn} onClick={handleConfirm}>
-              تأكيد الحجز
+            <button type="button" className={styles.confirmBtn} onClick={handleConfirm} disabled={isSubmitting}>
+              {isSubmitting ? 'جاري الإرسال...' : 'تأكيد الحجز'}
             </button>
             <button type="button" className={styles.cancelBtn} onClick={() => router.push(`/property/${property.id}`)}>
               إلغاء
@@ -412,7 +497,13 @@ const PropertyVisitBooking: React.FC = () => {
     )
   }
 
-  return <div className={styles.bookingPage}>{content}</div>
+  return (
+    <div className={styles.pageWrapper}>
+      <TenantNavigation currentPage="booking" />
+      <main className={styles.bookingMain}>{content}</main>
+      <Footer />
+    </div>
+  )
 }
 
 export default PropertyVisitBooking
