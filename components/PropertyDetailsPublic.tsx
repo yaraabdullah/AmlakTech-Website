@@ -323,7 +323,12 @@ export default function PropertyDetailsPublic() {
               <div className={styles.headerTopRow}>
                 <div className={styles.titleBlock}>
                   <h1 className={styles.propertyTitle}>{property.name || 'عقار مميز'}</h1>
-                  <div className={styles.propertyLocationLine}>📍 {formattedAddress || 'غير محدد'}</div>
+                  <div className={styles.propertyLocationLine}>
+                    <span className={styles.locationIcon}>
+                      <Image src="/icons/location.svg" alt="موقع العقار" width={18} height={18} />
+                    </span>
+                    {formattedAddress || 'غير محدد'}
+                  </div>
                 </div>
                 <div className={styles.priceSection}>
                   <span className={styles.priceValue}>{priceValue}</span>
@@ -364,7 +369,9 @@ export default function PropertyDetailsPublic() {
             <div className={styles.sectionCard}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>جولة افتراضية</h2>
-                <span className={styles.vrIcon}>🕶️</span>
+                <span className={styles.vrIcon}>
+                  <Image src="/icons/VR.svg" alt="جولة افتراضية" width={24} height={24} className={styles.vrIconImage} />
+                </span>
               </div>
               <div className={styles.virtualTourPlaceholder}>
                 <button className={styles.virtualTourBtn}>بدء الجولة الافتراضية بتقنية 360</button>
@@ -450,7 +457,9 @@ export default function PropertyDetailsPublic() {
             <div className={styles.contactCard}>
               <h3 className={styles.contactTitle}>تواصل مع المالك</h3>
               <div className={styles.landlordInfo}>
-                <div className={styles.landlordAvatar}>{landlordName.charAt(0) || 'م'}</div>
+                <div className={styles.landlordAvatar}>
+                  <Image src="/icons/مالك عقار.svg" alt="مالك العقار" width={40} height={40} className={styles.landlordAvatarImage} />
+                </div>
                 <div>
                   <div className={styles.landlordName}>{landlordName || 'مالك العقار'}</div>
                   <div className={styles.landlordRole}>مالك العقار</div>

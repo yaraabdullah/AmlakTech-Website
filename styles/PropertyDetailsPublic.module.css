@@ -152,14 +152,17 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  color: var(--color-text-white);
-  display: flex;
+  overflow: hidden;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 18px;
-  font-family: var(--font-family-primary);
+  background: var(--color-background-secondary);
+}
+
+.landlordAvatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .landlordName {
@@ -442,6 +445,18 @@
   font-size: 14px;
   color: var(--color-text-secondary);
   font-family: var(--font-family-primary);
+  display: inline-flex;
+  align-items: center;
+}
+
+.locationIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .statsRow {
@@ -494,7 +509,22 @@
   font-family: var(--font-family-primary);
 }
 
-.vrIcon,
+.vrIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  padding: 0;
+}
+
+.vrIconImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .ratingBadge {
   background: var(--color-background-secondary);
   padding: 8px 14px;

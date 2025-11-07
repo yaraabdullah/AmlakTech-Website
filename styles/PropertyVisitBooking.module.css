@@ -98,7 +98,18 @@
 }
 
 .visitIcon {
-  font-size: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 24px;
+}
+
+.visitIconImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .visitContent {
@@ -348,6 +359,18 @@
 .summaryLocation {
   color: var(--color-text-secondary);
   font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.summaryLocationIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .summaryDetails {
@@ -365,6 +388,21 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.summaryDetailIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.summaryDetailIconImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .priceBox {

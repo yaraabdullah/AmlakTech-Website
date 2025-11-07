@@ -202,7 +202,9 @@ const PropertyVisitBooking: React.FC = () => {
                 className={`${styles.visitTypeCard} ${visitType === 'virtual' ? styles.activeCard : ''}`}
                 onClick={() => setVisitType('virtual')}
               >
-                <span className={styles.visitIcon}>🕶️</span>
+                <span className={styles.visitIcon}>
+                  <Image src="/icons/VR.svg" alt="جولة افتراضية" width={32} height={32} className={styles.visitIconImage} />
+                </span>
                 <div className={styles.visitContent}>
                   <span className={styles.visitTitle}>جولة افتراضية</span>
                   <span className={styles.visitDescription}>عبر تقنية الواقع الافتراضي</span>
@@ -331,31 +333,43 @@ const PropertyVisitBooking: React.FC = () => {
             </div>
             <div className={styles.summaryContent}>
               <h2 className={styles.summaryTitle}>{property.name || 'عقار مميز'}</h2>
-              <div className={styles.summaryLocation}>📍 {formattedAddress || 'غير محدد'}</div>
+              <div className={styles.summaryLocation}>
+                <span className={styles.summaryLocationIcon}>
+                  <Image src="/icons/location.svg" alt="موقع العقار" width={18} height={18} />
+                </span>
+                {formattedAddress || 'غير محدد'}
+              </div>
               <ul className={styles.summaryDetails}>
                 {property.rooms && (
                   <li>
-                    <span>🛏️</span> {property.rooms} غرف نوم
+                    <span className={styles.summaryDetailIcon}>
+                      <Image src="/icons/bedroom.svg" alt="غرف النوم" width={20} height={20} />
+                    </span>
+                    {property.rooms} غرف نوم
                   </li>
                 )}
                 {property.bathrooms && (
                   <li>
-                    <span>🚿</span> {property.bathrooms} حمام
+                    <span className={styles.summaryDetailIcon}>
+                      <Image src="/icons/bathroom.svg" alt="الحمامات" width={20} height={20} />
+                    </span>
+                    {property.bathrooms} حمام
                   </li>
                 )}
                 {property.area && (
                   <li>
-                    <span>📐</span> {property.area} متر مربع
-                  </li>
-                )}
-                {property.type && (
-                  <li>
-                    <span>🏷️</span> {property.type}
+                    <span className={styles.summaryDetailIcon}>
+                      <Image src="/icons/size.svg" alt="المساحة" width={20} height={20} />
+                    </span>
+                    {property.area} متر مربع
                   </li>
                 )}
                 {landlordName && (
                   <li>
-                    <span>👤</span> {landlordName}
+                    <span className={styles.summaryDetailIcon}>
+                      <Image src="/icons/مالك عقار.svg" alt="مالك العقار" width={20} height={20} className={styles.summaryDetailIconImage} />
+                    </span>
+                    {landlordName}
                   </li>
                 )}
               </ul>
