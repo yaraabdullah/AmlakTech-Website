@@ -239,10 +239,38 @@ export default function PropertyDetailsPublic() {
   const images = parseImages(property.images)
   const features = parseFeatures(property.features)
   const landlordName = property.owner ? `${property.owner.first_name || ''} ${property.owner.last_name || ''}`.trim() : 'مالك العقار'
-  const priceLabel = property.listingType === 'للبيع' ? formatCurrency(property.price) : `${formatCurrency(property.monthlyRent)}/شهرياً`
+  const isForSale = property.listingType === 'للبيع'
+  const priceValue = isForSale ? formatCurrency(property.price) : formatCurrency(property.monthlyRent)
+  const priceSuffix = isForSale ? '' : 'شهرياً/'
   const furnishedStatus = property.status?.includes('مفروش') ? 'مفروشة' : property.status?.includes('غير مفروش') ? 'غير مفروشة' : null
 
   const formattedAddress = [property.neighborhood, property.city, 'المملكة العربية السعودية'].filter(Boolean).join(', ')
+
+  const quickStats = [
+    {
+      icon: '🛏️',
+      label: property.rooms ? `${property.rooms} غرف نوم` : 'غرف غير محددة',
+    },
+    {
+      icon: '🚿',
+      label: property.bathrooms ? `${property.bathrooms} حمامات` : 'حمامات غير محددة',
+    },
+    {
+      icon: '📐',
+      label: property.area ? `${property.area} متر مربع` : 'المساحة غير متوفرة',
+    },
+    {
+      icon: '📅',
+      label: formatRelativeTime(property.createdAt),
+    },
+  ]
+
+  const headerActions = [
+    { label: 'حفظ', icon: '/icons/save.svg' },
+    { label: 'مشاركة', icon: '/icons/share.svg' },
+    { label: 'طباعة', icon: '/icons/print.svg' },
+    { label: 'إبلاغ', icon: '/icons/report.svg' },
+  ]
 
   return (
     <div className={styles.pageWrapper}>
@@ -332,40 +360,47 @@ export default function PropertyDetailsPublic() {
 
           <section className={styles.contentColumn}>
             <div className={styles.headerCard}>
-              <div className={styles.headerInfo}>
-                <h1 className={styles.propertyTitle}>{property.name || 'عقار مميز'}</h1>
-                <div className={styles.propertyMetaTop}>
-                  <span className={styles.priceLabel}>{priceLabel}</span>
-                  <span className={styles.metaSeparator}>•</span>
-                  <span className={styles.agentStatus}>مؤجر في {property.city || 'غير معروف'}</span>
+              <div className={styles.headerTopRow}>
+                <div className={styles.priceSection}>
+                  {priceSuffix && <span className={styles.priceSuffix}>{priceSuffix}</span>}
+                  <span className={styles.priceValue}>{priceValue}</span>
                 </div>
-                <div className={styles.propertyMetaBottom}>
-                  <span>📍 {formattedAddress || 'غير محدد'}</span>
-                  <span>🛏️ {property.rooms || 'غير محدد'} غرف نوم</span>
-                  <span>🚿 {property.bathrooms || 'غير محدد'} حمامات</span>
-                  <span>📐 {property.area ? `${property.area} م²` : 'المساحة غير متوفرة'}</span>
+                <div className={styles.headerActionsRow}>
+                  {headerActions.map((action) => (
+                    <button key={action.label} className={styles.headerActionBtn}>
+                      <span className={styles.actionIconWrapper}>
+                        <Image src={action.icon} alt={action.label} width={20} height={20} />
+                      </span>
+                      <span className={styles.actionLabel}>{action.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className={styles.headerActions}>
-                <button className={styles.actionBtn}>حفظ 💙</button>
-                <button className={styles.actionBtn}>مشاركة 🔗</button>
-                <button className={styles.actionBtn}>طباعة 🖨️</button>
-                <button className={styles.actionBtn}>إبلاغ ⚠️</button>
-              </div>
-            </div>
 
-            <div className={styles.quickFeatures}>
-              <div>
-                <span className={styles.quickLabel}>نوع العقار</span>
-                <span className={styles.quickValue}>{property.type || 'غير محدد'}</span>
+              <div className={styles.propertySummary}>
+                <div>
+                  <h1 className={styles.propertyTitle}>{property.name || 'عقار مميز'}</h1>
+                  <div className={styles.propertyLocationLine}>📍 {formattedAddress || 'غير محدد'}</div>
+                </div>
               </div>
-              <div>
-                <span className={styles.quickLabel}>حالة التأثيث</span>
-                <span className={styles.quickValue}>{furnishedStatus || 'غير محددة'}</span>
-              </div>
-              <div>
-                <span className={styles.quickLabel}>تم النشر</span>
-                <span className={styles.quickValue}>{formatRelativeTime(property.createdAt)}</span>
+
+              <div className={styles.statsRow}>
+                {quickStats.map((stat) => (
+                  <div key={stat.label} className={styles.statItem}>
+                    <span className={styles.statIcon}>{stat.icon}</span>
+                    <span className={styles.statLabel}>{stat.label}</span>
+                  </div>
+                ))}
+                <div className={styles.statItem}>
+                  <span className={styles.statIcon}>🏷️</span>
+                  <span className={styles.statLabel}>{property.type || 'نوع غير محدد'}</span>
+                </div>
+                {furnishedStatus && (
+                  <div className={styles.statItem}>
+                    <span className={styles.statIcon}>🛋️</span>
+                    <span className={styles.statLabel}>{furnishedStatus}</span>
+                  </div>
+                )}
               </div>
             </div>
 
