@@ -487,7 +487,10 @@ export default function PropertySearch() {
                       </h3>
                       
                       <div className={styles.propertyLocation}>
-                        📍 {property.neighborhood ? `${property.neighborhood}، ` : ''}{property.city || 'غير محدد'}
+                        <span className={styles.locationIcon}>
+                          <Image src="/icons/location.svg" alt="موقع العقار" width={18} height={18} />
+                        </span>
+                        {property.neighborhood ? `${property.neighborhood}، ` : ''}{property.city || 'غير محدد'}
                       </div>
 
                       <div className={styles.propertyFeatures}>

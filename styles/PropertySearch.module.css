@@ -401,10 +401,20 @@
 }
 
 .propertyLocation {
-  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-md);
-  font-family: var(--font-family-primary);
+  font-size: 14px;
+}
+
+.locationIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .propertyFeatures {
