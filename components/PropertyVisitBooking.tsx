@@ -191,7 +191,9 @@ const PropertyVisitBooking: React.FC = () => {
                 className={`${styles.visitTypeCard} ${visitType === 'inPerson' ? styles.activeCard : ''}`}
                 onClick={() => setVisitType('inPerson')}
               >
-                <span className={styles.visitIcon}>🏡</span>
+                <span className={styles.visitIcon}>
+                  <Image src="/icons/مالك عقار.svg" alt="زيارة شخصية" width={64} height={64} className={styles.visitIconImage} />
+                </span>
                 <div className={styles.visitContent}>
                   <span className={styles.visitTitle}>زيارة شخصية</span>
                   <span className={styles.visitDescription}>زيارة العقار على الواقع</span>
@@ -203,7 +205,7 @@ const PropertyVisitBooking: React.FC = () => {
                 onClick={() => setVisitType('virtual')}
               >
                 <span className={styles.visitIcon}>
-                  <Image src="/icons/VR.svg" alt="جولة افتراضية" width={32} height={32} className={styles.visitIconImage} />
+                  <Image src="/icons/VR.svg" alt="جولة افتراضية" width={64} height={64} className={styles.visitIconImage} />
                 </span>
                 <div className={styles.visitContent}>
                   <span className={styles.visitTitle}>جولة افتراضية</span>
@@ -335,7 +337,7 @@ const PropertyVisitBooking: React.FC = () => {
               <h2 className={styles.summaryTitle}>{property.name || 'عقار مميز'}</h2>
               <div className={styles.summaryLocation}>
                 <span className={styles.summaryLocationIcon}>
-                  <Image src="/icons/location.svg" alt="موقع العقار" width={18} height={18} />
+                  <Image src="/icons/location.svg" alt="موقع العقار" width={20} height={20} className={styles.summaryLocationImage} />
                 </span>
                 {formattedAddress || 'غير محدد'}
               </div>
@@ -367,7 +369,7 @@ const PropertyVisitBooking: React.FC = () => {
                 {landlordName && (
                   <li>
                     <span className={styles.summaryDetailIcon}>
-                      <Image src="/icons/مالك عقار.svg" alt="مالك العقار" width={20} height={20} className={styles.summaryDetailIconImage} />
+                      <Image src="/icons/person.svg" alt="مالك العقار" width={20} height={20} className={styles.summaryDetailIconImage} />
                     </span>
                     {landlordName}
                   </li>

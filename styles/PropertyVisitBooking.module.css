@@ -1,7 +1,7 @@
 .bookingPage {
   min-height: 100vh;
   padding: 48px 32px 64px;
-  background: linear-gradient(145deg, #f5f7fb 0%, #eef2fa 100%);
+  background: var(--color-background-primary);
   display: flex;
   justify-content: center;
   font-family: var(--font-family-primary);
@@ -25,7 +25,7 @@
   background: var(--color-text-white);
   border-radius: 28px;
   padding: 32px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 18px 36px var(--color-shadow-primary);
 }
 
 .pageTitle {
@@ -43,7 +43,7 @@
   background: var(--color-text-white);
   border-radius: 28px;
   padding: 28px 32px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 18px 36px    rgba(15, 23, 42, 0.05);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -62,7 +62,7 @@
 }
 
 .requiredMark {
-  color: #ff6b6b;
+  color: var(--color-error);
   font-size: 18px;
 }
 
@@ -74,8 +74,8 @@
 
 .visitTypeCard {
   border-radius: 22px;
-  border: 1px solid #d7deee;
-  background: #f9fbff;
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
   padding: 20px 24px;
   display: flex;
   align-items: center;
@@ -87,23 +87,23 @@
 }
 
 .visitTypeCard:hover {
-  border-color: #4c6ef5;
-  box-shadow: 0 12px 24px rgba(76, 110, 245, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 24px rgba(var(--color-primary-rgb), 0.15);
 }
 
 .activeCard {
-  border-color: #4c6ef5;
-  background: linear-gradient(135deg, rgba(76, 110, 245, 0.12), rgba(76, 110, 245, 0.08));
-  box-shadow: 0 12px 24px rgba(76, 110, 245, 0.18);
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.12), rgba(var(--color-primary-rgb), 0.08));
+  box-shadow: 0 12px 24px rgba(var(--color-primary-rgb), 0.18);
 }
 
 .visitIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-size: 24px;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 12px;
 }
 
 .visitIconImage {
@@ -131,8 +131,8 @@
 
 .calendarCard {
   border-radius: 24px;
-  border: 1px solid #dfe5f3;
-  background: #f8faff;
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
   padding: 24px 28px;
 }
 
@@ -189,7 +189,7 @@
   border-radius: 14px;
   border: none;
   background: var(--color-text-white);
-  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 6px 12px var(--color-shadow-primary);
   cursor: pointer;
   font-size: 16px;
   color: var(--color-text-primary);
@@ -197,18 +197,18 @@
 }
 
 .calendarDay:hover {
-  background: rgba(76, 110, 245, 0.1);
+  background: rgba(var(--color-primary-rgb), 0.1);
 }
 
 .selectedDay {
-  background: linear-gradient(180deg, #4c6ef5 0%, #364fc7 100%);
+  background: var(--color-primary);
   color: var(--color-text-white);
-  box-shadow: 0 10px 18px rgba(76, 110, 245, 0.3);
+  box-shadow: 0 10px 18px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .disabledDay {
-  background: #f1f4fb;
-  color: #a1acc7;
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -221,7 +221,7 @@
 
 .timeSlotBtn {
   border-radius: 18px;
-  border: 1px solid #d8def0;
+  border: 1px solid var(--color-border-secondary);
   padding: 12px 16px;
   background: var(--color-text-white);
   cursor: pointer;
@@ -231,22 +231,22 @@
 }
 
 .timeSlotBtn:hover {
-  border-color: #4c6ef5;
-  color: #4c6ef5;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .activeTimeSlot {
-  border-color: #4c6ef5;
-  background: linear-gradient(135deg, rgba(76, 110, 245, 0.15), rgba(54, 79, 199, 0.08));
-  color: #1f2a49;
-  box-shadow: 0 12px 20px rgba(76, 110, 245, 0.2);
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.15), rgba(var(--color-primary-rgb), 0.08));
+  color: var(--color-text-primary);
+  box-shadow: 0 12px 20px rgba(var(--color-primary-rgb), 0.2);
 }
 
 .notesInput {
   border-radius: 18px;
-  border: 1px solid #d9e1f2;
+  border: 1px solid var(--color-border-secondary);
   padding: 16px 18px;
-  background: #f9fbff;
+  background: var(--color-background-secondary);
   font-size: 15px;
   color: var(--color-text-primary);
   min-height: 120px;
@@ -257,11 +257,11 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  background: linear-gradient(135deg, rgba(54, 79, 199, 0.12), rgba(76, 110, 245, 0.08));
+  background: rgba(var(--color-primary-rgb), 0.12);
   border-radius: 22px;
   padding: 20px 24px;
   color: var(--color-text-primary);
-  box-shadow: 0 12px 24px rgba(76, 110, 245, 0.14);
+  box-shadow: 0 12px 24px rgba(var(--color-primary-rgb), 0.14);
 }
 
 .assistantIcon {
@@ -289,11 +289,11 @@
   padding: 14px 32px;
   border-radius: 16px;
   border: none;
-  background: linear-gradient(135deg, #1d72f3, #1741b7);
+  background: var(--color-primary);
   color: var(--color-text-white);
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 16px 24px rgba(29, 114, 243, 0.24);
+  box-shadow: 0 16px 24px rgba(var(--color-primary-rgb), 0.24);
   transition: transform 0.2s ease;
 }
 
@@ -304,7 +304,7 @@
 .cancelBtn {
   padding: 14px 24px;
   border-radius: 16px;
-  border: 1px solid #c9d1e8;
+  border: 1px solid var(--color-border-secondary);
   background: var(--color-text-white);
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -312,8 +312,8 @@
 }
 
 .cancelBtn:hover {
-  border-color: #4c6ef5;
-  color: #4c6ef5;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .summaryColumn {
@@ -325,7 +325,7 @@
 .summaryCard {
   background: var(--color-text-white);
   border-radius: 28px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 18px 36px var(--color-shadow-primary);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -367,10 +367,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   margin-left: 8px;
   flex-shrink: 0;
+}
+
+.summaryLocationImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .summaryDetails {
@@ -406,7 +412,7 @@
 }
 
 .priceBox {
-  background: #f3f6ff;
+  background: var(--color-background-secondary);
   border-radius: 18px;
   padding: 16px 18px;
   display: flex;
@@ -435,7 +441,7 @@
   flex-direction: column;
   gap: 10px;
   padding-top: 12px;
-  border-top: 1px dashed #d6deef;
+  border-top: 1px dashed var(--color-border-secondary);
   font-size: 14px;
   color: var(--color-text-primary);
 }
@@ -453,7 +459,7 @@
   background: var(--color-text-white);
   padding: 40px;
   border-radius: 24px;
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 24px 48px var(--color-shadow-primary);
   text-align: center;
   font-size: 18px;
   color: var(--color-text-secondary);

@@ -458,7 +458,7 @@ export default function PropertyDetailsPublic() {
               <h3 className={styles.contactTitle}>تواصل مع المالك</h3>
               <div className={styles.landlordInfo}>
                 <div className={styles.landlordAvatar}>
-                  <Image src="/icons/مالك عقار.svg" alt="مالك العقار" width={40} height={40} className={styles.landlordAvatarImage} />
+                  <Image src="/icons/person.svg" alt="مالك العقار" width={40} height={40} className={styles.landlordAvatarImage} />
                 </div>
                 <div>
                   <div className={styles.landlordName}>{landlordName || 'مالك العقار'}</div>
