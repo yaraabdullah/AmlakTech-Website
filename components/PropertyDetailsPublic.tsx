@@ -372,7 +372,7 @@ export default function PropertyDetailsPublic() {
                 {Object.entries(features)
                   .filter(([, value]) => Boolean(value))
                   .map(([key]) => (
-                    <li key={key}>✅ {featureLabels[key] || key}</li>
+                    <li key={key}><span className={styles.checkmark}>✓</span> {featureLabels[key] || key}</li>
                   ))}
                 {furnishedStatus && <li>🛋️ {furnishedStatus}</li>}
                 {property.area && <li>📐 المساحة: {property.area} م²</li>}

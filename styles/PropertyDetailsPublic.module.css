@@ -467,6 +467,15 @@
   font-family: var(--font-family-primary);
 }
 
+.checkmark {
+  color: var(--color-primary);
+  font-weight: bold;
+  margin-left: 5px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  font-family: var(--font-family-primary);
+}
+
 .statLabel {
   white-space: nowrap;
   font-family: var(--font-family-primary);
