@@ -6,6 +6,7 @@ import TenantNavigation from './TenantNavigation'
 import Footer from './Footer'
 
 interface OwnerInfo {
+  id?: string | null
   first_name?: string | null
   last_name?: string | null
 }
