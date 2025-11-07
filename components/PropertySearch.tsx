@@ -496,17 +496,17 @@ export default function PropertySearch() {
                       <div className={styles.propertyFeatures}>
                         {property.area && (
                           <span className={styles.feature}>
-                            📐 {property.area} م²
+                            <Image src="/icons/size.svg" alt="المساحة" width={18} height={18} /> {property.area} م²
                           </span>
                         )}
                         {property.bathrooms && (
                           <span className={styles.feature}>
-                            🚿 {property.bathrooms} حمام
+                            <Image src="/icons/bathroom.svg" alt="عدد الحمامات" width={18} height={18} /> {property.bathrooms} حمام
                           </span>
                         )}
                         {property.rooms && (
                           <span className={styles.feature}>
-                            🛏️ {property.rooms} غرف
+                            <Image src="/icons/bedroom.svg" alt="عدد الغرف" width={18} height={18} /> {property.rooms} غرف
                           </span>
                         )}
                         {property.status && property.status.includes('مفروش') && (
@@ -533,7 +533,9 @@ export default function PropertySearch() {
 
                       <div className={styles.propertyMeta}>
                         <div className={styles.metaLeft}>
-                          <span className={styles.metaIcon}>📅</span>
+                          <span className={styles.metaIcon}>
+                            <Image src="/icons/date.svg" alt="تاريخ الإضافة" width={16} height={16} />
+                          </span>
                           <span className={styles.metaDate}>
                             {formatDate(property.createdAt)}
                           </span>

@@ -419,15 +419,20 @@
 
 .propertyFeatures {
   display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
 }
 
 .feature {
-  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-background-secondary);
+  padding: 6px 10px;
+  border-radius: 12px;
   color: var(--color-text-secondary);
-  font-family: var(--font-family-primary);
+  font-size: 13px;
 }
 
 .propertyMeta {
@@ -452,7 +457,11 @@
 }
 
 .metaIcon {
-  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
 }
 
 .metaTypeIcon {

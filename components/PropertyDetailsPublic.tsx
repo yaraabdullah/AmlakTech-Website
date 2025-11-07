@@ -398,10 +398,7 @@ export default function PropertyDetailsPublic() {
                   .map(([key]) => (
                     <li key={key}><span className={styles.checkmark}>✓</span> {featureLabels[key] || key}</li>
                   ))}
-                {furnishedStatus && <li>🛋️ {furnishedStatus}</li>}
-                {property.area && <li>📐 المساحة: {property.area} م²</li>}
-                {property.rooms && <li>🛏️ عدد الغرف: {property.rooms}</li>}
-                {property.bathrooms && <li>🚿 عدد الحمامات: {property.bathrooms}</li>}
+                {furnishedStatus && <li><span className={styles.checkmark}>✓</span> {furnishedStatus}</li>}
               </ul>
             </div>
 
