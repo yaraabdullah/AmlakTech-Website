@@ -271,7 +271,6 @@ const PropertyVisitBooking: React.FC = () => {
   const propertyImages = parseImages(property?.images)
   const landlordName = property?.owner ? `${property.owner.first_name || ''} ${property.owner.last_name || ''}`.trim() : ''
   const displayVisitType = visitType === 'inPerson' ? 'زيارة شخصية' : 'جولة افتراضية'
-  const displayVisitorName = visitorName.trim() || visitorEmail || ''
 
   let content: React.ReactNode
 
@@ -285,6 +284,9 @@ const PropertyVisitBooking: React.FC = () => {
     content = (
       <div className={styles.bookingLayout}>
         <div className={styles.formColumn}>
+          <button type="button" className={styles.backButton} onClick={() => router.back()}>
+            العودة للخلف
+          </button>
           <header className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>حجز زيارة للعقار</h1>
             <p className={styles.pageSubtitle}>اختر نوع الزيارة والتاريخ والوقت المناسب لك</p>
@@ -397,29 +399,6 @@ const PropertyVisitBooking: React.FC = () => {
                 </button>
               ))}
             </div>
-          </section>
-
-          <section className={styles.formSection}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>بيانات الزائر</h2>
-            </div>
-            <div className={styles.userDetails}>
-              <div>
-                <span className={styles.summaryLabel}>الاسم:</span>
-                <span>{isUserLoading ? 'جاري التحميل...' : displayVisitorName || 'غير متوفر'}</span>
-              </div>
-              <div>
-                <span className={styles.summaryLabel}>البريد الإلكتروني:</span>
-                <span>{isUserLoading ? 'جاري التحميل...' : visitorEmail || 'غير متوفر'}</span>
-              </div>
-              <div>
-                <span className={styles.summaryLabel}>رقم الهاتف:</span>
-                <span>{isUserLoading ? 'جاري التحميل...' : visitorPhone || 'غير متوفر'}</span>
-              </div>
-            </div>
-            {!isUserLoading && !visitorId && (
-              <p className={styles.userWarning}>يرجى تسجيل الدخول لحجز زيارة للعقار.</p>
-            )}
           </section>
 
           <section className={styles.formSection}>
