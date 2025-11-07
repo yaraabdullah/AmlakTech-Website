@@ -397,230 +397,6 @@ const PropertyVisitBooking: React.FC = () => {
   }
 
   return <div className={styles.bookingPage}>{content}</div>
-          <div className={styles.formColumn}>
-            <header className={styles.pageHeader}>
-              <h1 className={styles.pageTitle}>حجز زيارة للعقار</h1>
-              <p className={styles.pageSubtitle}>اختر نوع الزيارة والتاريخ والوقت المناسب لك</p>
-            </header>
-
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>نوع الزيارة</h2>
-                <span className={styles.requiredMark}>*</span>
-              </div>
-              <div className={styles.visitTypeGrid}>
-                <button
-                  type=\"button\"
-                  className={`${styles.visitTypeCard} ${visitType === 'inPerson' ? styles.activeCard : ''}`}
-                  onClick={() => setVisitType('inPerson')}
-                >
-                  <span className={styles.visitIcon}>🏡</span>
-                  <div className={styles.visitContent}>
-                    <span className={styles.visitTitle}>زيارة شخصية</span>
-                    <span className={styles.visitDescription}>زيارة العقار على الواقع</span>
-                  </div>
-                </button>
-                <button
-                  type=\"button\"
-                  className={`${styles.visitTypeCard} ${visitType === 'virtual' ? styles.activeCard : ''}`}
-                  onClick={() => setVisitType('virtual')}
-                >
-                  <span className={styles.visitIcon}>🕶️</span>
-                  <div className={styles.visitContent}>
-                    <span className={styles.visitTitle}>جولة افتراضية</span>
-                    <span className={styles.visitDescription}>عبر تقنية الواقع الافتراضي</span>
-                  </div>
-                </button>
-              </div>
-            </section>
-
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>اختر التاريخ</h2>
-                <span className={styles.requiredMark}>*</span>
-              </div>
-              <div className={styles.calendarCard}>
-                <div className={styles.calendarHeader}>
-                  <button type=\"button\" className={styles.calendarNavBtn} onClick={() => handleMonthChange('prev')}>
-                    ‹
-                  </button>
-                  <div className={styles.calendarMonth}>
-                    {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-                  </div>
-                  <button type=\"button\" className={styles.calendarNavBtn} onClick={() => handleMonthChange('next')}>
-                    ›
-                  </button>
-                </div>
-                <div className={styles.calendarGrid}>
-                  {weekdayLabels.map((day) => (
-                    <div key={day} className={styles.calendarWeekday}>
-                      {day}
-                    </div>
-                  ))}
-                  {daysMatrix.map((week, weekIndex) =>
-                    week.map((day, dayIndex) => {
-                      if (!day) {
-                        return <div key={`empty-${weekIndex}-${dayIndex}`} className={styles.calendarCell} />
-                      }
-                      const isSelected =
-                        selectedDate &&
-                        day.getDate() === selectedDate.getDate() &&
-                        day.getMonth() === selectedDate.getMonth() &&
-                        day.getFullYear() === selectedDate.getFullYear()
-                      const isPast =
-                        day < new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
-
-                      return (
-                        <button
-                          type=\"button\"
-                          key={day.toISOString()}
-                          className={`${styles.calendarDay} ${isSelected ? styles.selectedDay : ''} ${
-                            isPast ? styles.disabledDay : ''
-                          }`}
-                          disabled={isPast}
-                          onClick={() => setSelectedDate(day)}
-                        >
-                          {day.getDate()}
-                        </button>
-                      )
-                    }),
-                  )}
-                </div>
-              </div>
-            </section>
-
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>اختر الوقت</h2>
-                <span className={styles.requiredMark}>*</span>
-              </div>
-              <div className={styles.timeSlotsGrid}>
-                {timeSlots.map((slot) => (
-                  <button
-                    type=\"button\"
-                    key={slot}
-                    className={`${styles.timeSlotBtn} ${selectedTime === slot ? styles.activeTimeSlot : ''}`}
-                    onClick={() => setSelectedTime(slot)}
-                  >
-                    {slot}
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>ملاحظات إضافية</h2>
-              </div>
-              <textarea
-                className={styles.notesInput}
-                placeholder=\"أضف أي ملاحظات أو استفسارات خاصة بالزيارة...\"
-                rows={4}
-                value={notes}
-                onChange={(event) => setNotes(event.target.value)}
-              />
-            </section>
-
-            <div className={styles.assistantCard}>
-              <div className={styles.assistantIcon}>🤖</div>
-              <div>
-                <h3 className={styles.assistantTitle}>الذكاء الاصطناعي في خدمتك</h3>
-                <p className={styles.assistantText}>
-                  يقوم مساعدنا الذكي بتحليل تفضيلاتك وتقديم توصيات مخصصة لك بناءً على زياراتك السابقة واهتماماتك.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.actionsRow}>
-              <button type=\"button\" className={styles.confirmBtn} onClick={handleConfirm}>
-                تأكيد الحجز
-              </button>
-              <button type=\"button\" className={styles.cancelBtn} onClick={() => router.push(`/property/${property.id}`)}>
-                إلغاء
-              </button>
-            </div>
-          </div>
-
-          <aside className={styles.summaryColumn}>
-            <div className={styles.summaryCard}>
-              <div className={styles.summaryImageWrapper}>
-                <Image
-                  src={propertyImages[0]}
-                  alt={property.name || 'عقار'}
-                  width={400}
-                  height={260}
-                  className={styles.summaryImage}
-                />
-              </div>
-              <div className={styles.summaryContent}>
-                <h2 className={styles.summaryTitle}>{property.name || 'عقار مميز'}</h2>
-                <div className={styles.summaryLocation}>📍 {formattedAddress || 'غير محدد'}</div>
-                <ul className={styles.summaryDetails}>
-                  {property.rooms && (
-                    <li>
-                      <span>🛏️</span> {property.rooms} غرف نوم
-                    </li>
-                  )}
-                  {property.bathrooms && (
-                    <li>
-                      <span>🚿</span> {property.bathrooms} حمام
-                    </li>
-                  )}
-                  {property.area && (
-                    <li>
-                      <span>📐</span> {property.area} متر مربع
-                    </li>
-                  )}
-                  {property.type && (
-                    <li>
-                      <span>🏷️</span> {property.type}
-                    </li>
-                  )}
-                  {landlordName && (
-                    <li>
-                      <span>👤</span> {landlordName}
-                    </li>
-                  )}
-                </ul>
-                <div className={styles.priceBox}>
-                  <span className={styles.priceLabel}>{property.listingType === 'للبيع' ? 'سعر البيع' : 'الإيجار الشهري'}</span>
-                  <span className={styles.priceValue}>
-                    {formatCurrency(property.listingType === 'للبيع' ? property.price : property.monthlyRent)} ريال
-                  </span>
-                  {property.listingType !== 'للبيع' && <span className={styles.priceSuffix}>شهرياً</span>}
-                </div>
-                <div className={styles.visitSummary}>
-                  <div>
-                    <span className={styles.summaryLabel}>نوع الزيارة:</span>
-                    <span>{displayVisitType}</span>
-                  </div>
-                  <div>
-                    <span className={styles.summaryLabel}>التاريخ المحدد:</span>
-                    <span>
-                      {selectedDate
-                        ? selectedDate.toLocaleDateString('ar-SA', {
-                            weekday: 'long',
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric',
-                          })
-                        : 'لم يتم التحديد'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className={styles.summaryLabel}>الوقت المحدد:</span>
-                    <span>{selectedTime || 'لم يتم التحديد'}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      ) : (
-        <div className={styles.errorState}>لم يتم العثور على العقار المطلوب.</div>
-      )}
-    </div>
-  )
 }
 
 export default PropertyVisitBooking
