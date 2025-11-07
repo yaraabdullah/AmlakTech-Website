@@ -352,17 +352,18 @@
 
 .priceSection {
   min-width: 160px;
-  text-align: right;
+  text-align: left;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  justify-content: flex-start;
   font-family: var(--font-family-primary);
 }
 
 .priceValue {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
   font-size: 32px;
   font-weight: 800;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   font-family: var(--font-family-primary);
 }
 
@@ -374,11 +375,11 @@
 
 .headerActionsRow {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 12px;
   flex-wrap: wrap;
-  flex-direction: row-reverse;
   font-family: var(--font-family-primary);
+  width: 100%;
 }
 
 

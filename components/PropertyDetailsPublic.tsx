@@ -306,10 +306,8 @@ export default function PropertyDetailsPublic() {
                   <div className={styles.propertyLocationLine}>📍 {formattedAddress || 'غير محدد'}</div>
                 </div>
                 <div className={styles.priceSection}>
-                  <span className={styles.priceValue}>
-                    {priceValue}
-                    {priceSuffix && <span className={styles.priceSuffix}>{priceSuffix}</span>}
-                  </span>
+                  <span className={styles.priceValue}>{priceValue}</span>
+                  {priceSuffix && <span className={styles.priceSuffix}>{priceSuffix}</span>}
                 </div>
               </div>
 
