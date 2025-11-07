@@ -550,7 +550,7 @@
 
 .priceValue {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: var(--font-weight-normal);
   font-family: var(--font-family-primary);
 }
 

@@ -23,6 +23,7 @@
   padding: 120px 16px;
   font-size: 18px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .backBtn {
@@ -34,6 +35,7 @@
   cursor: pointer;
   font-size: 16px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .gallerySection {
@@ -42,6 +44,7 @@
   gap: 16px;
   margin-bottom: 32px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .primaryImage {
@@ -51,6 +54,7 @@
   background: var(--color-background-secondary);
   min-height: 420px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .galleryImage {
@@ -70,6 +74,7 @@
   border-radius: 999px;
   font-size: 15px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .secondaryImages {
@@ -86,6 +91,7 @@
   overflow: hidden;
   background: var(--color-background-secondary);
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .viewAllBtn {
@@ -100,6 +106,7 @@
   border: none;
   cursor: pointer;
   font-size: 14px;
+  font-weight: var(--font-weight-normal);
 }
 
 .layoutGrid {
@@ -107,12 +114,14 @@
   grid-template-columns: 1fr 320px;
   gap: 24px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  font-weight: var(--font-weight-normal);
 }
 
 .contentColumn {
@@ -120,6 +129,7 @@
   flex-direction: column;
   gap: 24px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .contactCard,
@@ -132,12 +142,14 @@
   padding: 24px;
   box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .contactTitle {
   font-size: 20px;
   margin-bottom: 16px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .landlordInfo {
@@ -146,6 +158,7 @@
   gap: 12px;
   margin-bottom: 12px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .landlordAvatar {
@@ -173,6 +186,7 @@
   font-size: 13px;
   color: #667085;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .verificationBox {
@@ -193,6 +207,7 @@
   flex-direction: column;
   gap: 12px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .contactForm input,
@@ -236,12 +251,14 @@
   background: var(--color-background-primary);
   font-family: var(--font-family-primary);
   cursor: pointer;
+  font-weight: var(--font-weight-normal);
 }
 
 .aiAssistantCard p {
   color: var(--color-text-secondary);
   margin-bottom: 12px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .aiQuestions {
@@ -253,6 +270,7 @@
   gap: 8px;
   color: var(--color-text-secondary);
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .aiBtn {
@@ -264,6 +282,7 @@
   color: var(--color-text-white);
   cursor: pointer;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .sectionTitle {
@@ -271,6 +290,7 @@
   font-weight: 600;
   margin-bottom: 8px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .similarList {
@@ -278,6 +298,7 @@
   flex-direction: column;
   gap: 12px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .similarItem {
@@ -295,24 +316,20 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
   font-family: var(--font-family-primary);
-}
-
-.similarImage {
-  border-radius: 14px;
-  object-fit: cover;
-  font-family: var(--font-family-primary);
-}
+  font-weight: var(--font-weight-normal);
 
 .similarInfo {
   display: flex;
   flex-direction: column;
   gap: 4px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .similarName {
   font-weight: 600;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .similarLocation,
@@ -320,6 +337,7 @@
   font-size: 13px;
   color: var(--color-text-secondary);
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .viewMoreBtn {
@@ -330,12 +348,15 @@
   cursor: pointer;
   font-size: 14px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .headerCard {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 
@@ -345,12 +366,14 @@
   align-items: flex-start;
   gap: 16px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .titleBlock {
   flex: 1;
   text-align: right;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .priceSection {
@@ -368,6 +391,7 @@
   font-weight: 800;
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .priceSuffix {
@@ -425,6 +449,7 @@
   justify-content: center;
   box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.08);
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .propertySummary {
@@ -439,6 +464,7 @@
   font-size: 30px;
   margin-bottom: 8px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .propertyLocationLine {
@@ -464,6 +490,7 @@
   flex-wrap: wrap;
   gap: 12px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .statItem {
@@ -531,6 +558,7 @@
   border-radius: 12px;
   font-size: 14px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .virtualTourPlaceholder {
@@ -608,6 +636,7 @@
   padding: 18px;
   border-radius: 16px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .reviewHeader {
@@ -616,6 +645,7 @@
   gap: 12px;
   margin-bottom: 12px;
   font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .reviewerAvatar {
@@ -634,25 +664,8 @@
 .reviewerName {
   font-weight: 600;
   font-family: var(--font-family-primary);
-}
+  font-weight: var(--font-weight-normal);
 
-.reviewDate {
-  font-size: 12px;
-  color: #94a3b8;
-  font-family: var(--font-family-primary);
-}
-
-.reviewRating {
-  margin-inline-start: auto;
-  font-weight: 600;
-  font-family: var(--font-family-primary);
-}
-
-.reviewText {
-  color: var(--color-text-secondary);
-  line-height: 1.7;
-  font-family: var(--font-family-primary);
-}
 
 .viewAllReviewsBtn {
   margin-top: 12px;
@@ -661,23 +674,28 @@
   color: var(--color-primary);
   font-family: var(--font-family-primary);
   cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 @media (max-width: 1100px) {
   .gallerySection {
     grid-template-columns: 1fr;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .secondaryImages {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: 140px;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .layoutGrid {
     grid-template-columns: 1fr;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 }
 
@@ -685,6 +703,7 @@
   .mainContent {
     padding: 24px 16px 64px;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .secondaryImages {
@@ -696,18 +715,21 @@
     flex-direction: column-reverse;
     align-items: flex-start;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .titleBlock {
     text-align: right;
     width: 100%;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .priceSection {
     text-align: right;
     width: 100%;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 }
 
@@ -715,18 +737,21 @@
   .primaryImage {
     min-height: 280px;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .secondaryImages {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 140px);
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 
   .headerActionsRow {
     justify-content: center;
     flex-direction: row;
     font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
   }
 }
 
