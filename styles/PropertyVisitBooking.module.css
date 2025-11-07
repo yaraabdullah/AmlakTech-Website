@@ -32,12 +32,6 @@
   gap: 24px;
 }
 
-.backButton:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  box-shadow: 0 8px 16px rgba(var(--color-primary-rgb), 0.12);
-}
-
 .pageHeader {
   background: var(--color-text-white);
   border-radius: 28px;

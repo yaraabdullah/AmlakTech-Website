@@ -284,9 +284,6 @@ const PropertyVisitBooking: React.FC = () => {
     content = (
       <div className={styles.bookingLayout}>
         <div className={styles.formColumn}>
-          <button type="button" className={styles.backButton} onClick={() => router.back()}>
-            العودة للخلف
-          </button>
           <header className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>حجز زيارة للعقار</h1>
             <p className={styles.pageSubtitle}>اختر نوع الزيارة والتاريخ والوقت المناسب لك</p>
