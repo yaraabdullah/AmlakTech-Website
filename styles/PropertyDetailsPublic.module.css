@@ -369,7 +369,8 @@
 
 .priceSuffix {
   font-size: 16px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+  font-weight: 600;
   font-family: var(--font-family-primary);
 }
 
