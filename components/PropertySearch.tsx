@@ -192,16 +192,50 @@ export default function PropertySearch() {
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
+      if (Number.isNaN(date.getTime())) return 'قريباً'
+
       const now = new Date()
-      const diffTime = Math.abs(now.getTime() - date.getTime())
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      
-      if (diffDays === 0) return 'اليوم'
-      if (diffDays === 1) return 'منذ يوم واحد'
-      if (diffDays < 7) return `منذ ${diffDays} أيام`
-      if (diffDays < 30) return `منذ ${Math.floor(diffDays / 7)} أسبوع`
-      if (diffDays < 365) return `منذ ${Math.floor(diffDays / 30)} شهر`
-      return `منذ ${Math.floor(diffDays / 365)} سنة`
+      const diffMs = now.getTime() - date.getTime()
+      if (diffMs < 0) return 'قريباً'
+
+      const minuteMs = 60 * 1000
+      const hourMs = 60 * minuteMs
+      const dayMs = 24 * hourMs
+      const weekMs = 7 * dayMs
+      const monthMs = 30 * dayMs
+      const yearMs = 365 * dayMs
+
+      const formatUnit = (value: number, singular: string, dual: string, few: string, many: string) => {
+        if (value <= 0) return 'منذ لحظات'
+        if (value === 1) return `منذ ${singular}`
+        if (value === 2) return `منذ ${dual}`
+        if (value <= 10) return `منذ ${value} ${few}`
+        return `منذ ${value} ${many}`
+      }
+
+      if (diffMs < minuteMs) return 'منذ لحظات'
+      if (diffMs < hourMs) {
+        const minutes = Math.floor(diffMs / minuteMs)
+        return formatUnit(minutes, 'دقيقة واحدة', 'دقيقتين', 'دقائق', 'دقيقة')
+      }
+      if (diffMs < dayMs) {
+        const hours = Math.floor(diffMs / hourMs)
+        return formatUnit(hours, 'ساعة واحدة', 'ساعتين', 'ساعات', 'ساعة')
+      }
+      if (diffMs < weekMs) {
+        const days = Math.floor(diffMs / dayMs)
+        return formatUnit(days, 'يوم واحد', 'يومين', 'أيام', 'يوماً')
+      }
+      if (diffMs < monthMs) {
+        const weeks = Math.floor(diffMs / weekMs)
+        return formatUnit(weeks, 'أسبوع واحد', 'أسبوعين', 'أسابيع', 'أسبوع')
+      }
+      if (diffMs < yearMs) {
+        const months = Math.floor(diffMs / monthMs)
+        return formatUnit(months, 'شهر واحد', 'شهرين', 'أشهر', 'شهراً')
+      }
+      const years = Math.floor(diffMs / yearMs)
+      return formatUnit(years, 'سنة واحدة', 'سنتين', 'سنوات', 'سنة')
     } catch {
       return 'قريباً'
     }
