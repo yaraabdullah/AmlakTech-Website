@@ -22,16 +22,18 @@
   gap: 16px;
   padding: 120px 16px;
   font-size: 18px;
+  font-family: var(--font-family-primary);
 }
 
 .backBtn {
   padding: 12px 24px;
   border-radius: 12px;
   border: none;
-  background: #0066ff;
+  background: var(--color-primary);
   color: #fff;
   cursor: pointer;
   font-size: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .gallerySection {
@@ -39,31 +41,35 @@
   grid-template-columns: 2fr 1fr;
   gap: 16px;
   margin-bottom: 32px;
+  font-family: var(--font-family-primary);
 }
 
 .primaryImage {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  background: #dde3f5;
+  background: var(--color-background-secondary);
   min-height: 420px;
+  font-family: var(--font-family-primary);
 }
 
 .galleryImage {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  font-family: var(--font-family-primary);
 }
 
 .listingBadge {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: #004aad;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-text-white);
   padding: 8px 18px;
   border-radius: 999px;
   font-size: 15px;
+  font-family: var(--font-family-primary);
 }
 
 .secondaryImages {
@@ -72,12 +78,14 @@
   grid-template-rows: repeat(2, 180px);
   gap: 12px;
   position: relative;
+  font-family: var(--font-family-primary);
 }
 
 .secondaryImageWrapper {
   border-radius: 18px;
   overflow: hidden;
-  background: #e4e8f5;
+  background: var(--color-background-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .viewAllBtn {
@@ -88,7 +96,7 @@
   padding: 12px;
   border-radius: 16px;
   background: rgba(0, 74, 173, 0.92);
-  color: #fff;
+  color: var(--color-text-white);
   border: none;
   cursor: pointer;
   font-size: 14px;
@@ -96,8 +104,9 @@
 
 .layoutGrid {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 1fr 320px;
   gap: 24px;
+  font-family: var(--font-family-primary);
 }
 
 .sidebar {
@@ -110,6 +119,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  font-family: var(--font-family-primary);
 }
 
 .contactCard,
@@ -117,15 +127,17 @@
 .similarCard,
 .headerCard,
 .sectionCard {
-  background: #fff;
+  background: var(--color-background-primary);
   border-radius: 24px;
   padding: 24px;
   box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+  font-family: var(--font-family-primary);
 }
 
 .contactTitle {
   font-size: 20px;
   margin-bottom: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .landlordInfo {
@@ -133,19 +145,21 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .landlordAvatar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7f9cf5, #4c51bf);
-  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-text-white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 18px;
+  font-family: var(--font-family-primary);
 }
 
 .landlordName {
@@ -155,36 +169,41 @@
 .landlordRole {
   font-size: 13px;
   color: #667085;
+  font-family: var(--font-family-primary);
 }
 
 .verificationBox {
   display: flex;
   gap: 10px;
-  background: #f4f7ff;
+  background: var(--color-background-secondary);
   padding: 12px;
   border-radius: 14px;
   font-size: 14px;
   margin-bottom: 16px;
   align-items: center;
+  font-family: var(--font-family-primary);
 }
 
 .verificationIcon {
   font-size: 18px;
+  font-family: var(--font-family-primary);
 }
 
 .contactForm {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .contactForm input,
 .contactForm textarea {
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 12px 14px;
   font-size: 14px;
-  background: #fff;
+  background: var(--color-background-primary);
+  font-family: var(--font-family-primary);
 }
 
 .contactForm textarea {
@@ -194,12 +213,13 @@
 
 .submitBtn {
   border: none;
-  background: #004aad;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-text-white);
   padding: 12px 0;
   border-radius: 14px;
   cursor: pointer;
   font-size: 15px;
+  font-family: var(--font-family-primary);
 }
 
 .contactActions {
@@ -207,19 +227,22 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .altAction {
-  border: 1px solid #d0d5dd;
+  border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 10px 0;
-  background: #fff;
+  background: var(--color-background-primary);
+  font-family: var(--font-family-primary);
   cursor: pointer;
 }
 
 .aiAssistantCard p {
-  color: #475467;
+  color: var(--color-text-secondary);
   margin-bottom: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .aiQuestions {
@@ -229,7 +252,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: #344054;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .aiBtn {
@@ -237,21 +261,24 @@
   border-radius: 14px;
   padding: 12px 0;
   width: 100%;
-  background: linear-gradient(135deg, #4f46e5, #3b82f6);
-  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-text-white);
   cursor: pointer;
+  font-family: var(--font-family-primary);
 }
 
 .sectionTitle {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 8px;
+  font-family: var(--font-family-primary);
 }
 
 .similarList {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .similarItem {
@@ -259,44 +286,51 @@
   gap: 12px;
   padding: 12px;
   border-radius: 16px;
-  background: #f8fafc;
+  background: var(--color-background-secondary);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-family-primary);
 }
 
 .similarItem:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  font-family: var(--font-family-primary);
 }
 
 .similarImage {
   border-radius: 14px;
   object-fit: cover;
+  font-family: var(--font-family-primary);
 }
 
 .similarInfo {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  font-family: var(--font-family-primary);
 }
 
 .similarName {
   font-weight: 600;
+  font-family: var(--font-family-primary);
 }
 
 .similarLocation,
 .similarPrice {
   font-size: 13px;
-  color: #475467;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .viewMoreBtn {
-  margin-top: 12px;
+  margin-top: 12px; 
   border: none;
-  background: #fff;
-  color: #004aad;
+  background: var(--color-background-primary);
+  color: var(--color-primary);
   cursor: pointer;
   font-size: 14px;
+  font-family: var(--font-family-primary);
 }
 
 .headerCard {
@@ -311,30 +345,35 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .titleBlock {
   flex: 1;
   text-align: right;
+  font-family: var(--font-family-primary);
 }
 
 .priceSection {
   min-width: 160px;
-  text-align: left;
+  text-align: right;
+  font-family: var(--font-family-primary);
 }
 
 .priceValue {
-  display: block;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   font-size: 32px;
   font-weight: 800;
-  color: #111827;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .priceSuffix {
-  display: block;
-  margin-top: 4px;
   font-size: 16px;
-  color: #475467;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .headerActionsRow {
@@ -342,6 +381,7 @@
   justify-content: flex-end;
   gap: 12px;
   flex-wrap: wrap;
+  font-family: var(--font-family-primary);
 }
 
 
@@ -354,10 +394,11 @@
   padding: 10px 14px;
   border-radius: 18px;
   border: none;
-  background: #f4f6fb;
+  background: var(--color-background-secondary);
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
   font-size: 13px;
-  color: #1f2937;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
   cursor: pointer;
   gap: 6px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
@@ -366,18 +407,20 @@
 .headerActionBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  background: #e9efff;
+  background: var(--color-background-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .actionIconWrapper {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--color-text-white);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.08);
+  font-family: var(--font-family-primary);
 }
 
 .propertySummary {
@@ -385,22 +428,26 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .propertyTitle {
   font-size: 30px;
   margin-bottom: 8px;
+  font-family: var(--font-family-primary);
 }
 
 .propertyLocationLine {
   font-size: 14px;
-  color: #475467;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .statsRow {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .statItem {
@@ -409,17 +456,20 @@
   gap: 6px;
   padding: 10px 14px;
   border-radius: 14px;
-  background: #f8fafc;
+  background: var(--color-background-secondary);
   font-size: 13px;
-  color: #1f2937;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .statIcon {
   font-size: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .statLabel {
   white-space: nowrap;
+  font-family: var(--font-family-primary);
 }
 
 .sectionHeader {
@@ -427,14 +477,16 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .vrIcon,
 .ratingBadge {
-  background: #f1f5ff;
+  background: var(--color-background-secondary);
   padding: 8px 14px;
   border-radius: 12px;
   font-size: 14px;
+  font-family: var(--font-family-primary);
 }
 
 .virtualTourPlaceholder {
@@ -442,26 +494,29 @@
   border-radius: 18px;
   padding: 40px 24px;
   text-align: center;
-  color: #1e3a8a;
+  color: var(--color-primary);
+  font-family: var(--font-family-primary);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .virtualTourBtn {
-  background: #1d4ed8;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-text-white);
   border: none;
   padding: 12px 24px;
   border-radius: 12px;
   cursor: pointer;
   align-self: center;
+  font-family: var(--font-family-primary);
 }
 
 .propertyDescription {
-  color: #475467;
+  color: var(--color-text-secondary);
   line-height: 1.8;
   font-size: 15px;
+  font-family: var(--font-family-primary);
 }
 
 .featuresList {
@@ -471,7 +526,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  color: #1f2937;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .mapPlaceholder {
@@ -481,8 +537,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1e3a8a;
+  color: var(--color-primary);
   font-weight: 600;
+  font-family: var(--font-family-primary);
 }
 
 .locationHighlights {
@@ -490,7 +547,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
-  color: #475467;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
   font-size: 14px;
 }
 
@@ -498,12 +556,14 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  font-family: var(--font-family-primary);
 }
 
 .reviewItem {
-  background: #f8fafc;
+  background: var(--color-background-secondary);
   padding: 18px;
   border-radius: 16px;
+  font-family: var(--font-family-primary);
 }
 
 .reviewHeader {
@@ -511,99 +571,117 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
+  font-family: var(--font-family-primary);
 }
 
 .reviewerAvatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #c7d2fe;
-  color: #1e3a8a;
+  background: var(--color-background-secondary);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
+  font-family: var(--font-family-primary);
 }
 
 .reviewerName {
   font-weight: 600;
+  font-family: var(--font-family-primary);
 }
 
 .reviewDate {
   font-size: 12px;
   color: #94a3b8;
+  font-family: var(--font-family-primary);
 }
 
 .reviewRating {
   margin-inline-start: auto;
   font-weight: 600;
+  font-family: var(--font-family-primary);
 }
 
 .reviewText {
-  color: #475467;
+  color: var(--color-text-secondary);
   line-height: 1.7;
+  font-family: var(--font-family-primary);
 }
 
 .viewAllReviewsBtn {
   margin-top: 12px;
   border: none;
-  background: #fff;
-  color: #1d4ed8;
+  background: var(--color-text-white);
+  color: var(--color-primary);
+  font-family: var(--font-family-primary);
   cursor: pointer;
 }
 
 @media (max-width: 1100px) {
   .gallerySection {
     grid-template-columns: 1fr;
+    font-family: var(--font-family-primary);
   }
 
   .secondaryImages {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: 140px;
+    font-family: var(--font-family-primary);
   }
 
   .layoutGrid {
     grid-template-columns: 1fr;
+    font-family: var(--font-family-primary);
   }
 }
 
 @media (max-width: 768px) {
   .mainContent {
     padding: 24px 16px 64px;
+    font-family: var(--font-family-primary);
   }
 
   .secondaryImages {
     grid-template-columns: repeat(2, 1fr);
+    font-family: var(--font-family-primary);
   }
 
   .headerTopRow {
     flex-direction: column-reverse;
     align-items: flex-start;
+    font-family: var(--font-family-primary);
   }
 
   .titleBlock {
     text-align: right;
     width: 100%;
+    font-family: var(--font-family-primary);
   }
 
   .priceSection {
     text-align: right;
     width: 100%;
+    font-family: var(--font-family-primary);
   }
 }
 
 @media (max-width: 520px) {
   .primaryImage {
     min-height: 280px;
+    font-family: var(--font-family-primary);
   }
 
   .secondaryImages {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 140px);
+    font-family: var(--font-family-primary);
   }
 
   .headerActionsRow {
     justify-content: center;
+    font-family: var(--font-family-primary);
   }
 }
 

@@ -298,6 +298,137 @@ export default function PropertyDetailsPublic() {
         </div>
 
         <div className={styles.layoutGrid}>
+          <section className={styles.contentColumn}>
+            <div className={styles.headerCard}>
+              <div className={styles.headerTopRow}>
+                <div className={styles.titleBlock}>
+                  <h1 className={styles.propertyTitle}>{property.name || 'عقار مميز'}</h1>
+                  <div className={styles.propertyLocationLine}>📍 {formattedAddress || 'غير محدد'}</div>
+                </div>
+                <div className={styles.priceSection}>
+                  <span className={styles.priceValue}>
+                    {priceValue}
+                    {priceSuffix && <span className={styles.priceSuffix}>{priceSuffix}</span>}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.statsRow}>
+                {quickStats.map((stat) => (
+                  <div key={stat.label} className={styles.statItem}>
+                    <span className={styles.statIcon}>{stat.icon}</span>
+                    <span className={styles.statLabel}>{stat.label}</span>
+                  </div>
+                ))}
+                <div className={styles.statItem}>
+                  <span className={styles.statIcon}>🏷️</span>
+                  <span className={styles.statLabel}>{property.type || 'نوع غير محدد'}</span>
+                </div>
+                {furnishedStatus && (
+                  <div className={styles.statItem}>
+                    <span className={styles.statIcon}>🛋️</span>
+                    <span className={styles.statLabel}>{furnishedStatus}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.headerActionsRow}>
+                {headerActions.map((action) => (
+                  <button key={action.label} className={styles.headerActionBtn}>
+                    <span className={styles.actionIconWrapper}>
+                      <Image src={action.icon} alt={action.label} width={20} height={20} />
+                    </span>
+                    <span className={styles.actionLabel}>{action.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>جولة افتراضية</h2>
+                <span className={styles.vrIcon}>🕶️</span>
+              </div>
+              <div className={styles.virtualTourPlaceholder}>
+                <button className={styles.virtualTourBtn}>بدء الجولة الافتراضية بتقنية 360</button>
+                <p>تم إنشاء الجولة بواسطة الذكاء الاصطناعي</p>
+              </div>
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>وصف العقار</h2>
+              </div>
+              <p className={styles.propertyDescription}>
+                {property.description || 'لا يوجد وصف متوفر لهذا العقار حالياً.'}
+              </p>
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>مميزات العقار</h2>
+              </div>
+              <ul className={styles.featuresList}>
+                {Object.entries(features)
+                  .filter(([, value]) => Boolean(value))
+                  .map(([key]) => (
+                    <li key={key}>✅ {featureLabels[key] || key}</li>
+                  ))}
+                {furnishedStatus && <li>🛋️ {furnishedStatus}</li>}
+                {property.area && <li>📐 المساحة: {property.area} م²</li>}
+                {property.rooms && <li>🛏️ عدد الغرف: {property.rooms}</li>}
+                {property.bathrooms && <li>🚿 عدد الحمامات: {property.bathrooms}</li>}
+              </ul>
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>الموقع</h2>
+              </div>
+              <div className={styles.mapPlaceholder}>
+                <div className={styles.mapCaption}>عرض الخريطة قريباً</div>
+              </div>
+              <div className={styles.locationHighlights}>
+                <div>🏫 المدارس: خلال 3 كم</div>
+                <div>🏥 المستشفيات: ضمن 5 كم</div>
+                <div>🛍️ المراكز التجارية: قريبة</div>
+                <div>🌳 الحدائق: تقع على بعد 2 كم</div>
+              </div>
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>تقييمات المستأجرين السابقين</h2>
+                <span className={styles.ratingBadge}>4.8 ⭐</span>
+              </div>
+              <div className={styles.reviewsList}>
+                <div className={styles.reviewItem}>
+                  <div className={styles.reviewHeader}>
+                    <div className={styles.reviewerAvatar}>أ</div>
+                    <div>
+                      <div className={styles.reviewerName}>أحمد محمد</div>
+                      <div className={styles.reviewDate}>مايو 2023</div>
+                    </div>
+                    <div className={styles.reviewRating}>5.0 ⭐</div>
+                  </div>
+                  <p className={styles.reviewText}>عشت في هذه الفيلا لمدة سنة كاملة وكانت تجربة رائعة، الموقع ممتاز وقريب من جميع الخدمات.</p>
+                </div>
+                <div className={styles.reviewItem}>
+                  <div className={styles.reviewHeader}>
+                    <div className={styles.reviewerAvatar}>س</div>
+                    <div>
+                      <div className={styles.reviewerName}>سارة عبد الله</div>
+                      <div className={styles.reviewDate}>فبراير 2023</div>
+                    </div>
+                    <div className={styles.reviewRating}>4.5 ⭐</div>
+                  </div>
+                  <p className={styles.reviewText}>الفيلا جميلة ومريحة، كان هناك بعض المشاكل في نظام التكييف ولكن المالك تجاوب سريعاً.</p>
+                </div>
+              </div>
+              <button className={styles.viewAllReviewsBtn}>عرض جميع التقييمات</button>
+            </div>
+          </section>
+
           <aside className={styles.sidebar}>
             <div className={styles.contactCard}>
               <h3 className={styles.contactTitle}>تواصل مع المالك</h3>
