@@ -318,10 +318,7 @@ export default function PropertyDetailsPublic() {
                     <span className={styles.statLabel}>{stat.label}</span>
                   </div>
                 ))}
-                <div className={styles.statItem}>
-                  <span className={styles.statIcon}>🏷️</span>
-                  <span className={styles.statLabel}>{property.type || 'نوع غير محدد'}</span>
-                </div>
+
                 {furnishedStatus && (
                   <div className={styles.statItem}>
                     <span className={styles.statIcon}>🛋️</span>
