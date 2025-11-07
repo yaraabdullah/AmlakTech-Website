@@ -305,37 +305,41 @@
   gap: 18px;
 }
 
+
 .headerTopRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 16px;
 }
 
-.priceSection {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-size: 28px;
-  font-weight: 700;
-  color: #0b3d91;
+.titleBlock {
+  flex: 1;
+  text-align: right;
 }
 
-.priceSuffix {
-  font-size: 18px;
-  font-weight: 500;
-  color: #334155;
+.priceSection {
+  min-width: 160px;
+  text-align: left;
 }
 
 .priceValue {
+  display: block;
   font-size: 32px;
   font-weight: 800;
-  color: #1d4ed8;
+  color: #111827;
+}
+
+.priceSuffix {
+  display: block;
+  margin-top: 4px;
+  font-size: 16px;
+  color: #475467;
 }
 
 .headerActionsRow {
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -573,12 +577,18 @@
   }
 
   .headerTopRow {
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: flex-start;
   }
 
-  .headerActionsRow {
-    align-self: stretch;
+  .titleBlock {
+    text-align: right;
+    width: 100%;
+  }
+
+  .priceSection {
+    text-align: right;
+    width: 100%;
   }
 }
 
@@ -593,11 +603,7 @@
   }
 
   .headerActionsRow {
-    flex-direction: column;
-  }
-
-  .headerActionBtn {
-    width: 100%;
+    justify-content: center;
   }
 }
 

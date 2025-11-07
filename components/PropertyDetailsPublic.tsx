@@ -259,11 +259,13 @@ export default function PropertyDetailsPublic() {
       icon: '📐',
       label: property.area ? `${property.area} متر مربع` : 'المساحة غير متوفرة',
     },
-    {
-      icon: '📅',
-      label: formatRelativeTime(property.createdAt),
-    },
-  ]
+    property.constructionYear
+      ? { icon: '📅', label: `ثبّت في ${property.constructionYear}` }
+      : { icon: '📅', label: formatRelativeTime(property.createdAt) },
+    parseFeatures(property.features)?.parking
+      ? { icon: '🚗', label: 'موقف سيارة متوفر' }
+      : null,
+  ].filter(Boolean) as { icon: string; label: string }[]
 
   const headerActions = [
     { label: 'حفظ', icon: '/icons/save.svg' },
@@ -361,26 +363,13 @@ export default function PropertyDetailsPublic() {
           <section className={styles.contentColumn}>
             <div className={styles.headerCard}>
               <div className={styles.headerTopRow}>
-                <div className={styles.priceSection}>
-                  {priceSuffix && <span className={styles.priceSuffix}>{priceSuffix}</span>}
-                  <span className={styles.priceValue}>{priceValue}</span>
-                </div>
-                <div className={styles.headerActionsRow}>
-                  {headerActions.map((action) => (
-                    <button key={action.label} className={styles.headerActionBtn}>
-                      <span className={styles.actionIconWrapper}>
-                        <Image src={action.icon} alt={action.label} width={20} height={20} />
-                      </span>
-                      <span className={styles.actionLabel}>{action.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.propertySummary}>
-                <div>
+                <div className={styles.titleBlock}>
                   <h1 className={styles.propertyTitle}>{property.name || 'عقار مميز'}</h1>
                   <div className={styles.propertyLocationLine}>📍 {formattedAddress || 'غير محدد'}</div>
+                </div>
+                <div className={styles.priceSection}>
+                  <span className={styles.priceValue}>{priceValue}</span>
+                  {priceSuffix && <span className={styles.priceSuffix}>{priceSuffix}</span>}
                 </div>
               </div>
 
@@ -401,6 +390,17 @@ export default function PropertyDetailsPublic() {
                     <span className={styles.statLabel}>{furnishedStatus}</span>
                   </div>
                 )}
+              </div>
+
+              <div className={styles.headerActionsRow}>
+                {headerActions.map((action) => (
+                  <button key={action.label} className={styles.headerActionBtn}>
+                    <span className={styles.actionIconWrapper}>
+                      <Image src={action.icon} alt={action.label} width={20} height={20} />
+                    </span>
+                    <span className={styles.actionLabel}>{action.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
