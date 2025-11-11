@@ -373,6 +373,10 @@
   font-weight: 500;
 }
 
+.waitingSignature {
+  color: #f97316;
+}
+
 .errorAlertMobile,
 .successAlertMobile {
   display: none;

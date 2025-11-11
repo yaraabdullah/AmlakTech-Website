@@ -506,7 +506,7 @@ export default function TenantSignContract() {
                   </div>
                   <div className={styles.signatureBox}>
                     <span className={styles.detailLabel}>الطرف الثاني (المستأجر)</span>
-                    <div className={styles.signaturePlaceholder waiting}>
+                    <div className={`${styles.signaturePlaceholder} ${styles.waitingSignature}`}>
                       <span>{signatureValue ? signatureValue : 'في انتظار توقيعك'}</span>
                       <small>{signatureValue ? 'تم إدخال التوقيع' : 'الرجاء إدخال التوقيع أعلاه'}</small>
                     </div>
