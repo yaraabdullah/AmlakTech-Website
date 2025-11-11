@@ -274,7 +274,7 @@ export default function PropertyDetailsPublic() {
         propertyId: property.id,
         propertyName: property.name || 'عقار مميز',
         propertyAddress,
-        ownerId: property.owner?.id || property.ownerId || '',
+        ownerId: property.owner?.id || '',
         ownerName,
         monthlyRent: property.monthlyRent || property.price || 0,
         startDate: bookingForm.startDate,
