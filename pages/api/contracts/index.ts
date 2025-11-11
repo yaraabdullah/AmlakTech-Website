@@ -4,16 +4,43 @@ import { prisma } from '../../../lib/prisma'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const { ownerId, status, propertyId } = req.query
+      const { ownerId, status, propertyId, tenantId, tenantUserId } = req.query
 
-      if (!ownerId) {
-        return res.status(400).json({ error: 'ownerId is required' })
+      if (!ownerId && !tenantId && !tenantUserId) {
+        return res.status(400).json({ error: 'Either ownerId, tenantId, or tenantUserId is required' })
       }
 
-      const ownerIdBigInt = BigInt(ownerId as string)
+      let ownerIdBigInt: bigint | undefined
+      let resolvedTenantId: string | undefined
+
+      if (ownerId) {
+        ownerIdBigInt = BigInt(ownerId as string)
+      }
+
+      if (tenantId) {
+        resolvedTenantId = tenantId as string
+      } else if (tenantUserId) {
+        try {
+          const tenantRecord = await prisma.tenant.findFirst({
+            where: { userId: BigInt(tenantUserId as string) },
+            select: { id: true },
+          })
+
+          if (!tenantRecord) {
+            return res.status(200).json([])
+          }
+
+          resolvedTenantId = tenantRecord.id
+        } catch (error) {
+          console.error('Error resolving tenant by userId:', error)
+          return res.status(500).json({ error: 'Failed to resolve tenant information' })
+        }
+      }
+
       const contracts = await prisma.contract.findMany({
         where: {
-          ownerId: ownerIdBigInt,
+          ...(ownerIdBigInt && { ownerId: ownerIdBigInt }),
+          ...(resolvedTenantId && { tenantId: resolvedTenantId }),
           ...(status && { status: status as string }),
           ...(propertyId && { propertyId: propertyId as string }),
         },

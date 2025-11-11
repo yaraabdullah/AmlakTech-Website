@@ -4,56 +4,77 @@ import { prisma } from '../../../lib/prisma'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const { phoneNumber, email, nationalId } = req.query
+      const { phoneNumber, email, nationalId, userId } = req.query
+
+      const tenantInclude = {
+        user: {
+          select: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            email: true,
+          },
+        },
+        contracts: {
+          include: {
+            property: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+                city: true,
+                neighborhood: true,
+              },
+            },
+            unit: {
+              select: {
+                id: true,
+                unitNumber: true,
+              },
+            },
+            payments: {
+              orderBy: {
+                dueDate: 'desc',
+              },
+            },
+          },
+        },
+      }
 
       let tenant = null
 
-      if (phoneNumber) {
+      if (userId) {
+        try {
+          tenant = await prisma.tenant.findUnique({
+            where: {
+              userId: BigInt(userId as string),
+            },
+            include: tenantInclude,
+          })
+        } catch (error) {
+          console.error('Error fetching tenant by userId:', error)
+          return res.status(500).json({ error: 'Failed to fetch tenant' })
+        }
+      } else if (phoneNumber) {
         tenant = await prisma.tenant.findUnique({
           where: {
             phoneNumber: phoneNumber as string,
           },
-          include: {
-            user: {
-              select: {
-                id: true,
-                first_name: true,
-                last_name: true,
-                email: true,
-              },
-            },
-            contracts: {
-              include: {
-                property: {
-                  select: {
-                    id: true,
-                    name: true,
-                    address: true,
-                  },
-                },
-              },
-            },
-          },
+          include: tenantInclude,
         })
       } else if (email) {
         tenant = await prisma.tenant.findUnique({
           where: {
             email: email as string,
           },
-          include: {
-            user: true,
-            contracts: true,
-          },
+          include: tenantInclude,
         })
       } else if (nationalId) {
         tenant = await prisma.tenant.findUnique({
           where: {
             nationalId: nationalId as string,
           },
-          include: {
-            user: true,
-            contracts: true,
-          },
+          include: tenantInclude,
         })
       }
 
@@ -65,10 +86,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const tenantWithStrings = {
         ...tenant,
         userId: tenant.userId?.toString() || null,
-        user: tenant.user ? {
-          ...tenant.user,
-          id: tenant.user.id.toString(),
-        } : null,
+        user: tenant.user
+          ? {
+              ...tenant.user,
+              id: tenant.user.id.toString(),
+            }
+          : null,
+        contracts: tenant.contracts
+          ? tenant.contracts.map((contract) => ({
+              ...contract,
+              ownerId: contract.ownerId.toString(),
+              payments: contract.payments
+                ? contract.payments.map((payment) => ({
+                    ...payment,
+                    ownerId: payment.ownerId.toString(),
+                    contractId: payment.contractId || null,
+                  }))
+                : [],
+            }))
+          : [],
       }
 
       return res.status(200).json(tenantWithStrings)
