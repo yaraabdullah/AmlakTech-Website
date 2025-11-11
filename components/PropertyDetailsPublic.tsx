@@ -162,6 +162,16 @@ export default function PropertyDetailsPublic() {
     email: '',
     message: ''
   })
+  const [showBookingModal, setShowBookingModal] = useState(false)
+  const [bookingForm, setBookingForm] = useState({
+    startDate: '',
+    endDate: '',
+    paymentFrequency: 'monthly',
+    deposit: '',
+    notes: ''
+  })
+  const [bookingError, setBookingError] = useState<string | null>(null)
+  const [bookingSuccess, setBookingSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -208,6 +218,80 @@ export default function PropertyDetailsPublic() {
     // Placeholder submission logic
     alert('تم إرسال رسالتك إلى المالك!')
     setContactForm({ name: '', phone: '', email: '', message: '' })
+  }
+
+  const handleOpenBookingModal = () => {
+    if (typeof window === 'undefined') return
+    const userId = localStorage.getItem('userId')
+    const userType = localStorage.getItem('userType')
+
+    if (!userId || !(userType === 'tenant' || userType === 'مستأجر')) {
+      router.push('/login')
+      return
+    }
+
+    setBookingError(null)
+    setBookingSuccess(null)
+    setShowBookingModal(true)
+  }
+
+  const handleCloseBookingModal = () => {
+    setShowBookingModal(false)
+    setBookingError(null)
+    setBookingSuccess(null)
+  }
+
+  const handleBookingChange = (field: keyof typeof bookingForm) => (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const value = event.target.value
+    setBookingForm((prev) => ({ ...prev, [field]: value }))
+    setBookingError(null)
+  }
+
+  const handleBookingSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    if (!property) return
+
+    if (!bookingForm.startDate || !bookingForm.endDate) {
+      setBookingError('يرجى اختيار تاريخ بداية ونهاية العقد.')
+      return
+    }
+
+    const start = new Date(bookingForm.startDate)
+    const end = new Date(bookingForm.endDate)
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      setBookingError('تاريخ نهاية العقد يجب أن يكون بعد تاريخ البداية.')
+      return
+    }
+
+    if (typeof window !== 'undefined') {
+      const propertyAddress = [property.neighborhood, property.city, 'المملكة العربية السعودية'].filter(Boolean).join(', ')
+      const ownerName =
+        property.owner ? `${property.owner.first_name || ''} ${property.owner.last_name || ''}`.trim() : 'مالك العقار'
+
+      const draftContract = {
+        propertyId: property.id,
+        propertyName: property.name || 'عقار مميز',
+        propertyAddress,
+        ownerId: property.owner?.id || property.ownerId || '',
+        ownerName,
+        monthlyRent: property.monthlyRent || property.price || 0,
+        startDate: bookingForm.startDate,
+        endDate: bookingForm.endDate,
+        paymentFrequency: bookingForm.paymentFrequency,
+        deposit: bookingForm.deposit,
+        notes: bookingForm.notes,
+        createdAt: new Date().toISOString(),
+      }
+
+      localStorage.setItem('draftContract', JSON.stringify(draftContract))
+      setBookingSuccess('تم حفظ بيانات العقد المبدئية. جاري الانتقال إلى صفحة التوقيع...')
+      setTimeout(() => {
+        setShowBookingModal(false)
+        router.push(`/tenant/sign-contract?propertyId=${property.id}`)
+      }, 600)
+    }
   }
 
   if (loading) {
@@ -467,6 +551,16 @@ export default function PropertyDetailsPublic() {
                 <div className={styles.verificationText}>{landlordVerificationMessages.verified}</div>
               </div>
 
+              {!isForSale && (
+                <div className={styles.bookingPrompt}>
+                  <h4>جاهز للاستئجار؟</h4>
+                  <p>قم بإدخال بياناتك الأولية واستكمل إجراءات التوقيع الإلكتروني خلال دقائق.</p>
+                  <button type="button" className={styles.bookPropertyBtn} onClick={handleOpenBookingModal}>
+                    توقيع عقد الإيجار
+                  </button>
+                </div>
+              )}
+
               <form className={styles.contactForm} onSubmit={handleContactSubmit}>
                 <input placeholder="الاسم" value={contactForm.name} onChange={handleContactChange('name')} required />
                 <input placeholder="رقم الهاتف" value={contactForm.phone} onChange={handleContactChange('phone')} />
@@ -520,6 +614,78 @@ export default function PropertyDetailsPublic() {
       </main>
 
       <Footer />
+
+      {showBookingModal && (
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+          <div className={styles.modalCard}>
+            <div className={styles.modalHeader}>
+              <div>
+                <h3>حجز العقار وتوقيع العقد</h3>
+                <p>أدخل تفاصيل العقد المبدئية لإتمام التوقيع الإلكتروني.</p>
+              </div>
+              <button className={styles.modalCloseBtn} type="button" onClick={handleCloseBookingModal} aria-label="إغلاق نافذة الحجز">
+                ×
+              </button>
+            </div>
+
+            <form className={styles.modalForm} onSubmit={handleBookingSubmit}>
+              <div className={styles.modalGrid}>
+                <label className={styles.modalField}>
+                  <span>تاريخ بداية العقد</span>
+                  <input type="date" value={bookingForm.startDate} onChange={handleBookingChange('startDate')} required />
+                </label>
+
+                <label className={styles.modalField}>
+                  <span>تاريخ نهاية العقد</span>
+                  <input type="date" value={bookingForm.endDate} onChange={handleBookingChange('endDate')} required />
+                </label>
+
+                <label className={styles.modalField}>
+                  <span>دورية الدفع</span>
+                  <select value={bookingForm.paymentFrequency} onChange={handleBookingChange('paymentFrequency')}>
+                    <option value="monthly">شهري</option>
+                    <option value="quarterly">ربع سنوي</option>
+                    <option value="yearly">سنوي</option>
+                  </select>
+                </label>
+
+                <label className={styles.modalField}>
+                  <span>مبلغ التأمين (اختياري)</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={bookingForm.deposit}
+                    onChange={handleBookingChange('deposit')}
+                    placeholder="مثال: 5000"
+                  />
+                </label>
+              </div>
+
+              <label className={styles.modalField}>
+                <span>ملاحظات إضافية</span>
+                <textarea
+                  rows={3}
+                  value={bookingForm.notes}
+                  onChange={handleBookingChange('notes')}
+                  placeholder="هل لديك أي شروط أو ملاحظات خاصة؟"
+                />
+              </label>
+
+              {bookingError && <div className={styles.modalError}>{bookingError}</div>}
+              {bookingSuccess && <div className={styles.modalSuccess}>{bookingSuccess}</div>}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.modalSecondaryBtn} onClick={handleCloseBookingModal}>
+                  إلغاء
+                </button>
+                <button type="submit" className={styles.modalPrimaryBtn}>
+                  المتابعة إلى التوقيع
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
