@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { phoneNumber, email, nationalId, userId } = req.query
 
-      const tenantInclude: Prisma.TenantInclude = {
+      const tenantInclude = Prisma.validator<Prisma.TenantInclude>()({
         user: {
           select: {
             id: true,
@@ -38,9 +38,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
           },
         },
-      }
+      })
 
-      let tenant = null
+      type TenantWithRelations = Prisma.TenantGetPayload<{ include: typeof tenantInclude }>
+
+      let tenant: TenantWithRelations | null = null
 
       if (userId) {
         try {
