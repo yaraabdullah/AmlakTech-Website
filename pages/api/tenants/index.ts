@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Prisma } from '@prisma/client'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -6,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { phoneNumber, email, nationalId, userId } = req.query
 
-      const tenantInclude = {
+      const tenantInclude: Prisma.TenantInclude = {
         user: {
           select: {
             id: true,
@@ -33,9 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               },
             },
             payments: {
-              orderBy: {
-                dueDate: 'desc',
-              },
+              orderBy: { dueDate: Prisma.SortOrder.desc },
             },
           },
         },
