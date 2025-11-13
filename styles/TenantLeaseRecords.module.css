@@ -291,6 +291,15 @@
   height: 24px;
   object-fit: contain;
   filter: brightness(0) invert(1);
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+.metricIcon img[src*="date.svg"],
+.metricIcon img[src*="payment-management.svg"],
+.metricIcon img[src*="reports.svg"] {
+  filter: brightness(0) invert(1) !important;
 }
 
 .metricLabel {

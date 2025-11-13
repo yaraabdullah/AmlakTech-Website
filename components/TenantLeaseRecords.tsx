@@ -378,7 +378,10 @@ export default function TenantLeaseRecords() {
                         alt="تاريخ العقد"
                         width={24}
                         height={24}
-                        style={{ display: 'block' }}
+                        style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
+                        onError={(e) => {
+                          console.error('Failed to load date.svg icon');
+                        }}
                       />
                     </div>
                     <span className={styles.metricLabel}>العقد الحالي</span>
@@ -409,7 +412,10 @@ export default function TenantLeaseRecords() {
                         alt="إدارة الدفع"
                         width={24}
                         height={24}
-                        style={{ display: 'block' }}
+                        style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
+                        onError={(e) => {
+                          console.error('Failed to load payment-management.svg icon');
+                        }}
                       />
                     </div>
                     <span className={styles.metricLabel}>الدفعة القادمة</span>
@@ -438,7 +444,10 @@ export default function TenantLeaseRecords() {
                         alt="التقارير"
                         width={24}
                         height={24}
-                        style={{ display: 'block' }}
+                        style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
+                        onError={(e) => {
+                          console.error('Failed to load reports.svg icon');
+                        }}
                       />
                     </div>
                     <span className={styles.metricLabel}>إجمالي المدفوعات</span>
