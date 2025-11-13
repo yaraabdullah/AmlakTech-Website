@@ -375,7 +375,7 @@ export default function TenantSignContract() {
                   </div>
                   <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>بيانات العقار</span>
-                    <p className={styles.detailValue}>{draft.propertyName || property.type || 'شقة'}</p>
+                    <p className={styles.detailValue}>{draft.propertyName || property.name || 'شقة'}</p>
                     <span className={styles.detailHint}>
                       {draft.propertyAddress || `${property.neighborhood || ''}, ${property.city || ''}, المملكة العربية السعودية`}
                     </span>
