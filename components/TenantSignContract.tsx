@@ -342,72 +342,48 @@ export default function TenantSignContract() {
         <div className={styles.container}>
           <form className={styles.layout} onSubmit={handleCompleteSigning}>
             <section className={styles.content}>
-              <div className={styles.statusCard}>
-                <div>
-                  <h1>توقيع عقد الإيجار</h1>
-                  <p>تم التحقق من جميع بنود العقد بواسطة الذكاء الاصطناعي وهو جاهز للتوقيع الآن.</p>
-                </div>
-                <div className={styles.statusBadge}>تم التحقق ✓</div>
+              <h1 className={styles.pageTitle}>توقيع عقد الإيجار</h1>
+              
+              <div className={styles.statusBanner}>
+                <div className={styles.statusBannerIcon}>🤖</div>
+                <p>تم التحقق من جميع بنود العقد بواسطة الذكاء الاصطناعي وهو جاهز للتوقيع الآن.</p>
               </div>
 
               <div className={styles.card}>
                 <div className={styles.cardHeader}>
-                  <div>
-                    <h2>عقد إيجار سكني</h2>
-                    <p>تم الاتفاق في يوم الأربعاء الموافق {formatDate(draft.createdAt || new Date().toISOString())}</p>
-                  </div>
-                  <div className={styles.cardMeta}>
-                    <span>رقم العقد: سيتم توليده آلياً</span>
-                    <span>مدة الإيجار: {formatDate(draft.startDate)} - {formatDate(draft.endDate)}</span>
-                  </div>
+                  <h2>عقد إيجار سكني</h2>
+                  <p className={styles.agreementDate}>تم الاتفاق في يوم الأربعاء الموافق {formatDate(draft.createdAt || new Date().toISOString())} م بين كل من:</p>
+                </div>
+
+                <div className={styles.contractMeta}>
+                  <span>رقم العقد: سيتم توليده آلياً</span>
+                  <span>مدة الإيجار: {formatDate(draft.startDate)} - {formatDate(draft.endDate)}</span>
                 </div>
 
                 <div className={styles.detailsGrid}>
-                  <div>
+                  <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>الطرف الأول (المالك)</span>
                     <p className={styles.detailValue}>{ownerDisplayName}</p>
                     <span className={styles.detailHint}>{property.owner?.email || 'البريد سيتم مشاركته بعد التوقيع'}</span>
                   </div>
-                  <div>
+                  <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>الطرف الثاني (المستأجر)</span>
                     <p className={styles.detailValue}>
                       {tenant.firstName} {tenant.lastName}
                     </p>
                     <span className={styles.detailHint}>{tenant.phoneNumber}</span>
                   </div>
-                  <div>
+                  <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>بيانات العقار</span>
-                    <p className={styles.detailValue}>{draft.propertyName}</p>
+                    <p className={styles.detailValue}>{draft.propertyName || property.type || 'شقة'}</p>
                     <span className={styles.detailHint}>
-                      {draft.propertyAddress || `${property.neighborhood || ''}, ${property.city || ''}`}
+                      {draft.propertyAddress || `${property.neighborhood || ''}, ${property.city || ''}, المملكة العربية السعودية`}
                     </span>
                   </div>
-                  <div>
+                  <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>قيمة الإيجار</span>
                     <p className={styles.detailValue}>{formatCurrency(draft.monthlyRent ?? property.monthlyRent ?? property.price)}</p>
                     <span className={styles.detailHint}>دورية الدفع: {frequencyLabel}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.card}>
-                <h3>تفاصيل إضافية</h3>
-                <div className={styles.detailsList}>
-                  <div>
-                    <span className={styles.detailLabel}>بداية العقد</span>
-                    <p>{formatDate(draft.startDate)}</p>
-                  </div>
-                  <div>
-                    <span className={styles.detailLabel}>نهاية العقد</span>
-                    <p>{formatDate(draft.endDate)}</p>
-                  </div>
-                  <div>
-                    <span className={styles.detailLabel}>مبلغ التأمين</span>
-                    <p>{depositValueLabel(draft, property)}</p>
-                  </div>
-                  <div>
-                    <span className={styles.detailLabel}>تاريخ التوقيع</span>
-                    <p>{formatDate(new Date().toISOString())}</p>
                   </div>
                 </div>
               </div>

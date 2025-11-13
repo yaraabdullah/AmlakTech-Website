@@ -64,7 +64,40 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+}
+
+.pageTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+  font-family: var(--font-family-primary);
+}
+
+.statusBanner {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(59, 130, 246, 0.1));
+  border-right: 4px solid #2563eb;
+  border-radius: 16px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.statusBannerIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.statusBanner p {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .userCard {
@@ -301,56 +334,80 @@
 
 .cardHeader {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
+  margin-bottom: 8px;
 }
 
 .cardHeader h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: var(--font-family-primary);
+}
+
+.agreementDate {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.6;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
 }
 
-.cardMeta {
+.contractMeta {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+  gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+  color: #475569;
+  font-size: 14px;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
-  align-items: flex-end;
+}
+
+.contractMeta span {
+  display: block;
 }
 
 .detailsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .detailLabel {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: #64748b;
+  font-weight: 600;
   font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-normal);
 }
 
 .detailValue {
-  font-size: var(--font-size-lg);
-  margin: 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
   font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-normal);
 }
 
 .detailHint {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  font-size: 13px;
+  color: #94a3b8;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
 }
