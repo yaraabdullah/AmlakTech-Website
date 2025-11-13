@@ -517,12 +517,14 @@ export default function TenantSignContract() {
           </form>
 
           <div className={styles.bottomActions}>
-            <button type="submit" form="signContractForm" className={styles.primaryBtn} disabled={isSubmitting}>
-              ✓ {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
-            </button>
-            <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
-              حفظ كمسودة
-            </button>
+            <div className={styles.leftButtons}>
+              <button type="submit" form="signContractForm" className={styles.primaryBtn} disabled={isSubmitting}>
+                ✓ {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
+              </button>
+              <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
+                حفظ كمسودة
+              </button>
+            </div>
             <button type="button" className={styles.returnLink} onClick={() => router.back()}>
               العودة للمراجعة →
             </button>
