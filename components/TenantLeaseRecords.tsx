@@ -373,15 +373,11 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <img 
+                      <Image 
                         src="/icons/date.svg" 
                         alt="تاريخ العقد"
                         width={24}
                         height={24}
-                        style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
-                        onError={(e) => {
-                          console.error('Failed to load date.svg icon');
-                        }}
                       />
                     </div>
                     <span className={styles.metricLabel}>العقد الحالي</span>
@@ -407,15 +403,11 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <img 
+                      <Image 
                         src="/icons/payment-management.svg" 
                         alt="إدارة الدفع"
                         width={24}
                         height={24}
-                        style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
-                        onError={(e) => {
-                          console.error('Failed to load payment-management.svg icon');
-                        }}
                       />
                     </div>
                     <span className={styles.metricLabel}>الدفعة القادمة</span>
@@ -439,15 +431,11 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <img 
+                      <Image 
                         src="/icons/reports.svg" 
                         alt="التقارير"
                         width={24}
                         height={24}
-                        style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
-                        onError={(e) => {
-                          console.error('Failed to load reports.svg icon');
-                        }}
                       />
                     </div>
                     <span className={styles.metricLabel}>إجمالي المدفوعات</span>
