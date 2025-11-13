@@ -340,79 +340,10 @@ export default function TenantSignContract() {
       <TenantNavigation currentPage="sign-contract" />
       <main className={styles.main}>
         <div className={styles.container}>
-          <form className={styles.layout} onSubmit={handleCompleteSigning}>
-            <section className={styles.content}>
-              <h1 className={styles.pageTitle}>توقيع عقد الإيجار</h1>
-              
-              <div className={styles.statusBanner}>
-                <div className={styles.statusBannerIcon}>🤖</div>
-                <p>تم التحقق من جميع بنود العقد بواسطة الذكاء الاصطناعي وهو جاهز للتوقيع الآن.</p>
-              </div>
-
-              <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h2>عقد إيجار سكني</h2>
-                  <p className={styles.agreementDate}>تم الاتفاق في يوم الأربعاء الموافق {formatDate(draft.createdAt || new Date().toISOString())} م بين كل من:</p>
-                </div>
-
-                <div className={styles.contractMeta}>
-                  <span>رقم العقد: سيتم توليده آلياً</span>
-                  <span>مدة الإيجار: {formatDate(draft.startDate)} - {formatDate(draft.endDate)}</span>
-                </div>
-
-                <div className={styles.detailsGrid}>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>الطرف الأول (المالك)</span>
-                    <p className={styles.detailValue}>{ownerDisplayName}</p>
-                    <span className={styles.detailHint}>{property.owner?.email || 'البريد سيتم مشاركته بعد التوقيع'}</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>الطرف الثاني (المستأجر)</span>
-                    <p className={styles.detailValue}>
-                      {tenant.firstName} {tenant.lastName}
-                    </p>
-                    <span className={styles.detailHint}>{tenant.phoneNumber}</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>بيانات العقار</span>
-                    <p className={styles.detailValue}>{draft.propertyName || property.name || 'شقة'}</p>
-                    <span className={styles.detailHint}>
-                      {draft.propertyAddress || `${property.neighborhood || ''}, ${property.city || ''}, المملكة العربية السعودية`}
-                    </span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>قيمة الإيجار</span>
-                    <p className={styles.detailValue}>{formatCurrency(draft.monthlyRent ?? property.monthlyRent ?? property.price)}</p>
-                    <span className={styles.detailHint}>دورية الدفع: {frequencyLabel}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.card}>
-                <h3>التواقيع</h3>
-                <div className={styles.signatures}>
-                  <div className={styles.signatureBox}>
-                    <span className={styles.detailLabel}>الطرف الأول (المالك)</span>
-                    <div className={styles.signaturePlaceholder}>
-                      <span>شركة أملاك تك</span>
-                      <small>تم التوقيع في {formatDate(new Date().toISOString())}</small>
-                    </div>
-                  </div>
-                  <div className={styles.signatureBox}>
-                    <span className={styles.detailLabel}>الطرف الثاني (المستأجر)</span>
-                    <div className={`${styles.signaturePlaceholder} ${styles.waitingSignature}`}>
-                      <span>{signatureValue ? signatureValue : 'في انتظار توقيعك'}</span>
-                      <small>{signatureValue ? 'تم إدخال التوقيع' : 'الرجاء إدخال التوقيع أعلاه'}</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {submitError && <div className={styles.errorAlertMobile}>{submitError}</div>}
-              {submitSuccess && <div className={styles.successAlertMobile}>{submitSuccess}</div>}
-            </section>
-
-            <aside className={styles.sidebar}>
+          <h1 className={styles.pageTitle}>توقيع عقد الإيجار</h1>
+          
+          <form id="signContractForm" className={styles.layout} onSubmit={handleCompleteSigning}>
+            <aside className={styles.signatureCard}>
               <div className={styles.signatureHeader}>
                 <h3>إضافة توقيعك</h3>
                 <button type="button" className={styles.helpIcon} aria-label="مساعدة">?</button>
@@ -530,19 +461,82 @@ export default function TenantSignContract() {
                 />
               </div>
 
-              <div className={styles.sidebarActions}>
-                <button type="submit" className={styles.primaryBtn} disabled={isSubmitting}>
-                  ✓ {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
-                </button>
-                <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
-                  حفظ كمسودة
-                </button>
-              </div>
-
               {submitError && <div className={styles.errorAlert}>{submitError}</div>}
               {submitSuccess && <div className={styles.successAlert}>{submitSuccess}</div>}
             </aside>
+
+            <section className={styles.contractBox}>
+              <div className={styles.statusBanner}>
+                <div className={styles.statusBannerIcon}>🤖</div>
+                <p>تم التحقق من جميع بنود العقد بواسطة الذكاء الاصطناعي وهو جاهز للتوقيع الآن.</p>
+              </div>
+
+              <div className={styles.contractContent}>
+                <div className={styles.cardHeader}>
+                  <h2>عقد إيجار سكني</h2>
+                  <p className={styles.agreementDate}>تم الاتفاق في يوم الأربعاء الموافق {formatDate(draft.createdAt || new Date().toISOString())} م بين كل من:</p>
+                </div>
+
+                <div className={styles.contractDetails}>
+                  <div className={styles.contractDetailRow}>
+                    <span className={styles.contractDetailLabel}>الطرف الأول (المؤجر):</span>
+                    <span className={styles.contractDetailValue}>{ownerDisplayName}، سجل تجاري رقم: {property.owner?.email || '1234567890'}</span>
+                  </div>
+                  <div className={styles.contractDetailRow}>
+                    <span className={styles.contractDetailLabel}>الطرف الثاني (المستأجر):</span>
+                    <span className={styles.contractDetailValue}>{tenant.firstName} {tenant.lastName}، هوية رقم: {tenant.phoneNumber}</span>
+                  </div>
+                  <div className={styles.contractDetailRow}>
+                    <span className={styles.contractDetailLabel}>بيانات العقار:</span>
+                    <span className={styles.contractDetailValue}>{draft.propertyName || property.name || 'شقة سكنية'} - {draft.propertyAddress || `${property.neighborhood || ''}, ${property.city || ''}, المملكة العربية السعودية`}</span>
+                  </div>
+                  <div className={styles.contractDetailRow}>
+                    <span className={styles.contractDetailLabel}>مدة الإيجار:</span>
+                    <span className={styles.contractDetailValue}>سنة ميلادية تبدأ من تاريخ {formatDate(draft.startDate)} م وتنتهي في {formatDate(draft.endDate)} م</span>
+                  </div>
+                  <div className={styles.contractDetailRow}>
+                    <span className={styles.contractDetailLabel}>قيمة الإيجار:</span>
+                    <span className={styles.contractDetailValue}>{formatCurrency(draft.monthlyRent ?? property.monthlyRent ?? property.price)} تدفع على أقساط شهرية</span>
+                  </div>
+                </div>
+
+                <div className={styles.signaturesSection}>
+                  <button type="button" className={styles.signaturesButton}>التوقيعات</button>
+                  <div className={styles.signatures}>
+                    <div className={styles.signatureBox}>
+                      <span className={styles.detailLabel}>توقيع الطرف الأول (المؤجر)</span>
+                      <div className={styles.signaturePlaceholder}>
+                        <span>شركة أملاك تك</span>
+                        <small>تم التوقيع: {formatDate(new Date().toISOString())}</small>
+                      </div>
+                    </div>
+                    <div className={styles.signatureBox}>
+                      <span className={styles.detailLabel}>توقيع الطرف الثاني (المستأجر)</span>
+                      <div className={`${styles.signaturePlaceholder} ${styles.waitingSignature}`}>
+                        <span>{signatureValue ? signatureValue : 'انقر للتوقيع'}</span>
+                        <small>{signatureValue ? 'تم إدخال التوقيع' : 'بانتظار التوقيع..'}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {submitError && <div className={styles.errorAlertMobile}>{submitError}</div>}
+              {submitSuccess && <div className={styles.successAlertMobile}>{submitSuccess}</div>}
+            </section>
           </form>
+
+          <div className={styles.bottomActions}>
+            <button type="submit" form="signContractForm" className={styles.primaryBtn} disabled={isSubmitting}>
+              ✓ {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
+            </button>
+            <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
+              حفظ كمسودة
+            </button>
+            <button type="button" className={styles.secondaryBtn} onClick={() => router.back()}>
+              ← العودة للمراجعة
+            </button>
+          </div>
         </div>
       </main>
       <Footer />
