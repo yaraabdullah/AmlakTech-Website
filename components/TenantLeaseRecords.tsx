@@ -346,12 +346,6 @@ export default function TenantLeaseRecords() {
         <div className={styles.container} dir="rtl">
           <section className={styles.greetingSection}>
             <div className={styles.greetingContent}>
-              <div className={styles.greetingLeft}>
-                <button className={styles.aiAssistantButton}>
-                  <span>مساعد أملاك الذكي</span>
-                  <span className={styles.robotIcon}>🤖</span>
-                </button>
-              </div>
               <div className={styles.greetingRight}>
                 <div className={styles.greetingText}>
                   <h1 className={styles.greetingTitle}>
@@ -363,6 +357,12 @@ export default function TenantLeaseRecords() {
                     </p>
                   )}
                 </div>
+              </div>
+              <div className={styles.greetingLeft}>
+                <button className={styles.aiAssistantButton}>
+                  <span>مساعد أملاك الذكي</span>
+                  <span className={styles.robotIcon}>🤖</span>
+                </button>
               </div>
             </div>
           </section>
