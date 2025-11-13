@@ -1,14 +1,15 @@
 .page {
   min-height: 100vh;
-  background-color: #f7f9fc;
-  color: #1f2937;
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
   display: flex;
   flex-direction: column;
+  font-family: var(--font-family-primary);
 }
 
 .main {
   flex: 1;
-  padding: 120px 0 60px;
+  padding: 120px 0 var(--spacing-2xl);
 }
 
 .container {
@@ -16,31 +17,31 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--spacing-xl);
 }
 
 .loadingState,
 .errorState,
 .emptyState {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 48px;
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-3xl);
   text-align: center;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
 }
 
 .loadingState p {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #4b5563;
+  margin-top: var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .spinner {
   width: 56px;
   height: 56px;
-  border-radius: 50%;
-  border: 6px solid #e5e7eb;
-  border-top-color: #2563eb;
+  border-radius: var(--border-radius-full);
+  border: 6px solid var(--color-border);
+  border-top-color: var(--color-accent);
   margin: 0 auto;
   animation: spin 1s linear infinite;
 }
@@ -52,15 +53,18 @@
 }
 
 .errorState h2 {
-  font-size: 24px;
-  margin-bottom: 12px;
-  color: #b91c1c;
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-error);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
 }
 
 .errorState p {
-  color: #4b5563;
-  margin-bottom: 24px;
-  font-size: 16px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-primary);
 }
 
 .primaryButton,
@@ -69,91 +73,105 @@
 .linkButton {
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   transition: all 0.2s ease-in-out;
-  border-radius: 12px;
-  font-family: inherit;
+  border-radius: var(--border-radius-xl);
+  font-family: var(--font-family-primary);
 }
 
 .primaryButton {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #ffffff;
-  padding: 14px 26px;
-  font-size: 16px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+  color: var(--color-text-white);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  font-size: var(--font-size-base);
 }
 
 .primaryButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 25px rgba(37, 99, 235, 0.25);
 }
 
 .secondaryButton {
-  background: #eef2ff;
-  color: #4338ca;
-  padding: 12px 24px;
-  font-size: 15px;
+  background: var(--color-blue-light);
+  color: var(--color-secondary);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-base);
 }
 
 .secondaryButton:hover {
-  background: #e0e7ff;
+  background: var(--color-background-tertiary);
 }
 
 .linkButton {
   background: transparent;
-  color: #2563eb;
-  padding: 8px 0;
-  font-size: 15px;
+  color: var(--color-accent);
+  padding: var(--spacing-sm) 0;
+  font-size: var(--font-size-base);
 }
 
 .linkButton:hover {
-  color: #1d4ed8;
+  color: var(--color-secondary);
   text-decoration: underline;
 }
 
 .greetingSection {
-  background: linear-gradient(to right, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 30%, #ffffff 30%);
-  border-radius: 24px;
-  padding: 36px 40px;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-3xl);
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.greetingSection::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  background: linear-gradient(to left, rgba(37, 99, 235, 0.05), rgba(37, 99, 235, 0.02));
+  z-index: 0;
 }
 
 .greetingContent {
   display: flex;
   justify-content: space-between;
-  gap: 32px;
-  align-items: flex-start;
+  gap: var(--spacing-xl);
+  align-items: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 
 .greetingLeft {
   display: flex;
   align-items: center;
+  order: 1;
 }
 
 .aiAssistantButton {
-  background: #e0e7ff;
+  background: var(--color-blue-light);
   border: none;
-  border-radius: 12px;
-  padding: 12px 20px;
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-sm);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  color: #1e40af;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-secondary);
+  white-space: nowrap;
 }
 
 .aiAssistantButton:hover {
-  background: #c7d2fe;
+  background: var(--color-background-tertiary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .robotIcon {
-  font-size: 20px;
+  font-size: var(--font-size-lg);
   display: inline-block;
 }
 
@@ -161,124 +179,138 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-sm);
+  order: 2;
+  text-align: right;
 }
 
 .greetingText {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-xs);
+  align-items: flex-end;
 }
 
 .welcomeEmoji {
-  font-size: 32px;
+  font-size: var(--font-size-3xl);
   display: inline-block;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-xs);
+  line-height: var(--line-height-tight);
 }
 
 .greetingTitle {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
   margin: 0;
-  color: #1f2937;
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  font-family: var(--font-family-primary);
 }
 
 .lastLogin {
-  color: #6b7280;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
+  line-height: var(--line-height-normal);
+  font-family: var(--font-family-primary);
 }
 
 .greetingSubtitle {
-  color: #6b7280;
-  font-size: 16px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
   max-width: 560px;
-  line-height: 1.6;
+  line-height: var(--line-height-relaxed);
   margin: 0;
+  font-family: var(--font-family-primary);
 }
 
 .greetingMeta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-top: 8px;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
 }
 
 .metaLabel {
   display: block;
-  font-size: 13px;
-  color: #9ca3af;
-  margin-bottom: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .metaValue {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   display: block;
+  font-family: var(--font-family-primary);
 }
 
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  gap: var(--spacing-xl);
 }
 
 .metricCard {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 28px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.07);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .metricHeader {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .metricIcon {
   width: 42px;
   height: 42px;
-  border-radius: 14px;
-  background: #eef2ff;
+  border-radius: var(--border-radius-xl);
+  background: var(--color-blue-light);
   display: grid;
   place-items: center;
-  font-size: 22px;
+  font-size: var(--font-size-xl);
 }
 
 .metricLabel {
-  font-size: 15px;
-  color: #6b7280;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-primary);
 }
 
 .metricValue {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
 }
 
 .metricMeta {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
-  color: #6b7280;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
 }
 
 .metricTag {
   align-self: flex-start;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  background: #eef2ff;
-  color: #4338ca;
-  font-weight: 600;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-xs);
+  background: var(--color-blue-light);
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-primary);
 }
 
 .metricTagWarning {
@@ -294,93 +326,104 @@
 .contractOverview {
   display: grid;
   grid-template-columns: 3fr 2fr;
-  gap: 24px;
+  gap: var(--spacing-xl);
   align-items: stretch;
 }
 
 .contractCard,
 .keyDatesCard {
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 32px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.07);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-3xl);
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-xl);
 }
 
 .contractCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .contractCardHeader h2 {
-  font-size: 22px;
-  margin-bottom: 6px;
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .contractCardHeader p {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .contractInfoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 .infoLabel {
-  font-size: 13px;
-  color: #9ca3af;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .infoValue {
-  font-size: 18px;
-  font-weight: 650;
-  color: #1f2937;
-  margin-bottom: 6px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
 }
 
 .infoHint {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .keyDatesCard h3 {
-  font-size: 20px;
-  margin-bottom: 12px;
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .keyDatesCard ul {
   list-style: none;
   display: grid;
-  gap: 16px;
+  gap: var(--spacing-md);
   padding: 0;
   margin: 0;
 }
 
 .keyDatesCard li {
-  background: #f9fafb;
-  border-radius: 16px;
-  padding: 16px 18px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-md) var(--spacing-lg);
 }
 
 .contractConditions {
-  background: #eef2ff;
-  border-radius: 18px;
-  padding: 18px;
+  background: var(--color-blue-light);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-lg);
 }
 
 .contractConditions h4 {
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: #4338ca;
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-secondary);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .contractConditions ul {
@@ -388,53 +431,58 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 10px;
-  font-size: 14px;
-  color: #4b5563;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .paymentsSection {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 20px 36px rgba(15, 23, 42, 0.07);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-3xl);
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-xl);
 }
 
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .sectionHeader h2 {
-  font-size: 22px;
-  margin-bottom: 6px;
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .sectionHeader p {
-  color: #6b7280;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
 }
 
 .filters {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .filterButton {
-  background: #f3f4f6;
-  color: #1f2937;
-  padding: 10px 18px;
-  font-size: 14px;
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
 }
 
 .filterButton:hover {
-  background: #e5e7eb;
+  background: var(--color-border);
 }
 
 .tableWrapper {
@@ -445,37 +493,40 @@
   width: 100%;
   border-collapse: collapse;
   min-width: 720px;
+  font-family: var(--font-family-primary);
 }
 
 .paymentsTable th,
 .paymentsTable td {
   text-align: right;
-  padding: 14px 16px;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
 }
 
 .paymentsTable thead th {
-  font-size: 13px;
-  color: #6b7280;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-weight: 700;
-  background: #f9fafb;
+  font-weight: var(--font-weight-bold);
+  background: var(--color-background-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .paymentsTable tbody tr:hover {
-  background: #f9fafb;
+  background: var(--color-background-secondary);
 }
 
 .statusBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 13px;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-primary);
 }
 
 .badgePaid {
@@ -494,73 +545,77 @@
 }
 
 .previousContracts {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 20px 36px rgba(15, 23, 42, 0.07);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-3xl);
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: var(--spacing-2xl);
 }
 
 .previousContractsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 .previousContractCard {
-  background: #f9fafb;
-  border-radius: 20px;
-  padding: 20px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--spacing-md);
 }
 
 .previousContractHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .statusPill {
-  background: #e0e7ff;
-  color: #4338ca;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
+  background: var(--color-blue-light);
+  color: var(--color-secondary);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-primary);
 }
 
 .contractPeriod {
-  font-size: 13px;
-  color: #6b7280;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .previousContractCard h3 {
-  font-size: 18px;
-  font-weight: 650;
-  color: #1f2937;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
 }
 
 .previousContractLocation {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .previousContractMeta {
   display: flex;
   justify-content: space-between;
-  gap: 14px;
-  font-size: 14px;
-  color: #4b5563;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
 }
 
 .previousContractMeta p {
-  font-weight: 600;
-  margin-top: 6px;
+  font-weight: var(--font-weight-semibold);
+  margin-top: var(--spacing-xs);
 }
 
 @media (max-width: 1024px) {
@@ -579,12 +634,21 @@
     align-items: flex-start;
   }
 
-  .greetingSection {
-    background: #ffffff;
+  .greetingSection::before {
+    width: 100%;
+    height: 30%;
+    top: 0;
+    right: 0;
+    background: linear-gradient(to bottom, rgba(37, 99, 235, 0.05), rgba(37, 99, 235, 0.02));
   }
 
-  .greetingMeta {
-    grid-template-columns: 1fr;
+  .greetingRight {
+    text-align: right;
+    width: 100%;
+  }
+
+  .greetingText {
+    align-items: flex-end;
   }
 
   .metricsGrid {

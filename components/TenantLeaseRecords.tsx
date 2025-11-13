@@ -324,9 +324,8 @@ export default function TenantLeaseRecords() {
               </div>
               <div className={styles.greetingRight}>
                 <div className={styles.greetingText}>
-                  <span className={styles.welcomeEmoji}>👋</span>
                   <h1 className={styles.greetingTitle}>
-                    مرحباً، {tenant.firstName} {tenant.lastName}
+                    <span className={styles.welcomeEmoji}>👋</span> مرحباً، {tenant.firstName} {tenant.lastName}
                   </h1>
                   {tenant.user?.lastLogin && (
                     <p className={styles.lastLogin}>
