@@ -54,6 +54,9 @@ interface TenantProfile {
   status: string
   userId?: string | null
   contracts?: ContractRecord[]
+  user?: {
+    lastLogin?: string | null
+  } | null
 }
 
 const formatCurrency = (value?: number | null) => {
@@ -74,6 +77,26 @@ const formatDate = (value?: string | null) => {
       year: 'numeric',
     })
     return day
+  } catch {
+    return '—'
+  }
+}
+
+const formatLastLogin = (value: string) => {
+  try {
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return '—'
+    const day = date.toLocaleDateString('ar-SA', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+    const time = date.toLocaleTimeString('ar-SA', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    })
+    return `${day}. ${time}`
   } catch {
     return '—'
   }
@@ -293,26 +316,39 @@ export default function TenantLeaseRecords() {
         <div className={styles.container} dir="rtl">
           <section className={styles.greetingSection}>
             <div className={styles.greetingContent}>
-              <div>
-                <span className={styles.welcomeEmoji}>👋</span>
-                <h1 className={styles.greetingTitle}>
-                  مرحباً، {tenant.firstName} {tenant.lastName}
-                </h1>
+              <div className={styles.greetingLeft}>
+                <button className={styles.aiAssistantButton}>
+                  <span>مساعد أملاك الذكي</span>
+                  <span className={styles.robotIcon}>🤖</span>
+                </button>
+              </div>
+              <div className={styles.greetingRight}>
+                <div className={styles.greetingText}>
+                  <span className={styles.welcomeEmoji}>👋</span>
+                  <h1 className={styles.greetingTitle}>
+                    مرحباً، {tenant.firstName} {tenant.lastName}
+                  </h1>
+                  {tenant.user?.lastLogin && (
+                    <p className={styles.lastLogin}>
+                      آخر تسجيل دخول: {formatLastLogin(tenant.user.lastLogin)}
+                    </p>
+                  )}
+                </div>
                 <p className={styles.greetingSubtitle}>
                   يسعدنا متابعتك لعقود الإيجار والمدفوعات بكل سهولة عبر لوحة التحكم الخاصة بك
                 </p>
-              </div>
-              <div className={styles.greetingMeta}>
-                <div>
-                  <span className={styles.metaLabel}>رقم الجوال</span>
-                  <span className={styles.metaValue}>{tenant.phoneNumber}</span>
-                </div>
-                {tenant.email && (
+                <div className={styles.greetingMeta}>
                   <div>
-                    <span className={styles.metaLabel}>البريد الإلكتروني</span>
-                    <span className={styles.metaValue}>{tenant.email}</span>
+                    <span className={styles.metaLabel}>رقم الجوال</span>
+                    <span className={styles.metaValue}>{tenant.phoneNumber}</span>
                   </div>
-                )}
+                  {tenant.email && (
+                    <div>
+                      <span className={styles.metaLabel}>البريد الإلكتروني</span>
+                      <span className={styles.metaValue}>{tenant.email}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </section>

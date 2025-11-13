@@ -111,7 +111,7 @@
 }
 
 .greetingSection {
-  background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 55%), #ffffff;
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 30%, #ffffff 30%);
   border-radius: 24px;
   padding: 36px 40px;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
@@ -120,21 +120,73 @@
 .greetingContent {
   display: flex;
   justify-content: space-between;
-  gap: 24px;
-  align-items: center;
+  gap: 32px;
+  align-items: flex-start;
   flex-wrap: wrap;
+}
+
+.greetingLeft {
+  display: flex;
+  align-items: center;
+}
+
+.aiAssistantButton {
+  background: #e0e7ff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.aiAssistantButton:hover {
+  background: #c7d2fe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.robotIcon {
+  font-size: 20px;
+  display: inline-block;
+}
+
+.greetingRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.greetingText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .welcomeEmoji {
   font-size: 32px;
-  margin-bottom: 12px;
   display: inline-block;
+  margin-bottom: 4px;
 }
 
 .greetingTitle {
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 6px;
+  margin: 0;
+  color: #1f2937;
+}
+
+.lastLogin {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
 }
 
 .greetingSubtitle {
@@ -142,25 +194,28 @@
   font-size: 16px;
   max-width: 560px;
   line-height: 1.6;
+  margin: 0;
 }
 
 .greetingMeta {
   display: grid;
-  gap: 12px;
-  min-width: 240px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
 }
 
 .metaLabel {
   display: block;
   font-size: 13px;
   color: #9ca3af;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .metaValue {
   font-size: 16px;
   font-weight: 600;
   color: #1f2937;
+  display: block;
 }
 
 .metricsGrid {
@@ -522,6 +577,14 @@
   .greetingContent {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .greetingSection {
+    background: #ffffff;
+  }
+
+  .greetingMeta {
+    grid-template-columns: 1fr;
   }
 
   .metricsGrid {

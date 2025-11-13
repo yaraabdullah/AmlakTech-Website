@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             first_name: true,
             last_name: true,
             email: true,
+            last_login: true,
           },
         },
         contracts: {
@@ -91,6 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? {
               ...tenant.user,
               id: tenant.user.id.toString(),
+              lastLogin: tenant.user.last_login?.toISOString() || null,
             }
           : null,
         contracts: tenant.contracts
