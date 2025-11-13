@@ -341,88 +341,6 @@ export default function TenantSignContract() {
       <main className={styles.main}>
         <div className={styles.container}>
           <form className={styles.layout} onSubmit={handleCompleteSigning}>
-            <aside className={styles.sidebar}>
-              <div className={styles.userCard}>
-                <div className={styles.userAvatar}>{tenant.firstName.charAt(0)}</div>
-                <div>
-                  <h3>{`${tenant.firstName} ${tenant.lastName}`.trim()}</h3>
-                  <span>{tenant.email || 'بريد غير متوفر'}</span>
-                </div>
-                <div className={styles.verifyBadge}>تم التحقق ✅</div>
-              </div>
-
-              <div className={styles.signatureSection}>
-                <div className={styles.signatureTabs}>
-                  <button
-                    type="button"
-                    className={`${styles.signatureTab} ${signatureMethod === 'draw' ? styles.activeTab : ''}`}
-                    onClick={() => setSignatureMethod('draw')}
-                  >
-                    رسم
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.signatureTab} ${signatureMethod === 'type' ? styles.activeTab : ''}`}
-                    onClick={() => setSignatureMethod('type')}
-                  >
-                    كتابة
-                  </button>
-                </div>
-
-                {signatureMethod === 'type' ? (
-                  <input
-                    className={styles.signatureInput}
-                    placeholder="اكتب توقيعك هنا"
-                    value={signatureValue}
-                    onChange={(event) => setSignatureValue(event.target.value)}
-                  />
-                ) : (
-                  <textarea
-                    className={styles.signaturePad}
-                    placeholder="منطقة التوقيع - سيتم حفظ توقيعك الإلكتروني"
-                    value={signatureValue}
-                    onChange={(event) => setSignatureValue(event.target.value)}
-                    rows={4}
-                  />
-                )}
-
-                <div className={styles.checkboxRow}>
-                  <input
-                    id="acknowledge"
-                    type="checkbox"
-                    checked={acknowledged}
-                    onChange={(event) => setAcknowledged(event.target.checked)}
-                  />
-                  <label htmlFor="acknowledge">
-                    أقر أنا {tenant.firstName} {tenant.lastName} باستخدام التوقيع الإلكتروني لإبرام هذا العقد، وأفهم أنه ملزم
-                    قانونياً.
-                  </label>
-                </div>
-              </div>
-
-              <div className={styles.notesSection}>
-                <label>ملاحظات إضافية</label>
-                <textarea
-                  placeholder="يمكنك إضافة أي شروط أو ملاحظات مهمة قبل الإرسال."
-                  rows={4}
-                  value={additionalNotes}
-                  onChange={(event) => setAdditionalNotes(event.target.value)}
-                />
-              </div>
-
-              <div className={styles.sidebarActions}>
-                <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
-                  حفظ كمسودة
-                </button>
-                <button type="submit" className={styles.primaryBtn} disabled={isSubmitting}>
-                  {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
-                </button>
-              </div>
-
-              {submitError && <div className={styles.errorAlert}>{submitError}</div>}
-              {submitSuccess && <div className={styles.successAlert}>{submitSuccess}</div>}
-            </aside>
-
             <section className={styles.content}>
               <div className={styles.statusCard}>
                 <div>
@@ -517,6 +435,88 @@ export default function TenantSignContract() {
               {submitError && <div className={styles.errorAlertMobile}>{submitError}</div>}
               {submitSuccess && <div className={styles.successAlertMobile}>{submitSuccess}</div>}
             </section>
+
+            <aside className={styles.sidebar}>
+              <div className={styles.userCard}>
+                <div className={styles.userAvatar}>{tenant.firstName.charAt(0)}</div>
+                <div>
+                  <h3>{`${tenant.firstName} ${tenant.lastName}`.trim()}</h3>
+                  <span>{tenant.email || 'بريد غير متوفر'}</span>
+                </div>
+                <div className={styles.verifyBadge}>تم التحقق ✅</div>
+              </div>
+
+              <div className={styles.signatureSection}>
+                <div className={styles.signatureTabs}>
+                  <button
+                    type="button"
+                    className={`${styles.signatureTab} ${signatureMethod === 'draw' ? styles.activeTab : ''}`}
+                    onClick={() => setSignatureMethod('draw')}
+                  >
+                    رسم
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.signatureTab} ${signatureMethod === 'type' ? styles.activeTab : ''}`}
+                    onClick={() => setSignatureMethod('type')}
+                  >
+                    كتابة
+                  </button>
+                </div>
+
+                {signatureMethod === 'type' ? (
+                  <input
+                    className={styles.signatureInput}
+                    placeholder="اكتب توقيعك هنا"
+                    value={signatureValue}
+                    onChange={(event) => setSignatureValue(event.target.value)}
+                  />
+                ) : (
+                  <textarea
+                    className={styles.signaturePad}
+                    placeholder="منطقة التوقيع - سيتم حفظ توقيعك الإلكتروني"
+                    value={signatureValue}
+                    onChange={(event) => setSignatureValue(event.target.value)}
+                    rows={4}
+                  />
+                )}
+
+                <div className={styles.checkboxRow}>
+                  <input
+                    id="acknowledge"
+                    type="checkbox"
+                    checked={acknowledged}
+                    onChange={(event) => setAcknowledged(event.target.checked)}
+                  />
+                  <label htmlFor="acknowledge">
+                    أقر أنا {tenant.firstName} {tenant.lastName} باستخدام التوقيع الإلكتروني لإبرام هذا العقد، وأفهم أنه ملزم
+                    قانونياً.
+                  </label>
+                </div>
+              </div>
+
+              <div className={styles.notesSection}>
+                <label>ملاحظات إضافية</label>
+                <textarea
+                  placeholder="يمكنك إضافة أي شروط أو ملاحظات مهمة قبل الإرسال."
+                  rows={4}
+                  value={additionalNotes}
+                  onChange={(event) => setAdditionalNotes(event.target.value)}
+                />
+              </div>
+
+              <div className={styles.sidebarActions}>
+                <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
+                  حفظ كمسودة
+                </button>
+                <button type="submit" className={styles.primaryBtn} disabled={isSubmitting}>
+                  {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
+                </button>
+              </div>
+
+              {submitError && <div className={styles.errorAlert}>{submitError}</div>}
+              {submitSuccess && <div className={styles.successAlert}>{submitSuccess}</div>}
+            </aside>
           </form>
         </div>
       </main>
