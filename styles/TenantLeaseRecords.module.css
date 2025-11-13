@@ -143,7 +143,7 @@
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 .greetingLeft {
@@ -731,73 +731,123 @@
   padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2xl);
+  gap: var(--spacing-xl);
   box-shadow: var(--shadow-lg);
+}
+
+.previousContracts .sectionHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.previousContracts .sectionHeader h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: var(--font-family-primary);
 }
 
 .previousContractsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
 }
 
 .previousContractCard {
-  background: var(--color-background-secondary);
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius-2xl);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  box-shadow: var(--shadow-md);
 }
 
-.previousContractHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-md);
+.previousContractTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: var(--font-family-primary);
+  line-height: var(--line-height-normal);
 }
 
-.statusPill {
-  background: var(--color-blue-light);
-  color: var(--color-secondary);
+.previousContractDuration {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
+  margin-top: var(--spacing-xs);
+}
+
+.previousContractStatus {
+  margin: var(--spacing-xs) 0;
+}
+
+.statusPillExpired {
+  background: #f3f4f6;
+  color: #6b7280;
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--border-radius-full);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   font-family: var(--font-family-primary);
+  display: inline-block;
 }
 
-.contractPeriod {
-  font-size: var(--font-size-xs);
+.previousContractDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.previousContractDetailItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.previousContractLabel {
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   font-family: var(--font-family-primary);
 }
 
-.previousContractCard h3 {
-  font-size: var(--font-size-lg);
+.previousContractValue {
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
 }
 
-.previousContractLocation {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  font-family: var(--font-family-primary);
-}
-
-.previousContractMeta {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  font-family: var(--font-family-primary);
-}
-
-.previousContractMeta p {
+.viewDetailsButton {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  padding: var(--spacing-sm) 0;
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  margin-top: var(--spacing-xs);
+  font-family: var(--font-family-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  transition: all 0.2s ease;
+}
+
+.viewDetailsButton:hover {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+.arrowIcon {
+  font-size: var(--font-size-lg);
+  display: inline-block;
 }
 
 @media (max-width: 1024px) {

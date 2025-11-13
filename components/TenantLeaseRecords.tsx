@@ -250,8 +250,16 @@ export default function TenantLeaseRecords() {
 
   const previousContracts = useMemo(() => {
     if (!contracts.length) return []
-    if (!activeContract) return contracts.slice(1)
-    return contracts.filter((contract) => contract.id !== activeContract.id)
+    const now = new Date()
+    return contracts
+      .filter((contract) => {
+        if (!contract.startDate || !contract.endDate) return false
+        if (contract.id === activeContract?.id) return false
+        const end = new Date(contract.endDate)
+        // Include contracts that are expired or have status "منتهي" or "منتهى"
+        return contract.status === 'منتهي' || contract.status === 'منتهى' || end < now
+      })
+      .sort((a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime())
   }, [contracts, activeContract])
 
   const payments = useMemo(() => {
@@ -346,12 +354,6 @@ export default function TenantLeaseRecords() {
         <div className={styles.container} dir="rtl">
           <section className={styles.greetingSection}>
             <div className={styles.greetingContent}>
-              <div className={styles.greetingLeft}>
-                <button className={styles.aiAssistantButton}>
-                  <span>مساعد أملاك الذكي</span>
-                  <span className={styles.robotIcon}>🤖</span>
-                </button>
-              </div>
               <div className={styles.greetingRight}>
                 <div className={styles.greetingText}>
                   <h1 className={styles.greetingTitle}>
@@ -363,6 +365,12 @@ export default function TenantLeaseRecords() {
                     </p>
                   )}
                 </div>
+              </div>
+              <div className={styles.greetingLeft}>
+                <button className={styles.aiAssistantButton}>
+                  <span>مساعد أملاك الذكي</span>
+                  <span className={styles.robotIcon}>🤖</span>
+                </button>
               </div>
             </div>
           </section>
@@ -650,45 +658,48 @@ export default function TenantLeaseRecords() {
           {previousContracts.length > 0 && (
             <section className={styles.previousContracts}>
               <div className={styles.sectionHeader}>
-                <div>
-                  <h2>العقود السابقة</h2>
-                  <p>لمحة عن عقودك السابقة والمدفوعات الخاصة بها</p>
-                </div>
+                <h2>العقود السابقة</h2>
               </div>
 
               <div className={styles.previousContractsGrid}>
-                {previousContracts.map((contract) => (
-                  <div key={contract.id} className={styles.previousContractCard}>
-                    <div className={styles.previousContractHeader}>
-                      <span className={styles.statusPill}>{contract.status}</span>
-                      <span className={styles.contractPeriod}>
-                        {formatDate(contract.startDate)} - {formatDate(contract.endDate)}
-                      </span>
-                    </div>
-                    <h3>{contract.property?.name || 'عقار بدون اسم'}</h3>
-                    <p className={styles.previousContractLocation}>
-                      {contract.property?.city || ''}{' '}
-                      {contract.property?.neighborhood ? `- ${contract.property.neighborhood}` : ''}
-                    </p>
-                    <div className={styles.previousContractMeta}>
-                      <div>
-                        <span className={styles.infoLabel}>الإيجار الشهري</span>
-                        <p>{formatCurrency(contract.monthlyRent)}</p>
+                {previousContracts.map((contract) => {
+                  const contractStart = new Date(contract.startDate)
+                  const contractEnd = new Date(contract.endDate)
+                  const monthsDiff = Math.round((contractEnd.getTime() - contractStart.getTime()) / (1000 * 60 * 60 * 24 * 30))
+                  const totalPaidForContract = (contract.payments || [])
+                    .filter((payment) => payment.status === 'مدفوعة' || payment.status === 'مدفوع')
+                    .reduce((sum, payment) => sum + (payment.amount ?? 0), 0)
+
+                  return (
+                    <div key={contract.id} className={styles.previousContractCard}>
+                      <h3 className={styles.previousContractTitle}>
+                        {contract.property?.name || 'عقار بدون اسم'}
+                        {contract.property?.city && ` - ${contract.property.city}`}
+                        {contract.property?.neighborhood && ` حي ${contract.property.neighborhood}`}
+                      </h3>
+                      <div className={styles.previousContractDuration}>
+                        {monthsDiff} شهر ({formatDate(contract.startDate)} - {formatDate(contract.endDate)})
                       </div>
-                      <div>
-                        <span className={styles.infoLabel}>إجمالي المدفوعات</span>
-                        <p>
-                          {formatCurrency(
-                            (contract.payments || [])
-                              .filter((payment) => payment.status === 'مدفوعة' || payment.status === 'مدفوع')
-                              .reduce((sum, payment) => sum + (payment.amount ?? 0), 0),
-                          )}
-                        </p>
+                      <div className={styles.previousContractStatus}>
+                        <span className={styles.statusPillExpired}>منتهى</span>
                       </div>
+                      <div className={styles.previousContractDetails}>
+                        <div className={styles.previousContractDetailItem}>
+                          <span className={styles.previousContractLabel}>الإيجار الشهري:</span>
+                          <span className={styles.previousContractValue}>{formatCurrency(contract.monthlyRent)}</span>
+                        </div>
+                        <div className={styles.previousContractDetailItem}>
+                          <span className={styles.previousContractLabel}>إجمالي المدفوعات:</span>
+                          <span className={styles.previousContractValue}>{formatCurrency(totalPaidForContract)}</span>
+                        </div>
+                      </div>
+                      <button className={styles.viewDetailsButton}>
+                        عرض التفاصيل
+                        <span className={styles.arrowIcon}>←</span>
+                      </button>
                     </div>
-                    <button className={styles.linkButton}>عرض التفاصيل</button>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </section>
           )}
