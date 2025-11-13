@@ -340,7 +340,8 @@
 }
 
 .signatureInput,
-.signaturePad {
+.signaturePad,
+.signatureCanvas {
   border: 2px dashed var(--color-border);
   border-radius: var(--border-radius-2xl);
   padding: var(--spacing-md);
@@ -350,10 +351,17 @@
   background: var(--color-background-secondary);
   width: 100%;
   box-sizing: border-box;
+  display: block;
 }
 
 .signaturePad {
   resize: vertical;
+}
+
+.signatureCanvas {
+  touch-action: none;
+  cursor: crosshair;
+  background: var(--color-background-primary);
 }
 
 .clearButton {

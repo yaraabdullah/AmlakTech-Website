@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react'
+import React, { FormEvent, useEffect, useMemo, useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import TenantNavigation from './TenantNavigation'
 import Footer from './Footer'
@@ -79,11 +79,14 @@ export default function TenantSignContract() {
   const [tenant, setTenant] = useState<TenantInfo | null>(null)
   const [signatureMethod, setSignatureMethod] = useState<'draw' | 'type'>('draw')
   const [signatureValue, setSignatureValue] = useState('')
+  const [signatureImage, setSignatureImage] = useState<string>('') // Base64 image for drawn signature
   const [acknowledged, setAcknowledged] = useState(false)
   const [additionalNotes, setAdditionalNotes] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const isDrawingRef = useRef(false)
 
   const frequencyLabel = useMemo(() => {
     if (!draft?.paymentFrequency) return 'غير محدد'
@@ -197,13 +200,155 @@ export default function TenantSignContract() {
     initialise()
   }, [router, propertyId])
 
+  // Canvas drawing handlers
+  useEffect(() => {
+    if (signatureMethod !== 'draw' || !canvasRef.current) return
+
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Set canvas size - use fixed dimensions for better quality
+    const setCanvasSize = () => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
+      const width = rect.width || 400
+      const height = rect.height || 120
+      
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.scale(dpr, dpr)
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      
+      // Reset drawing style after scaling
+      ctx.strokeStyle = '#1f2937'
+      ctx.lineWidth = 2
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      
+      // Restore existing signature if available
+      if (signatureImage) {
+        const img = new Image()
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, width, height)
+        }
+        img.src = signatureImage
+      }
+    }
+
+    // Initialize after a small delay to ensure DOM is ready
+    let timer: NodeJS.Timeout | null = setTimeout(() => {
+      setCanvasSize()
+    }, 100)
+    
+    // Recalculate on resize
+    const handleResize = () => {
+      if (canvasRef.current && canvasRef.current === canvas) {
+        const currentImage = canvas.toDataURL('image/png')
+        setCanvasSize()
+        // Restore image after resize
+        if (currentImage && signatureImage) {
+          const img = new Image()
+          img.onload = () => {
+            const rect = canvas.getBoundingClientRect()
+            ctx.drawImage(img, 0, 0, rect.width, rect.height)
+          }
+          img.src = signatureImage
+        }
+      }
+    }
+    window.addEventListener('resize', handleResize)
+
+    const startDrawing = (e: MouseEvent | TouchEvent) => {
+      isDrawingRef.current = true
+      const point = getPoint(e)
+      ctx.beginPath()
+      ctx.moveTo(point.x, point.y)
+    }
+
+    const draw = (e: MouseEvent | TouchEvent) => {
+      if (!isDrawingRef.current) return
+      e.preventDefault()
+      const point = getPoint(e)
+      ctx.lineTo(point.x, point.y)
+      ctx.stroke()
+      // Save canvas as base64 image continuously
+      const imageData = canvas.toDataURL('image/png')
+      setSignatureImage(imageData)
+      setSignatureValue('drawn')
+    }
+
+    const stopDrawing = () => {
+      if (isDrawingRef.current) {
+        isDrawingRef.current = false
+        // Final save
+        const imageData = canvas.toDataURL('image/png')
+        setSignatureImage(imageData)
+        setSignatureValue('drawn')
+      }
+    }
+
+    const getPoint = (e: MouseEvent | TouchEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      if (e instanceof MouseEvent) {
+        return {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        }
+      } else {
+        const touch = e.touches[0] || e.changedTouches[0]
+        return {
+          x: touch.clientX - rect.left,
+          y: touch.clientY - rect.top,
+        }
+      }
+    }
+
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing)
+    canvas.addEventListener('mousemove', draw)
+    canvas.addEventListener('mouseup', stopDrawing)
+    canvas.addEventListener('mouseleave', stopDrawing)
+
+    // Touch events
+    canvas.addEventListener('touchstart', startDrawing)
+    canvas.addEventListener('touchmove', draw)
+    canvas.addEventListener('touchend', stopDrawing)
+
+    return () => {
+      canvas.removeEventListener('mousedown', startDrawing)
+      canvas.removeEventListener('mousemove', draw)
+      canvas.removeEventListener('mouseup', stopDrawing)
+      canvas.removeEventListener('mouseleave', stopDrawing)
+      canvas.removeEventListener('touchstart', startDrawing)
+      canvas.removeEventListener('touchmove', draw)
+      canvas.removeEventListener('touchend', stopDrawing)
+      window.removeEventListener('resize', handleResize)
+      if (timer) {
+        clearTimeout(timer)
+      }
+    }
+  }, [signatureMethod, signatureImage])
+
+  const clearCanvas = () => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d')
+      if (ctx) {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+        setSignatureImage('')
+        setSignatureValue('')
+      }
+    }
+  }
+
   const handleSaveDraft = () => {
     if (typeof window === 'undefined' || !draft) return
     const updatedDraft = {
       ...draft,
       notes: additionalNotes,
       signatureMethod,
-      signatureValue,
+      signatureValue: signatureMethod === 'draw' ? signatureImage : signatureValue,
       acknowledged,
       updatedAt: new Date().toISOString(),
     }
@@ -222,7 +367,8 @@ export default function TenantSignContract() {
       setSubmitError('يرجى الموافقة على استخدام التوقيع الإلكتروني قبل المتابعة.')
       return
     }
-    if (!signatureValue.trim()) {
+    const finalSignature = signatureMethod === 'draw' ? signatureImage : signatureValue.trim()
+    if (!finalSignature) {
       setSubmitError('يرجى إدخال توقيعك الإلكتروني.')
       return
     }
@@ -269,7 +415,9 @@ export default function TenantSignContract() {
           endDate: draft.endDate,
           monthlyRent: monthlyRentValue.toString(),
           deposit: depositValue,
-          notes: combinedNotes ? `${combinedNotes} | التوقيع: ${signatureValue.trim()}` : `التوقيع: ${signatureValue.trim()}`,
+          notes: combinedNotes 
+            ? `${combinedNotes} | التوقيع: ${signatureMethod === 'draw' ? 'رسم إلكتروني' : signatureValue.trim()}${signatureMethod === 'draw' && signatureImage ? ` | SIGNATURE_IMAGE:${signatureImage}` : ''}` 
+            : `التوقيع: ${signatureMethod === 'draw' ? 'رسم إلكتروني' : signatureValue.trim()}${signatureMethod === 'draw' && signatureImage ? ` | SIGNATURE_IMAGE:${signatureImage}` : ''}`,
         }),
       })
 
@@ -391,8 +539,14 @@ export default function TenantSignContract() {
                     <div className={styles.signatureBox}>
                       <span className={styles.detailLabel}>توقيع الطرف الثاني (المستأجر)</span>
                       <div className={`${styles.signaturePlaceholder} ${styles.waitingSignature}`}>
-                        <span>{signatureValue ? signatureValue : 'انقر للتوقيع'}</span>
-                        <small>{signatureValue ? 'تم إدخال التوقيع' : 'بانتظار التوقيع..'}</small>
+                        {signatureMethod === 'draw' && signatureImage ? (
+                          <img src={signatureImage} alt="التوقيع" style={{ maxWidth: '100%', maxHeight: '80px' }} />
+                        ) : signatureValue ? (
+                          <span>{signatureValue}</span>
+                        ) : (
+                          <span>انقر للتوقيع</span>
+                        )}
+                        <small>{signatureValue || signatureImage ? 'تم إدخال التوقيع' : 'بانتظار التوقيع..'}</small>
                       </div>
                     </div>
                   </div>
@@ -451,22 +605,22 @@ export default function TenantSignContract() {
                       onChange={(event) => setSignatureValue(event.target.value)}
                     />
                   ) : (
-                    <textarea
-                      className={styles.signaturePad}
-                      placeholder="قم بالرسم هنا"
-                      value={signatureValue}
-                      onChange={(event) => setSignatureValue(event.target.value)}
-                      rows={6}
-                    />
-                  )}
-                  {signatureMethod === 'draw' && signatureValue && (
-                    <button
-                      type="button"
-                      className={styles.clearButton}
-                      onClick={() => setSignatureValue('')}
-                    >
-                      🗑️ مسح
-                    </button>
+                    <>
+                      <canvas
+                        ref={canvasRef}
+                        className={styles.signatureCanvas}
+                        style={{ cursor: 'crosshair' }}
+                      />
+                      {signatureImage && (
+                        <button
+                          type="button"
+                          className={styles.clearButton}
+                          onClick={clearCanvas}
+                        >
+                          🗑️ مسح
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -488,7 +642,8 @@ export default function TenantSignContract() {
                   disabled={isSubmitting}
                   onClick={(e) => {
                     e.preventDefault()
-                    if (acknowledged && signatureValue.trim()) {
+                    const hasSignature = signatureMethod === 'draw' ? signatureImage : signatureValue.trim()
+                    if (acknowledged && hasSignature) {
                       handleCompleteSigning(e as any)
                     } else {
                       setSubmitError('يرجى إدخال التوقيع والموافقة على الشروط أولاً.')
