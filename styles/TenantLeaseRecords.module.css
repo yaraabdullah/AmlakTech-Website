@@ -279,34 +279,18 @@
 }
 
 .metricIcon {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
-  border-radius: var(--border-radius-xl);
-  background: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  overflow: visible;
 }
 
 .metricIcon img {
   width: 24px;
   height: 24px;
-  min-width: 24px;
-  min-height: 24px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
   display: block;
-  visibility: visible;
-  opacity: 1;
-  position: relative;
-  z-index: 10;
-  pointer-events: none;
-  user-select: none;
 }
 
 .metricLabel {
@@ -746,7 +730,8 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 0;
-  direction: rtl;
+  width: 100%;
+  direction: ltr;
 }
 
 .previousContracts .sectionHeader h2 {
@@ -756,6 +741,7 @@
   margin: 0;
   font-family: var(--font-family-primary);
   text-align: right;
+  margin-left: auto;
 }
 
 .previousContractsGrid {
