@@ -451,10 +451,6 @@
 }
 
 .contractInfoIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--border-radius-lg);
-  background: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -462,7 +458,10 @@
 }
 
 .contractInfoIcon img {
-  filter: brightness(0) invert(1);
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
 }
 
 .contractInfoContent {
@@ -542,10 +541,6 @@
 }
 
 .dateIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--border-radius-lg);
-  background: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -553,7 +548,10 @@
 }
 
 .dateIcon img {
-  filter: brightness(0) invert(1);
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
 }
 
 .dateContent {
