@@ -372,6 +372,9 @@ export default function TenantLeaseRecords() {
               <section className={styles.metricsGrid}>
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
+                    <div className={styles.metricIcon}>
+                      <img src="/icons/date.svg" alt="تاريخ العقد" width={24} height={24} />
+                    </div>
                     <span className={styles.metricLabel}>العقد الحالي</span>
                   </div>
                   <div className={styles.metricContent}>
@@ -394,6 +397,9 @@ export default function TenantLeaseRecords() {
 
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
+                    <div className={styles.metricIcon}>
+                      <img src="/icons/payment-management.svg" alt="إدارة الدفع" width={24} height={24} />
+                    </div>
                     <span className={styles.metricLabel}>الدفعة القادمة</span>
                   </div>
                   <div className={styles.metricContent}>
@@ -414,6 +420,9 @@ export default function TenantLeaseRecords() {
 
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
+                    <div className={styles.metricIcon}>
+                      <img src="/icons/reports.svg" alt="التقارير" width={24} height={24} />
+                    </div>
                     <span className={styles.metricLabel}>إجمالي المدفوعات</span>
                   </div>
                   <div className={styles.metricContent}>
