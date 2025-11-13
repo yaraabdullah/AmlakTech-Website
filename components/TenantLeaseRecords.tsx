@@ -346,6 +346,12 @@ export default function TenantLeaseRecords() {
         <div className={styles.container} dir="rtl">
           <section className={styles.greetingSection}>
             <div className={styles.greetingContent}>
+              <div className={styles.greetingLeft}>
+                <button className={styles.aiAssistantButton}>
+                  <span>مساعد أملاك الذكي</span>
+                  <span className={styles.robotIcon}>🤖</span>
+                </button>
+              </div>
               <div className={styles.greetingRight}>
                 <div className={styles.greetingText}>
                   <h1 className={styles.greetingTitle}>
@@ -358,12 +364,6 @@ export default function TenantLeaseRecords() {
                   )}
                 </div>
               </div>
-              <div className={styles.greetingLeft}>
-                <button className={styles.aiAssistantButton}>
-                  <span>مساعد أملاك الذكي</span>
-                  <span className={styles.robotIcon}>🤖</span>
-                </button>
-              </div>
             </div>
           </section>
 
@@ -373,7 +373,13 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <img src="/icons/date.svg" alt="تاريخ العقد" width={24} height={24} />
+                      <img 
+                        src="/icons/date.svg" 
+                        alt="تاريخ العقد" 
+                        width={24} 
+                        height={24}
+                        style={{ display: 'block', width: '24px', height: '24px' }}
+                      />
                     </div>
                     <span className={styles.metricLabel}>العقد الحالي</span>
                   </div>
@@ -398,7 +404,13 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <img src="/icons/payment-management.svg" alt="إدارة الدفع" width={24} height={24} />
+                      <img 
+                        src="/icons/payment-management.svg" 
+                        alt="إدارة الدفع" 
+                        width={24} 
+                        height={24}
+                        style={{ display: 'block', width: '24px', height: '24px' }}
+                      />
                     </div>
                     <span className={styles.metricLabel}>الدفعة القادمة</span>
                   </div>
@@ -421,7 +433,13 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <img src="/icons/reports.svg" alt="التقارير" width={24} height={24} />
+                      <img 
+                        src="/icons/reports.svg" 
+                        alt="التقارير" 
+                        width={24} 
+                        height={24}
+                        style={{ display: 'block', width: '24px', height: '24px' }}
+                      />
                     </div>
                     <span className={styles.metricLabel}>إجمالي المدفوعات</span>
                   </div>

@@ -143,7 +143,7 @@
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-  flex-direction: row;
+  flex-direction: row-reverse;
 }
 
 .greetingLeft {
@@ -278,19 +278,29 @@
 .metricIcon {
   width: 42px;
   height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   border-radius: var(--border-radius-xl);
   background: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
 }
 
 .metricIcon img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  object-fit: contain !important;
+  filter: brightness(0) invert(1) !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 .metricLabel {
