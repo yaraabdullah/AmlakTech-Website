@@ -334,21 +334,6 @@ export default function TenantLeaseRecords() {
                     </p>
                   )}
                 </div>
-                <p className={styles.greetingSubtitle}>
-                  يسعدنا متابعتك لعقود الإيجار والمدفوعات بكل سهولة عبر لوحة التحكم الخاصة بك
-                </p>
-                <div className={styles.greetingMeta}>
-                  <div>
-                    <span className={styles.metaLabel}>رقم الجوال</span>
-                    <span className={styles.metaValue}>{tenant.phoneNumber}</span>
-                  </div>
-                  {tenant.email && (
-                    <div>
-                      <span className={styles.metaLabel}>البريد الإلكتروني</span>
-                      <span className={styles.metaValue}>{tenant.email}</span>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           </section>
