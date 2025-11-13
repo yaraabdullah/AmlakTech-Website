@@ -655,12 +655,12 @@ export default function TenantLeaseRecords() {
             </section>
           )}
 
-          {previousContracts.length > 0 && (
-            <section className={styles.previousContracts}>
-              <div className={styles.sectionHeader}>
-                <h2>العقود السابقة</h2>
-              </div>
+          <section className={styles.previousContracts}>
+            <div className={styles.sectionHeader}>
+              <h2>العقود السابقة</h2>
+            </div>
 
+            {previousContracts.length > 0 ? (
               <div className={styles.previousContractsGrid}>
                 {previousContracts.map((contract) => {
                   const contractStart = new Date(contract.startDate)
@@ -701,8 +701,12 @@ export default function TenantLeaseRecords() {
                   )
                 })}
               </div>
-            </section>
-          )}
+            ) : (
+              <div className={styles.emptyState}>
+                <p>لا توجد عقود سابقة</p>
+              </div>
+            )}
+          </section>
         </div>
       </main>
       <Footer />

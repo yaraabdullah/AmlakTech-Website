@@ -143,14 +143,12 @@
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-  flex-direction: row;
-  direction: rtl;
+  flex-direction: row-reverse;
 }
 
 .greetingLeft {
   display: flex;
   align-items: center;
-  order: 2;
 }
 
 .aiAssistantButton {
@@ -189,7 +187,6 @@
   gap: var(--spacing-sm);
   text-align: right;
   align-items: flex-end;
-  order: 1;
 }
 
 .greetingText {
