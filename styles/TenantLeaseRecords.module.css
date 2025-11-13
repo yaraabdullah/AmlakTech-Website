@@ -143,12 +143,14 @@
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-  flex-direction: row-reverse;
+  flex-direction: row;
+  direction: ltr;
 }
 
 .greetingLeft {
   display: flex;
   align-items: center;
+  order: 1;
 }
 
 .aiAssistantButton {
@@ -187,6 +189,7 @@
   gap: var(--spacing-sm);
   text-align: right;
   align-items: flex-end;
+  order: 2;
 }
 
 .greetingText {
@@ -287,20 +290,23 @@
   justify-content: center;
   flex-shrink: 0;
   position: relative;
+  overflow: visible;
 }
 
 .metricIcon img {
-  width: 24px !important;
-  height: 24px !important;
-  min-width: 24px !important;
-  min-height: 24px !important;
-  object-fit: contain !important;
-  filter: brightness(0) invert(1) !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 10 !important;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
 }
 
 .metricLabel {
@@ -740,6 +746,7 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 0;
+  direction: rtl;
 }
 
 .previousContracts .sectionHeader h2 {
@@ -748,6 +755,7 @@
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
+  text-align: right;
 }
 
 .previousContractsGrid {

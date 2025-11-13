@@ -386,7 +386,6 @@ export default function TenantLeaseRecords() {
                         alt="تاريخ العقد" 
                         width={24} 
                         height={24}
-                        style={{ display: 'block', width: '24px', height: '24px' }}
                       />
                     </div>
                     <span className={styles.metricLabel}>العقد الحالي</span>
@@ -417,7 +416,6 @@ export default function TenantLeaseRecords() {
                         alt="إدارة الدفع" 
                         width={24} 
                         height={24}
-                        style={{ display: 'block', width: '24px', height: '24px' }}
                       />
                     </div>
                     <span className={styles.metricLabel}>الدفعة القادمة</span>
@@ -446,7 +444,6 @@ export default function TenantLeaseRecords() {
                         alt="التقارير" 
                         width={24} 
                         height={24}
-                        style={{ display: 'block', width: '24px', height: '24px' }}
                       />
                     </div>
                     <span className={styles.metricLabel}>إجمالي المدفوعات</span>
