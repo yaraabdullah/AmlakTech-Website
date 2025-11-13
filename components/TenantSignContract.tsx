@@ -523,8 +523,8 @@ export default function TenantSignContract() {
             <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
               حفظ كمسودة
             </button>
-            <button type="button" className={styles.secondaryBtn} onClick={() => router.back()}>
-              ← العودة للمراجعة
+            <button type="button" className={styles.returnLink} onClick={() => router.back()}>
+              العودة للمراجعة →
             </button>
           </div>
         </div>

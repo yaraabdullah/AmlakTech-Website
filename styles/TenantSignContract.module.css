@@ -155,12 +155,31 @@
 
 .bottomActions {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
   margin-top: var(--spacing-2xl);
   padding: var(--spacing-lg) 0;
   border-top: 1px solid var(--color-border);
+}
+
+.returnLink {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: color 0.2s;
+}
+
+.returnLink:hover {
+  color: var(--color-text-primary);
 }
 
 .signatureHeader {
@@ -491,8 +510,9 @@
 }
 
 .secondaryBtn {
-  background: var(--color-background-secondary);
-  color: var(--color-text-primary);
+  background: var(--color-background-primary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 }
 
 .errorAlert,
