@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import TenantNavigation from './TenantNavigation'
 import Footer from './Footer'
 import styles from '../styles/TenantLeaseRecords.module.css'
@@ -102,6 +103,17 @@ const formatLastLogin = (value: string) => {
   }
 }
 
+const formatMonthName = (value?: string | null) => {
+  if (!value) return '—'
+  try {
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return '—'
+    return date.toLocaleDateString('ar-SA', { month: 'long' })
+  } catch {
+    return '—'
+  }
+}
+
 const daysBetween = (from?: string | null, to?: string | null) => {
   if (!from || !to) return null
   const start = new Date(from)
@@ -147,6 +159,7 @@ export default function TenantLeaseRecords() {
   const [error, setError] = useState<string | null>(null)
   const [tenant, setTenant] = useState<TenantProfile | null>(null)
   const [contracts, setContracts] = useState<ContractRecord[]>([])
+  const [propertyDetails, setPropertyDetails] = useState<any>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -180,7 +193,24 @@ export default function TenantLeaseRecords() {
 
         const tenantData: TenantProfile = await response.json()
         setTenant(tenantData)
-        setContracts(Array.isArray(tenantData.contracts) ? tenantData.contracts : [])
+        const contractsData = Array.isArray(tenantData.contracts) ? tenantData.contracts : []
+        setContracts(contractsData)
+        
+        // Fetch property details with owner info for the active contract
+        if (contractsData.length > 0) {
+          const activeContract = contractsData.find(c => c.status === 'نشط') || contractsData[0]
+          if (activeContract?.propertyId) {
+            try {
+              const propertyResponse = await fetch(`/api/properties/${activeContract.propertyId}`)
+              if (propertyResponse.ok) {
+                const propertyData = await propertyResponse.json()
+                setPropertyDetails(propertyData)
+              }
+            } catch (err) {
+              console.error('Error fetching property details:', err)
+            }
+          }
+        }
       } catch (err: any) {
         console.error('Error fetching tenant lease records:', err)
         setError(err.message || 'حدث خطأ غير متوقع')
@@ -342,71 +372,81 @@ export default function TenantLeaseRecords() {
               <section className={styles.metricsGrid}>
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
-                    <span className={styles.metricIcon} aria-hidden="true">
-                      🏠
-                    </span>
+                    <div className={styles.metricIcon}>
+                      <Image 
+                        src="/icons/date.svg" 
+                        alt="تاريخ العقد"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
                     <span className={styles.metricLabel}>العقد الحالي</span>
                   </div>
-                  <div className={styles.metricValue}>{activeContract.property?.name || 'غير مسمى'}</div>
-                  <div className={styles.metricMeta}>
-                    <span>{activeContract.property?.city || ''}</span>
-                    <span>•</span>
-                    <span>{formatDate(activeContract.startDate)} - {formatDate(activeContract.endDate)}</span>
-                  </div>
-                  {remainingDays !== null && remainingDays >= 0 && (
-                    <div className={styles.metricTag}>
-                      متبقي {remainingDays} يوم
+                  <div className={styles.metricContent}>
+                    <div className={styles.metricPropertyInfo}>
+                      {activeContract.property?.name || 'غير مسمى'}
+                      {activeContract.property?.city && ` - ${activeContract.property.city}`}
+                      {activeContract.property?.neighborhood && ` حي ${activeContract.property.neighborhood}`}
                     </div>
-                  )}
-                </div>
-
-                <div className={styles.metricCard}>
-                  <div className={styles.metricHeader}>
-                    <span className={styles.metricIcon} aria-hidden="true">
-                      💳
-                    </span>
-                    <span className={styles.metricLabel}>الدفع القادمة</span>
-                  </div>
-                  <div className={styles.metricValue}>
-                    {nextPayment ? formatCurrency(nextPayment.amount) : 'لا يوجد دفعات مستحقة'}
-                  </div>
-                  <div className={styles.metricMeta}>
-                    {nextPayment ? (
-                      <>
-                        <span>{formatDate(nextPayment.dueDate)}</span>
-                        <span>•</span>
-                        <span>{normalizeStatusLabel(nextPayment.status)}</span>
-                      </>
-                    ) : (
-                      <span>لقد قمت بسداد جميع الدفعات الحالية</span>
+                    <div className={styles.metricDateRange}>
+                      {leaseDurationDays !== null ? `${Math.round(leaseDurationDays / 30)} شهر` : ''} ({formatDate(activeContract.startDate)} - {formatDate(activeContract.endDate)})
+                    </div>
+                    <div className={styles.metricRemainingLabel}>متبقي على انتهاء العقد:</div>
+                    {remainingDays !== null && remainingDays >= 0 && (
+                      <div className={styles.metricTag}>
+                        يوم {remainingDays}
+                      </div>
                     )}
                   </div>
-                  {nextPayment && (
-                    <div className={`${styles.metricTag} ${styles.metricTagWarning}`}>
-                      {(() => {
-                        const daysUntil = daysFromToday(nextPayment.dueDate)
-                        if (daysUntil === null) return '—'
-                        if (daysUntil < 0) return `متأخرة ${Math.abs(daysUntil)} يوم`
-                        if (daysUntil === 0) return 'تستحق اليوم'
-                        return `متبقي ${daysUntil} يوم`
-                      })()}
-                    </div>
-                  )}
                 </div>
 
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
-                    <span className={styles.metricIcon} aria-hidden="true">
-                      📊
-                    </span>
+                    <div className={styles.metricIcon}>
+                      <Image 
+                        src="/icons/payment-management.svg" 
+                        alt="إدارة الدفع"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <span className={styles.metricLabel}>الدفعة القادمة</span>
+                  </div>
+                  <div className={styles.metricContent}>
+                    <div className={styles.metricSubLabel}>الإيجار الشهري</div>
+                    <div className={styles.metricAmount}>
+                      {nextPayment ? formatCurrency(nextPayment.amount) : formatCurrency(activeContract.monthlyRent)}
+                    </div>
+                    <div className={styles.metricRemainingLabel}>تاريخ الاستحقاق:</div>
+                    {nextPayment ? (
+                      <div className={`${styles.metricTag} ${styles.metricTagWarning}`}>
+                        {formatMonthName(nextPayment.dueDate)}
+                      </div>
+                    ) : (
+                      <div className={styles.metricTag}>لا يوجد دفعات مستحقة</div>
+                    )}
+                  </div>
+                </div>
+
+                <div className={styles.metricCard}>
+                  <div className={styles.metricHeader}>
+                    <div className={styles.metricIcon}>
+                      <Image 
+                        src="/icons/reports.svg" 
+                        alt="التقارير"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
                     <span className={styles.metricLabel}>إجمالي المدفوعات</span>
                   </div>
-                  <div className={styles.metricValue}>{formatCurrency(totalPaid)}</div>
-                  <div className={styles.metricMeta}>
-                    المبلغ المدفوع منذ بداية العقد
-                  </div>
-                  <div className={`${styles.metricTag} ${styles.metricTagSuccess}`}>
-                    الإيجار الشهري {formatCurrency(activeContract.monthlyRent)}
+                  <div className={styles.metricContent}>
+                    <div className={styles.metricSubLabel}>منذ بداية العقد</div>
+                    <div className={styles.metricAmount}>{formatCurrency(totalPaid)}</div>
+                    <div className={styles.metricRemainingLabel}>عدد الدفعات:</div>
+                    <div className={`${styles.metricTag} ${styles.metricTagSuccess}`}>
+                      دفعة (كاملة) {payments.filter(p => p.status === 'مدفوعة' || p.status === 'مدفوع').length}
+                    </div>
                   </div>
                 </div>
               </section>
@@ -414,87 +454,127 @@ export default function TenantLeaseRecords() {
               <section className={styles.contractOverview}>
                 <div className={styles.contractCard}>
                   <div className={styles.contractCardHeader}>
-                    <div>
-                      <h2>تفاصيل العقد الحالي</h2>
-                      <p>تابع أهم معلومات عقد الإيجار الحالي الخاص بك</p>
-                    </div>
-                    <button className={styles.secondaryButton}>تحميل العقد</button>
+                    <h2>تفاصيل العقد الحالي</h2>
+                    <button className={styles.downloadButton}>
+                      <Image src="/icons/save.svg" alt="تحميل" width={16} height={16} />
+                      تحميل العقد
+                    </button>
                   </div>
 
-                  <div className={styles.contractInfoGrid}>
-                    <div>
-                      <span className={styles.infoLabel}>العقار</span>
-                      <p className={styles.infoValue}>
-                        {activeContract.property?.name || 'غير مسمى'}{' '}
-                        {activeContract.unit?.unitNumber ? `- وحدة ${activeContract.unit.unitNumber}` : ''}
-                      </p>
-                      <span className={styles.infoHint}>{activeContract.property?.address || 'العنوان غير متوفر'}</span>
-                    </div>
-                    <div>
-                      <span className={styles.infoLabel}>نوع العقد</span>
-                      <p className={styles.infoValue}>{activeContract.type || 'غير محدد'}</p>
-                      <span className={styles.infoHint}>الحالة: {activeContract.status}</span>
-                    </div>
-                    <div>
-                      <span className={styles.infoLabel}>مدة العقد</span>
-                      <p className={styles.infoValue}>
-                        {formatDate(activeContract.startDate)} - {formatDate(activeContract.endDate)}
-                      </p>
-                      <span className={styles.infoHint}>
-                        {leaseDurationDays !== null ? `${leaseDurationDays} يوم` : '—'}
-                      </span>
-                    </div>
-                    <div>
-                      <span className={styles.infoLabel}>قيمة الإيجار</span>
-                      <p className={styles.infoValue}>{formatCurrency(activeContract.monthlyRent)} / شهر</p>
-                      <span className={styles.infoHint}>التأمين: {formatCurrency(activeContract.deposit)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.keyDatesCard}>
-                  <h3>تواريخ مهمة</h3>
-                  <ul>
-                    <li>
-                      <div>
-                        <span className={styles.infoLabel}>تاريخ بداية العقد</span>
-                        <p>{formatDate(activeContract.startDate)}</p>
+                  <div className={styles.contractTopGrid}>
+                    <div className={styles.contractInfoItem}>
+                      <div className={styles.contractInfoIcon}>
+                        <Image src="/icons/location.svg" alt="العقار" width={20} height={20} />
                       </div>
-                    </li>
-                    <li>
-                      <div>
-                        <span className={styles.infoLabel}>تاريخ نهاية العقد</span>
-                        <p>{formatDate(activeContract.endDate)}</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div>
-                        <span className={styles.infoLabel}>موعد التجديد المقترح</span>
-                        <p>
-                          {activeContract.endDate
-                            ? formatDate(
-                                new Date(new Date(activeContract.endDate).getTime() - 30 * 24 * 60 * 60 * 1000).toISOString()
-                              )
-                            : '—'}
+                      <div className={styles.contractInfoContent}>
+                        <span className={styles.infoLabel}>العقار</span>
+                        <p className={styles.infoValue}>
+                          {activeContract.property?.name || 'غير مسمى'}
+                          {activeContract.unit?.unitNumber ? ` - الطابق ${activeContract.unit.unitNumber}` : ''}
                         </p>
+                        <span className={styles.infoHint}>
+                          {activeContract.property?.city || ''}
+                          {activeContract.property?.neighborhood ? `، حي ${activeContract.property.neighborhood}` : ''}
+                          {activeContract.property?.address ? `، ${activeContract.property.address}` : ''}
+                        </span>
                       </div>
-                    </li>
-                    <li>
-                      <div>
-                        <span className={styles.infoLabel}>موعد الدفع الشهري</span>
-                        <p>{nextPayment ? formatDate(nextPayment.dueDate) : 'اليوم الأول من كل شهر'}</p>
-                      </div>
-                    </li>
-                  </ul>
+                    </div>
 
-                  <div className={styles.contractConditions}>
-                    <h4>شروط العقد</h4>
-                    <ul>
-                      <li>مدة العقد 12 شهر قابلة للتجديد</li>
-                      <li>طريقة الدفع تحويل بنكي</li>
-                      <li>يشمل الإيجار رسوم الخدمات الأساسية</li>
-                      <li>يتم خصم التأمين عند وجود تلفيات</li>
-                    </ul>
+                    <div className={styles.contractInfoItem}>
+                      <div className={styles.contractInfoIcon}>
+                        <Image src="/icons/person.svg" alt="المؤجر" width={20} height={20} />
+                      </div>
+                      <div className={styles.contractInfoContent}>
+                        <span className={styles.infoLabel}>المؤجر</span>
+                        <p className={styles.infoValue}>
+                          {propertyDetails?.owner?.first_name && propertyDetails?.owner?.last_name
+                            ? `${propertyDetails.owner.first_name} ${propertyDetails.owner.last_name}`
+                            : propertyDetails?.owner?.email || 'غير محدد'}
+                        </p>
+                        <span className={styles.infoHint}>
+                          رقم التواصل: {propertyDetails?.owner?.email || propertyDetails?.owner?.phone_number || tenant.phoneNumber || 'غير متوفر'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.contractInfoItem}>
+                      <div className={styles.contractInfoIcon}>
+                        <Image src="/icons/smart-contracts.svg" alt="تفاصيل العقد" width={20} height={20} />
+                      </div>
+                      <div className={styles.contractInfoContent}>
+                        <span className={styles.infoLabel}>تفاصيل العقد</span>
+                        <p className={styles.infoValue}>رقم العقد: {activeContract.id}</p>
+                        <span className={styles.infoHint}>موثق إلكترونيا عبر منصة إيجار</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.contractDivider}></div>
+
+                  <div className={styles.contractBottomGrid}>
+                    <div className={styles.contractTermsSection}>
+                      <h3 className={styles.sectionTitle}>شروط العقد</h3>
+                      <ul className={styles.contractTermsList}>
+                        <li>
+                          <span className={styles.checkmark}>✓</span>
+                          <span>مدة العقد: {leaseDurationDays !== null ? `${Math.round(leaseDurationDays / 30)} شهر` : 'غير محدد'}</span>
+                        </li>
+                        <li>
+                          <span className={styles.checkmark}>✓</span>
+                          <span>قيمة الإيجار: {formatCurrency(activeContract.monthlyRent)} شهريا</span>
+                        </li>
+                        <li>
+                          <span className={styles.checkmark}>✓</span>
+                          <span>التأمين: {formatCurrency(activeContract.deposit || 0)} (مسترد)</span>
+                        </li>
+                        <li>
+                          <span className={styles.checkmark}>✓</span>
+                          <span>طريقة الدفع: شهري (تحويل بنكي)</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className={styles.keyDatesSection}>
+                      <h3 className={styles.sectionTitle}>تواريخ مهمة</h3>
+                      <ul className={styles.keyDatesList}>
+                        <li>
+                          <div className={styles.dateIcon}>
+                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                          </div>
+                          <div className={styles.dateContent}>
+                            <span className={styles.infoLabel}>تاريخ بداية العقد</span>
+                            <p>{formatDate(activeContract.startDate)}</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div className={styles.dateIcon}>
+                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                          </div>
+                          <div className={styles.dateContent}>
+                            <span className={styles.infoLabel}>تاريخ نهاية العقد</span>
+                            <p>{formatDate(activeContract.endDate)}</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div className={styles.dateIcon}>
+                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                          </div>
+                          <div className={styles.dateContent}>
+                            <span className={styles.infoLabel}>موعد تجديد العقد</span>
+                            <p>قبل ٦٠ يوم من الانتهاء</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div className={styles.dateIcon}>
+                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                          </div>
+                          <div className={styles.dateContent}>
+                            <span className={styles.infoLabel}>تاريخ دفع الإيجار</span>
+                            <p>أول كل شهر ميلادي</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </section>
