@@ -100,47 +100,106 @@
   font-weight: var(--font-weight-normal);
 }
 
-.userCard {
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(59, 130, 246, 0.08));
-  border-radius: 20px;
-  padding: 22px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 18px;
+.signatureHeader {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+.signatureHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2563eb;
+  font-family: var(--font-family-primary);
+}
+
+.helpIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  border: none;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+}
+
+.identitySection {
+  margin-bottom: 20px;
+}
+
+.identitySection h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: var(--font-family-primary);
+}
+
+.identityCard {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.identityInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.identityText {
+  flex: 1;
+}
+
+.identityName {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: var(--font-family-primary);
+}
+
+.identityEmail {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  font-family: var(--font-family-primary);
 }
 
 .userAvatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   background: #1d4ed8;
   color: #ffffff;
   display: grid;
   place-items: center;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.userCard h3 {
-  margin: 0;
   font-size: 20px;
-}
-
-.userCard span {
-  color: #475569;
-  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: var(--font-family-primary);
 }
 
 .verifyBadge {
-  grid-column: 1 / -1;
-  justify-self: start;
   background: #dcfce7;
   color: #15803d;
   padding: 6px 12px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
+  align-self: flex-start;
+  font-family: var(--font-family-primary);
 }
 
 .signatureSection {
@@ -151,6 +210,15 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin-bottom: 20px;
+}
+
+.signatureSection h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: var(--font-family-primary);
 }
 
 .signatureTabs {
@@ -170,12 +238,22 @@
   font-weight: 600;
   color: #475569;
   cursor: pointer;
+  font-family: var(--font-family-primary);
+  transition: all 0.2s;
 }
 
 .activeTab {
   background: #ffffff;
-  color: #1d4ed8;
-  box-shadow: 0 10px 18px rgba(59, 130, 246, 0.15);
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+}
+
+.signatureAreaWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .signatureInput,
@@ -185,12 +263,32 @@
   padding: 16px;
   font-size: 16px;
   font-family: inherit;
-  min-height: 90px;
+  min-height: 120px;
   background: #f8fafc;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .signaturePad {
   resize: vertical;
+}
+
+.clearButton {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-family-primary);
+}
+
+.clearButton:hover {
+  color: #ef4444;
 }
 
 .checkboxRow {
@@ -200,10 +298,86 @@
   font-size: 13px;
   color: #475569;
   line-height: 1.6;
+  font-family: var(--font-family-primary);
 }
 
 .checkboxRow input {
   margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.checkboxRow label {
+  cursor: pointer;
+}
+
+.signContractBtn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-family-primary);
+  transition: all 0.2s;
+}
+
+.signContractBtn:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.signContractBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.featuresSection {
+  background: #f1f5f9;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.featuresHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.featuresIcon {
+  font-size: 20px;
+}
+
+.featuresHeader h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: var(--font-family-primary);
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.featuresList li {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.6;
+  font-family: var(--font-family-primary);
 }
 
 .notesSection {
@@ -230,6 +404,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 8px;
 }
 
 .primaryBtn,

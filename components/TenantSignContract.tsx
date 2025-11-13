@@ -413,24 +413,28 @@ export default function TenantSignContract() {
             </section>
 
             <aside className={styles.sidebar}>
-              <div className={styles.userCard}>
-                <div className={styles.userAvatar}>{tenant.firstName.charAt(0)}</div>
-                <div>
-                  <h3>{`${tenant.firstName} ${tenant.lastName}`.trim()}</h3>
-                  <span>{tenant.email || 'بريد غير متوفر'}</span>
+              <div className={styles.signatureHeader}>
+                <h3>إضافة توقيعك</h3>
+                <button type="button" className={styles.helpIcon} aria-label="مساعدة">?</button>
+              </div>
+
+              <div className={styles.identitySection}>
+                <h4>تأكيد الهوية:</h4>
+                <div className={styles.identityCard}>
+                  <div className={styles.identityInfo}>
+                    <div className={styles.identityText}>
+                      <p className={styles.identityName}>{`${tenant.firstName} ${tenant.lastName}`.trim()}</p>
+                      <p className={styles.identityEmail}>{tenant.email || 'بريد غير متوفر'}</p>
+                    </div>
+                    <div className={styles.userAvatar}>{tenant.firstName.charAt(0)}</div>
+                  </div>
+                  <div className={styles.verifyBadge}>تم التحقق</div>
                 </div>
-                <div className={styles.verifyBadge}>تم التحقق ✅</div>
               </div>
 
               <div className={styles.signatureSection}>
+                <h4>طريقة التوقيع:</h4>
                 <div className={styles.signatureTabs}>
-                  <button
-                    type="button"
-                    className={`${styles.signatureTab} ${signatureMethod === 'draw' ? styles.activeTab : ''}`}
-                    onClick={() => setSignatureMethod('draw')}
-                  >
-                    رسم
-                  </button>
                   <button
                     type="button"
                     className={`${styles.signatureTab} ${signatureMethod === 'type' ? styles.activeTab : ''}`}
@@ -438,24 +442,42 @@ export default function TenantSignContract() {
                   >
                     كتابة
                   </button>
+                  <button
+                    type="button"
+                    className={`${styles.signatureTab} ${signatureMethod === 'draw' ? styles.activeTab : ''}`}
+                    onClick={() => setSignatureMethod('draw')}
+                  >
+                    رسم
+                  </button>
                 </div>
 
-                {signatureMethod === 'type' ? (
-                  <input
-                    className={styles.signatureInput}
-                    placeholder="اكتب توقيعك هنا"
-                    value={signatureValue}
-                    onChange={(event) => setSignatureValue(event.target.value)}
-                  />
-                ) : (
-                  <textarea
-                    className={styles.signaturePad}
-                    placeholder="منطقة التوقيع - سيتم حفظ توقيعك الإلكتروني"
-                    value={signatureValue}
-                    onChange={(event) => setSignatureValue(event.target.value)}
-                    rows={4}
-                  />
-                )}
+                <div className={styles.signatureAreaWrapper}>
+                  {signatureMethod === 'type' ? (
+                    <input
+                      className={styles.signatureInput}
+                      placeholder="اكتب توقيعك هنا"
+                      value={signatureValue}
+                      onChange={(event) => setSignatureValue(event.target.value)}
+                    />
+                  ) : (
+                    <textarea
+                      className={styles.signaturePad}
+                      placeholder="قم بالرسم هنا"
+                      value={signatureValue}
+                      onChange={(event) => setSignatureValue(event.target.value)}
+                      rows={6}
+                    />
+                  )}
+                  {signatureMethod === 'draw' && signatureValue && (
+                    <button
+                      type="button"
+                      className={styles.clearButton}
+                      onClick={() => setSignatureValue('')}
+                    >
+                      🗑️ مسح
+                    </button>
+                  )}
+                </div>
 
                 <div className={styles.checkboxRow}>
                   <input
@@ -465,10 +487,37 @@ export default function TenantSignContract() {
                     onChange={(event) => setAcknowledged(event.target.checked)}
                   />
                   <label htmlFor="acknowledge">
-                    أقر أنا {tenant.firstName} {tenant.lastName} باستخدام التوقيع الإلكتروني لإبرام هذا العقد، وأفهم أنه ملزم
-                    قانونياً.
+                    أنا. {tenant.firstName} {tenant.lastName} ، أوافق على استخدام توقيعي الإلكتروني لتوقيع هذا المستند وأقر بأنه ملزم قانونياً. 🔒
                   </label>
                 </div>
+
+                <button 
+                  type="submit" 
+                  className={styles.signContractBtn}
+                  disabled={isSubmitting}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (acknowledged && signatureValue.trim()) {
+                      handleCompleteSigning(e as any)
+                    } else {
+                      setSubmitError('يرجى إدخال التوقيع والموافقة على الشروط أولاً.')
+                    }
+                  }}
+                >
+                  ✏️ توقيع العقد
+                </button>
+              </div>
+
+              <div className={styles.featuresSection}>
+                <div className={styles.featuresHeader}>
+                  <span className={styles.featuresIcon}>💡</span>
+                  <h4>مميزات التوقيع الإلكتروني</h4>
+                </div>
+                <ul className={styles.featuresList}>
+                  <li>✓ توثيق آمن بتقنية التشفير المتقدمة</li>
+                  <li>✓ معتمد قانونياً وفق أنظمة المملكة</li>
+                  <li>✓ حفظ تلقائي للعقود في حسابك</li>
+                </ul>
               </div>
 
               <div className={styles.notesSection}>
@@ -482,11 +531,11 @@ export default function TenantSignContract() {
               </div>
 
               <div className={styles.sidebarActions}>
+                <button type="submit" className={styles.primaryBtn} disabled={isSubmitting}>
+                  ✓ {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
+                </button>
                 <button type="button" className={styles.secondaryBtn} onClick={handleSaveDraft}>
                   حفظ كمسودة
-                </button>
-                <button type="submit" className={styles.primaryBtn} disabled={isSubmitting}>
-                  {isSubmitting ? 'جاري التوقيع...' : 'إكمال التوقيع'}
                 </button>
               </div>
 
