@@ -511,16 +511,6 @@ export default function TenantSignContract() {
                 </ul>
               </div>
 
-              <div className={styles.notesSection}>
-                <label>ملاحظات إضافية</label>
-                <textarea
-                  placeholder="يمكنك إضافة أي شروط أو ملاحظات مهمة قبل الإرسال."
-                  rows={4}
-                  value={additionalNotes}
-                  onChange={(event) => setAdditionalNotes(event.target.value)}
-                />
-              </div>
-
               {submitError && <div className={styles.errorAlert}>{submitError}</div>}
               {submitSuccess && <div className={styles.successAlert}>{submitSuccess}</div>}
             </aside>
