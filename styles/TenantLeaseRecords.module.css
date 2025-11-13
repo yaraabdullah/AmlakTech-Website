@@ -455,13 +455,17 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .contractInfoIcon img {
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .contractInfoContent {
@@ -545,13 +549,17 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .dateIcon img {
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .dateContent {
