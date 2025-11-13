@@ -373,7 +373,7 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <Image 
+                      <img 
                         src="/icons/date.svg" 
                         alt="تاريخ العقد"
                         width={24}
@@ -403,7 +403,7 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <Image 
+                      <img 
                         src="/icons/payment-management.svg" 
                         alt="إدارة الدفع"
                         width={24}
@@ -431,7 +431,7 @@ export default function TenantLeaseRecords() {
                 <div className={styles.metricCard}>
                   <div className={styles.metricHeader}>
                     <div className={styles.metricIcon}>
-                      <Image 
+                      <img 
                         src="/icons/reports.svg" 
                         alt="التقارير"
                         width={24}
@@ -464,7 +464,7 @@ export default function TenantLeaseRecords() {
                   <div className={styles.contractTopGrid}>
                     <div className={styles.contractInfoItem}>
                       <div className={styles.contractInfoIcon}>
-                        <Image src="/icons/location.svg" alt="العقار" width={20} height={20} />
+                        <img src="/icons/location.svg" alt="العقار" width={20} height={20} />
                       </div>
                       <div className={styles.contractInfoContent}>
                         <span className={styles.infoLabel}>العقار</span>
@@ -482,7 +482,7 @@ export default function TenantLeaseRecords() {
 
                     <div className={styles.contractInfoItem}>
                       <div className={styles.contractInfoIcon}>
-                        <Image src="/icons/person.svg" alt="المؤجر" width={20} height={20} />
+                        <img src="/icons/person.svg" alt="المؤجر" width={20} height={20} />
                       </div>
                       <div className={styles.contractInfoContent}>
                         <span className={styles.infoLabel}>المؤجر</span>
@@ -499,7 +499,7 @@ export default function TenantLeaseRecords() {
 
                     <div className={styles.contractInfoItem}>
                       <div className={styles.contractInfoIcon}>
-                        <Image src="/icons/smart-contracts.svg" alt="تفاصيل العقد" width={20} height={20} />
+                        <img src="/icons/smart-contracts.svg" alt="تفاصيل العقد" width={20} height={20} />
                       </div>
                       <div className={styles.contractInfoContent}>
                         <span className={styles.infoLabel}>تفاصيل العقد</span>
@@ -539,7 +539,7 @@ export default function TenantLeaseRecords() {
                       <ul className={styles.keyDatesList}>
                         <li>
                           <div className={styles.dateIcon}>
-                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                            <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
                           </div>
                           <div className={styles.dateContent}>
                             <span className={styles.infoLabel}>تاريخ بداية العقد</span>
@@ -548,7 +548,7 @@ export default function TenantLeaseRecords() {
                         </li>
                         <li>
                           <div className={styles.dateIcon}>
-                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                            <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
                           </div>
                           <div className={styles.dateContent}>
                             <span className={styles.infoLabel}>تاريخ نهاية العقد</span>
@@ -557,7 +557,7 @@ export default function TenantLeaseRecords() {
                         </li>
                         <li>
                           <div className={styles.dateIcon}>
-                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                            <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
                           </div>
                           <div className={styles.dateContent}>
                             <span className={styles.infoLabel}>موعد تجديد العقد</span>
@@ -566,7 +566,7 @@ export default function TenantLeaseRecords() {
                         </li>
                         <li>
                           <div className={styles.dateIcon}>
-                            <Image src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
+                            <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} />
                           </div>
                           <div className={styles.dateContent}>
                             <span className={styles.infoLabel}>تاريخ دفع الإيجار</span>
