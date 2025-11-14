@@ -543,7 +543,10 @@
 .keyDatesList li {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
 }
 
 .dateIcon {
@@ -562,21 +565,6 @@
   display: block;
   visibility: visible;
   opacity: 1;
-}
-
-.dateContent {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  flex: 1;
-}
-
-.dateContent p {
-  margin: 0;
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-semibold);
-  font-family: var(--font-family-primary);
 }
 
 .contractInfoGrid {

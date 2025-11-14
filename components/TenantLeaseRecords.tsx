@@ -546,40 +546,28 @@ export default function TenantLeaseRecords() {
                       <h3 className={styles.sectionTitle}>تواريخ مهمة</h3>
                       <ul className={styles.keyDatesList}>
                         <li>
-                          <div className={styles.dateIcon}>
+                          <span className={styles.dateIcon}>
                             <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} style={{ display: 'block' }} />
-                          </div>
-                          <div className={styles.dateContent}>
-                            <span className={styles.infoLabel}>تاريخ بداية العقد</span>
-                            <p>{formatDate(activeContract.startDate)}</p>
-                          </div>
+                          </span>
+                          <span>تاريخ بداية العقد: {formatDate(activeContract.startDate)}</span>
                         </li>
                         <li>
-                          <div className={styles.dateIcon}>
+                          <span className={styles.dateIcon}>
                             <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} style={{ display: 'block' }} />
-                          </div>
-                          <div className={styles.dateContent}>
-                            <span className={styles.infoLabel}>تاريخ نهاية العقد</span>
-                            <p>{formatDate(activeContract.endDate)}</p>
-                          </div>
+                          </span>
+                          <span>تاريخ نهاية العقد: {formatDate(activeContract.endDate)}</span>
                         </li>
                         <li>
-                          <div className={styles.dateIcon}>
+                          <span className={styles.dateIcon}>
                             <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} style={{ display: 'block' }} />
-                          </div>
-                          <div className={styles.dateContent}>
-                            <span className={styles.infoLabel}>موعد تجديد العقد</span>
-                            <p>قبل ٦٠ يوم من الانتهاء</p>
-                          </div>
+                          </span>
+                          <span>موعد تجديد العقد: قبل ٦٠ يوم من الانتهاء</span>
                         </li>
                         <li>
-                          <div className={styles.dateIcon}>
+                          <span className={styles.dateIcon}>
                             <img src="/icons/date.svg" alt="تاريخ" width={20} height={20} style={{ display: 'block' }} />
-                          </div>
-                          <div className={styles.dateContent}>
-                            <span className={styles.infoLabel}>تاريخ دفع الإيجار</span>
-                            <p>أول كل شهر ميلادي</p>
-                          </div>
+                          </span>
+                          <span>تاريخ دفع الإيجار: أول كل شهر ميلادي</span>
                         </li>
                       </ul>
                     </div>
