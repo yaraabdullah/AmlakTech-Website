@@ -143,14 +143,14 @@ export default function TenantPropertyValuation() {
     }
   }
 
-  const calculateOverallRating = () => {
+  const calculateOverallRating = (): number => {
     const allRatings = [
       ...Object.values(propertyRatings),
       ...Object.values(ownerRatings),
     ]
     if (allRatings.length === 0) return 0
     const sum = allRatings.reduce((acc, val) => acc + val, 0)
-    return (sum / allRatings.length).toFixed(1)
+    return parseFloat((sum / allRatings.length).toFixed(1))
   }
 
   const handlePhotoSelect = (files: FileList | null) => {
@@ -248,7 +248,7 @@ export default function TenantPropertyValuation() {
           tenantUserId: userId,
           stayPeriodFrom,
           stayPeriodTo,
-          overallPropertyRating: parseFloat(calculateOverallRating()),
+          overallPropertyRating: calculateOverallRating(),
           propertyRatings,
           ownerRatings,
           satisfactionLevel,
@@ -403,12 +403,12 @@ export default function TenantPropertyValuation() {
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>التقييم العام للعقار</h2>
             <div className={styles.overallRating}>
-              <span className={styles.ratingNumber}>{overallRating}</span>
+              <span className={styles.ratingNumber}>{overallRating.toFixed(1)}</span>
               <div className={styles.ratingStars}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span
                     key={star}
-                    className={`${styles.overallStar} ${star <= parseFloat(overallRating) ? styles.starFilled : styles.starEmpty}`}
+                    className={`${styles.overallStar} ${star <= overallRating ? styles.starFilled : styles.starEmpty}`}
                   >
                     ★
                   </span>
