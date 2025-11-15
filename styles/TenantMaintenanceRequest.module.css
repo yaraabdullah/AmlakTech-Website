@@ -173,6 +173,38 @@
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
 }
 
+.noUnitsMessage {
+  padding: var(--spacing-xl);
+  background: var(--color-background-secondary);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+}
+
+.noUnitsMessage p {
+  margin: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
+}
+
+.noUnitsSubtext {
+  margin-top: var(--spacing-sm) !important;
+  font-size: var(--font-size-sm) !important;
+  color: var(--color-text-light) !important;
+}
+
+.selectedUnitInfo {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-blue-light);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-primary);
+}
+
 /* Problem Type Grid */
 .problemTypeGrid {
   display: grid;

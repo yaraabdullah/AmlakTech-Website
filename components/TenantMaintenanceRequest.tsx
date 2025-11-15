@@ -76,23 +76,28 @@ export default function TenantMaintenanceRequest() {
     try {
       setLoading(true)
       
-      // Fetch tenant contracts to get units
-      const contractsResponse = await fetch(`/api/contracts?tenantUserId=${userId}`)
+      // Fetch tenant contracts to get units - only active contracts
+      const contractsResponse = await fetch(`/api/contracts?tenantUserId=${userId}&status=نشط`)
       if (contractsResponse.ok) {
         const contractsData = await contractsResponse.json()
         setContracts(contractsData)
         
-        // Extract unique units from contracts
+        // Extract unique units from active contracts only
         const unitsMap = new Map<string, Unit>()
         contractsData.forEach((contract: Contract) => {
-          if (contract.unitId && contract.unit && contract.property) {
+          // Only include contracts with units and properties
+          if (contract.unitId && contract.unit && contract.property && contract.status === 'نشط') {
             const unitKey = contract.unitId
             if (!unitsMap.has(unitKey)) {
               unitsMap.set(unitKey, {
                 id: contract.unit.id,
-                unitNumber: contract.unit.unitNumber,
+                unitNumber: contract.unit.unitNumber || '',
                 propertyId: contract.propertyId,
-                property: contract.property,
+                property: {
+                  id: contract.property.id,
+                  name: contract.property.name || 'عقار',
+                  address: contract.property.address || '',
+                },
               })
             }
           }
@@ -323,18 +328,33 @@ export default function TenantMaintenanceRequest() {
                 {/* Residential Unit */}
                 <div className={styles.formSection}>
                   <label className={styles.label}>الوحدة السكنية</label>
-                  <select
-                    className={styles.select}
-                    value={selectedUnit}
-                    onChange={(e) => setSelectedUnit(e.target.value)}
-                  >
-                    <option value="">اختر الوحدة السكنية</option>
-                    {units.map((unit) => (
-                      <option key={unit.id} value={unit.id}>
-                        {unit.property?.name || 'عقار'} - الوحدة {unit.unitNumber}
-                      </option>
-                    ))}
-                  </select>
+                  {units.length === 0 ? (
+                    <div className={styles.noUnitsMessage}>
+                      <p>لا توجد وحدات سكنية نشطة في عقد الإيجار الخاص بك.</p>
+                      <p className={styles.noUnitsSubtext}>يرجى التأكد من وجود عقد إيجار نشط.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <select
+                        className={styles.select}
+                        value={selectedUnit}
+                        onChange={(e) => setSelectedUnit(e.target.value)}
+                      >
+                        <option value="">اختر الوحدة السكنية</option>
+                        {units.map((unit) => (
+                          <option key={unit.id} value={unit.id}>
+                            {unit.property?.name || 'عقار'} - الوحدة {unit.unitNumber}
+                            {unit.property?.address ? ` (${unit.property.address})` : ''}
+                          </option>
+                        ))}
+                      </select>
+                      {selectedUnit && (
+                        <div className={styles.selectedUnitInfo}>
+                          <span>✓ تم اختيار الوحدة</span>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
 
                 {/* Problem Type */}
