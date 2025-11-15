@@ -77,33 +77,60 @@ export default function TenantMaintenanceRequest() {
     try {
       setLoading(true)
       
-      // Fetch tenant contracts to get units - only active contracts
-      const contractsResponse = await fetch(`/api/contracts?tenantUserId=${userId}&status=نشط`)
+      // Fetch tenant contracts - get all contracts first, then filter
+      const contractsResponse = await fetch(`/api/contracts?tenantUserId=${userId}`)
       if (contractsResponse.ok) {
         const contractsData = await contractsResponse.json()
         setContracts(contractsData)
         
-        // Extract unique units from active contracts only
+        console.log('Fetched contracts:', contractsData) // Debug log
+        
+        // Extract unique units from active contracts
         const unitsMap = new Map<string, Unit>()
         contractsData.forEach((contract: Contract) => {
-          // Only include contracts with units and properties
-          if (contract.unitId && contract.unit && contract.property && contract.status === 'نشط') {
-            const unitKey = contract.unitId
-            if (!unitsMap.has(unitKey)) {
-              unitsMap.set(unitKey, {
-                id: contract.unit.id,
-                unitNumber: contract.unit.unitNumber || '',
-                propertyId: contract.propertyId,
-                property: {
-                  id: contract.property.id,
-                  name: contract.property.name || 'عقار',
-                  address: contract.property.address || '',
-                },
-              })
+          // Check if contract is active
+          const isActive = contract.status === 'نشط' || contract.status === 'active'
+          
+          // Include contracts with units and properties, or contracts with propertyId even without unitId
+          if (isActive && contract.property) {
+            // If contract has a unit, use it
+            if (contract.unitId && contract.unit) {
+              const unitKey = contract.unitId
+              if (!unitsMap.has(unitKey)) {
+                unitsMap.set(unitKey, {
+                  id: contract.unit.id,
+                  unitNumber: contract.unit.unitNumber || '',
+                  propertyId: contract.propertyId,
+                  property: {
+                    id: contract.property.id,
+                    name: contract.property.name || 'عقار',
+                    address: contract.property.address || '',
+                  },
+                })
+              }
+            } else if (contract.propertyId) {
+              // If no unitId, create a unit entry using propertyId as the key
+              // This handles cases where contracts don't have specific units
+              const unitKey = `property-${contract.propertyId}`
+              if (!unitsMap.has(unitKey)) {
+                unitsMap.set(unitKey, {
+                  id: contract.propertyId, // Use propertyId as unit id if no unitId
+                  unitNumber: contract.property.name || 'الوحدة',
+                  propertyId: contract.propertyId,
+                  property: {
+                    id: contract.property.id,
+                    name: contract.property.name || 'عقار',
+                    address: contract.property.address || '',
+                  },
+                })
+              }
             }
           }
         })
-        setUnits(Array.from(unitsMap.values()))
+        
+        const unitsArray = Array.from(unitsMap.values())
+        console.log('Extracted units:', unitsArray) // Debug log
+        setUnits(unitsArray)
       }
     } catch (error) {
       console.error('Error fetching tenant data:', error)
