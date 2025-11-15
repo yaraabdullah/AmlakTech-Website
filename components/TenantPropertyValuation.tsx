@@ -327,7 +327,6 @@ export default function TenantPropertyValuation() {
           {/* Page Header */}
           <div className={styles.pageHeader}>
             <div className={styles.headerContent}>
-              <div className={styles.headerIcon}>⭐</div>
               <div>
                 <h1 className={styles.pageTitle}>تقييم العقار والمالك</h1>
                 <p className={styles.pageSubtitle}>
