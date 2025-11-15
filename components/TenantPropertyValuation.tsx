@@ -22,7 +22,7 @@ interface Contract {
     area?: number
     rooms?: number
     bathrooms?: number
-    images?: string[]
+    images?: string | string[]
     owner?: {
       id: string
       first_name: string
@@ -55,6 +55,17 @@ const SATISFACTION_LEVELS = [
   { id: 'bad', emoji: '😞', label: 'سيء' },
   { id: 'very-bad', emoji: '😡', label: 'سيء جداً' },
 ]
+
+const parseImages = (images?: string | string[] | null): string[] => {
+  if (!images) return []
+  if (Array.isArray(images)) return images
+  try {
+    const parsed = JSON.parse(images)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return images ? [images] : []
+  }
+}
 
 export default function TenantPropertyValuation() {
   const router = useRouter()
@@ -317,6 +328,7 @@ export default function TenantPropertyValuation() {
 
   const property = selectedContract.property
   const overallRating = calculateOverallRating()
+  const propertyImages = parseImages(property.images)
 
   return (
     <div className={styles.page}>
@@ -380,9 +392,16 @@ export default function TenantPropertyValuation() {
                   </div>
                 )}
               </div>
-              {property.images && property.images.length > 0 && (
+              {propertyImages.length > 0 ? (
                 <div className={styles.propertyImage}>
-                  <img src={property.images[0]} alt={property.name} />
+                  <img src={propertyImages[0]} alt={property.name} />
+                </div>
+              ) : (
+                <div className={styles.propertyImage}>
+                  <div className={styles.propertyImagePlaceholder}>
+                    <span>📷</span>
+                    <p>لا توجد صورة</p>
+                  </div>
                 </div>
               )}
             </div>
