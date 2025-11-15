@@ -645,6 +645,7 @@
   margin-bottom: 12px;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
+  direction: rtl;
 }
 
 .reviewerAvatar {
@@ -672,6 +673,38 @@
   color: var(--color-primary);
   font-family: var(--font-family-primary);
   cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
+}
+
+.reviewDate {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
+}
+
+.reviewRating {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
+}
+
+.reviewText {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: 14px;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
+  margin: 0;
+}
+
+.noReviewsText {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 24px;
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
 }

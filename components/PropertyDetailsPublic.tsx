@@ -49,6 +49,22 @@ interface SimilarProperty {
   listingType?: string
 }
 
+interface PropertyRating {
+  id: string
+  propertyId: string
+  tenantUserId?: string | null
+  tenantUser?: {
+    id: string
+    firstName: string
+    lastName: string
+  } | null
+  overallPropertyRating: number
+  positives?: string | null
+  negatives?: string | null
+  privacyOption: string
+  createdAt: string
+}
+
 const defaultImages = ['/placeholder-property.jpg']
 
 const formatCurrency = (value?: number | null) => {
@@ -154,6 +170,7 @@ export default function PropertyDetailsPublic() {
   const { id } = router.query
   const [property, setProperty] = useState<PropertyDetails | null>(null)
   const [similarProperties, setSimilarProperties] = useState<SimilarProperty[]>([])
+  const [ratings, setRatings] = useState<PropertyRating[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [contactForm, setContactForm] = useState({
@@ -197,6 +214,17 @@ export default function PropertyDetailsPublic() {
           setSimilarProperties(filtered)
         } else {
           setSimilarProperties([])
+        }
+
+        // Fetch ratings for this property
+        const ratingsResponse = await fetch(`/api/ratings?propertyId=${propertyId}`)
+        if (ratingsResponse.ok) {
+          const ratingsData: PropertyRating[] = await ratingsResponse.json()
+          // Filter out private ratings (only show public and anonymous)
+          const publicRatings = ratingsData.filter((rating) => rating.privacyOption !== 'private')
+          setRatings(publicRatings)
+        } else {
+          setRatings([])
         }
       } catch (err: any) {
         console.error('Error fetching property details:', err)
@@ -330,6 +358,55 @@ export default function PropertyDetailsPublic() {
   const furnishedStatus = property.status?.includes('مفروش') ? 'مفروشة' : property.status?.includes('غير مفروش') ? 'غير مفروشة' : null
 
   const formattedAddress = [property.neighborhood, property.city, 'المملكة العربية السعودية'].filter(Boolean).join(', ')
+
+  // Calculate average rating
+  const averageRating = ratings.length > 0
+    ? (ratings.reduce((sum, rating) => sum + rating.overallPropertyRating, 0) / ratings.length).toFixed(1)
+    : '0.0'
+
+  // Format date in Arabic
+  const formatArabicDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      const months = [
+        'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+      ]
+      return `${months[date.getMonth()]} ${date.getFullYear()}`
+    } catch {
+      return 'تاريخ غير محدد'
+    }
+  }
+
+  // Get reviewer name based on privacy
+  const getReviewerName = (rating: PropertyRating): string => {
+    if (rating.privacyOption === 'anonymous') {
+      return 'مستأجر سابق'
+    }
+    if (rating.tenantUser) {
+      return `${rating.tenantUser.firstName || ''} ${rating.tenantUser.lastName || ''}`.trim() || 'مستأجر سابق'
+    }
+    return 'مستأجر سابق'
+  }
+
+  // Get first letter for avatar
+  const getAvatarLetter = (rating: PropertyRating): string => {
+    if (rating.privacyOption === 'anonymous') {
+      return 'م'
+    }
+    if (rating.tenantUser) {
+      const firstName = rating.tenantUser.firstName || ''
+      return firstName.charAt(0) || 'م'
+    }
+    return 'م'
+  }
+
+  // Get review text (positives or negatives)
+  const getReviewText = (rating: PropertyRating): string => {
+    if (rating.positives) return rating.positives
+    if (rating.negatives) return rating.negatives
+    return 'لا يوجد تعليق'
+  }
 
   type QuickStat = {
     icon: string
@@ -504,33 +581,34 @@ export default function PropertyDetailsPublic() {
             <div className={styles.sectionCard}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>تقييمات المستأجرين السابقين</h2>
-                <span className={styles.ratingBadge}>4.8 ⭐</span>
+                {ratings.length > 0 && (
+                  <span className={styles.ratingBadge}>{averageRating} ⭐</span>
+                )}
               </div>
-              <div className={styles.reviewsList}>
-                <div className={styles.reviewItem}>
-                  <div className={styles.reviewHeader}>
-                    <div className={styles.reviewerAvatar}>أ</div>
-                    <div>
-                      <div className={styles.reviewerName}>أحمد محمد</div>
-                      <div className={styles.reviewDate}>مايو 2023</div>
-                    </div>
-                    <div className={styles.reviewRating}>5.0 ⭐</div>
+              {ratings.length > 0 ? (
+                <>
+                  <div className={styles.reviewsList}>
+                    {ratings.slice(0, 2).map((rating) => (
+                      <div key={rating.id} className={styles.reviewItem}>
+                        <div className={styles.reviewHeader}>
+                          <div className={styles.reviewerAvatar}>{getAvatarLetter(rating)}</div>
+                          <div>
+                            <div className={styles.reviewerName}>{getReviewerName(rating)}</div>
+                            <div className={styles.reviewDate}>{formatArabicDate(rating.createdAt)}</div>
+                          </div>
+                          <div className={styles.reviewRating}>{rating.overallPropertyRating.toFixed(1)} ⭐</div>
+                        </div>
+                        <p className={styles.reviewText}>{getReviewText(rating)}</p>
+                      </div>
+                    ))}
                   </div>
-                  <p className={styles.reviewText}>عشت في هذه الفيلا لمدة سنة كاملة وكانت تجربة رائعة، الموقع ممتاز وقريب من جميع الخدمات.</p>
-                </div>
-                <div className={styles.reviewItem}>
-                  <div className={styles.reviewHeader}>
-                    <div className={styles.reviewerAvatar}>س</div>
-                    <div>
-                      <div className={styles.reviewerName}>سارة عبد الله</div>
-                      <div className={styles.reviewDate}>فبراير 2023</div>
-                    </div>
-                    <div className={styles.reviewRating}>4.5 ⭐</div>
-                  </div>
-                  <p className={styles.reviewText}>الفيلا جميلة ومريحة، كان هناك بعض المشاكل في نظام التكييف ولكن المالك تجاوب سريعاً.</p>
-                </div>
-              </div>
-              <button className={styles.viewAllReviewsBtn}>عرض جميع التقييمات</button>
+                  {ratings.length > 2 && (
+                    <button className={styles.viewAllReviewsBtn}>عرض جميع التقييمات</button>
+                  )}
+                </>
+              ) : (
+                <p className={styles.noReviewsText}>لا توجد تقييمات متاحة حالياً</p>
+              )}
             </div>
           </section>
 

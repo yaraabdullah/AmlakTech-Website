@@ -115,6 +115,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 name: true,
               },
             },
+            tenantUser: {
+              select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+              },
+            },
           },
           orderBy: {
             createdAt: 'desc',
@@ -128,6 +135,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           propertyRatings: rating.propertyRatings ? JSON.parse(rating.propertyRatings) : null,
           ownerRatings: rating.ownerRatings ? JSON.parse(rating.ownerRatings) : null,
           photos: rating.photos ? JSON.parse(rating.photos) : null,
+          tenantUser: rating.tenantUser ? {
+            id: rating.tenantUser.id.toString(),
+            firstName: rating.tenantUser.first_name,
+            lastName: rating.tenantUser.last_name,
+          } : null,
         }))
 
         return res.status(200).json(ratingsWithStrings)

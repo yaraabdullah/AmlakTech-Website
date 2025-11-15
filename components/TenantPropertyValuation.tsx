@@ -810,7 +810,6 @@ export default function TenantPropertyValuation() {
               onClick={handleSubmit}
               disabled={submitting}
             >
-              <img src="/icons/share.svg" alt="إرسال" className={styles.submitIcon} />
               {submitting ? 'جاري الإرسال...' : 'إرسال التقييم'}
             </button>
           </div>
