@@ -636,7 +636,7 @@ export default function TenantMaintenanceRequest() {
                 {/* Help Section */}
                 <div className={styles.helpSection}>
                   <h3 className={styles.helpTitle}>
-                    <span>❓</span>
+                    <img src="/icons/help.svg" alt="مساعدة" className={styles.helpTitleIcon} />
                     هل تحتاج إلى مساعدة؟
                   </h3>
                   <div className={styles.helpCards}>
