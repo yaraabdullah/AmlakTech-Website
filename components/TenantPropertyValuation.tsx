@@ -61,8 +61,6 @@ export default function TenantPropertyValuation() {
   const [userId, setUserId] = useState<string | null>(null)
   const [contracts, setContracts] = useState<Contract[]>([])
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null)
-  const [stayPeriodFrom, setStayPeriodFrom] = useState('')
-  const [stayPeriodTo, setStayPeriodTo] = useState('')
   
   // Ratings
   const [overallPropertyRating, setOverallPropertyRating] = useState(0)
@@ -246,8 +244,8 @@ export default function TenantPropertyValuation() {
           propertyId: selectedContract.propertyId,
           contractId: selectedContract.id,
           tenantUserId: userId,
-          stayPeriodFrom,
-          stayPeriodTo,
+          stayPeriodFrom: selectedContract.startDate || null,
+          stayPeriodTo: selectedContract.endDate || null,
           overallPropertyRating: calculateOverallRating(),
           propertyRatings,
           ownerRatings,
@@ -372,24 +370,14 @@ export default function TenantPropertyValuation() {
                     <span>المالك: {property.owner.first_name} {property.owner.last_name}</span>
                   </div>
                 )}
-                <div className={styles.stayPeriod}>
-                  <div className={styles.stayPeriodInput}>
-                    <label>فترة الإقامة من</label>
-                    <input
-                      type="date"
-                      value={stayPeriodFrom}
-                      onChange={(e) => setStayPeriodFrom(e.target.value)}
-                    />
+                {selectedContract?.startDate && selectedContract?.endDate && (
+                  <div className={styles.stayPeriod}>
+                    <span className={styles.stayPeriodLabel}>فترة الإقامة:</span>
+                    <span className={styles.stayPeriodValue}>
+                      من {new Date(selectedContract.startDate).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })} إلى {new Date(selectedContract.endDate).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </span>
                   </div>
-                  <div className={styles.stayPeriodInput}>
-                    <label>إلى</label>
-                    <input
-                      type="date"
-                      value={stayPeriodTo}
-                      onChange={(e) => setStayPeriodTo(e.target.value)}
-                    />
-                  </div>
-                </div>
+                )}
               </div>
               {property.images && property.images.length > 0 && (
                 <div className={styles.propertyImage}>
@@ -591,7 +579,6 @@ export default function TenantPropertyValuation() {
                   onChange={(e) => setPrivacyOption(e.target.value as 'public')}
                 />
                 <div className={styles.privacyContent}>
-                  <img src="/icons/share.svg" alt="عام" className={styles.privacyIcon} />
                   <div>
                     <strong>عام</strong>
                     <p>سيظهر تقييمك لجميع المستخدمين</p>
@@ -607,7 +594,6 @@ export default function TenantPropertyValuation() {
                   onChange={(e) => setPrivacyOption(e.target.value as 'anonymous')}
                 />
                 <div className={styles.privacyContent}>
-                  <img src="/icons/Privacy.svg" alt="مجهول" className={styles.privacyIcon} />
                   <div>
                     <strong>مجهول</strong>
                     <p>سيظهر تقييمك بدون اسمك</p>
@@ -623,7 +609,6 @@ export default function TenantPropertyValuation() {
                   onChange={(e) => setPrivacyOption(e.target.value as 'private')}
                 />
                 <div className={styles.privacyContent}>
-                  <img src="/icons/Privacy.svg" alt="خاص" className={styles.privacyIcon} />
                   <div>
                     <strong>خاص</strong>
                     <p>سيظهر تقييمك للمالك فقط</p>

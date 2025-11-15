@@ -42,21 +42,9 @@
   gap: var(--spacing-lg);
 }
 
-.headerIcon {
-  width: 64px;
-  height: 64px;
-  background: var(--color-primary);
-  border-radius: var(--border-radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  flex-shrink: 0;
-}
-
 .pageTitle {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-md);
   font-family: var(--font-family-primary);
@@ -93,7 +81,7 @@
 
 .propertyName {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
@@ -149,29 +137,20 @@
 
 .stayPeriod {
   display: flex;
-  gap: var(--spacing-md);
+  align-items: center;
+  gap: var(--spacing-sm);
   margin-top: var(--spacing-md);
-}
-
-.stayPeriodInput {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  flex: 1;
-}
-
-.stayPeriodInput label {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   color: var(--color-text-secondary);
   font-family: var(--font-family-primary);
 }
 
-.stayPeriodInput input {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-base);
-  font-family: var(--font-family-primary);
+.stayPeriodLabel {
+  font-weight: var(--font-weight-normal);
+}
+
+.stayPeriodValue {
+  font-weight: var(--font-weight-normal);
 }
 
 .propertyImage {
@@ -197,7 +176,7 @@
 
 .sectionTitle {
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-xl);
   font-family: var(--font-family-primary);
@@ -257,7 +236,7 @@
 
 .criterionLabel {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
 }
@@ -329,7 +308,7 @@
 
 .satisfactionLabel {
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
 }
@@ -355,7 +334,7 @@
 
 .feedbackHeader h3 {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
@@ -578,15 +557,10 @@
   flex: 1;
 }
 
-.privacyIcon {
-  width: 32px;
-  height: 32px;
-}
-
 .privacyContent strong {
   display: block;
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-xs);
   font-family: var(--font-family-primary);
@@ -621,7 +595,7 @@
 
 .aiAnalysisTitle {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
@@ -655,7 +629,7 @@
 
 .aiAnalysisCardHeader h3 {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
@@ -740,7 +714,7 @@
 
 .recommendationsHeader h3 {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin: 0;
   font-family: var(--font-family-primary);
@@ -779,7 +753,7 @@
   border: none;
   border-radius: var(--border-radius-lg);
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: var(--font-family-primary);
