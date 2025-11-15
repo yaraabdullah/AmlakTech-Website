@@ -28,6 +28,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const tenantUserIdBigInt = tenantUserId ? BigInt(tenantUserId) : null
 
+      // Check if user has already rated this property
+      if (tenantUserIdBigInt) {
+        const existingRating = await prisma.propertyRating.findFirst({
+          where: {
+            propertyId: propertyId,
+            tenantUserId: tenantUserIdBigInt,
+          },
+        })
+
+        if (existingRating) {
+          return res.status(400).json({ error: 'لقد قمت بتقييم هذا العقار مسبقاً' })
+        }
+      }
+
       try {
         const rating = await prisma.propertyRating.create({
           data: {

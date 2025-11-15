@@ -73,7 +73,9 @@ export default function TenantPropertyValuation() {
   const [submitting, setSubmitting] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const [contracts, setContracts] = useState<Contract[]>([])
+  const [availableContracts, setAvailableContracts] = useState<Contract[]>([])
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null)
+  const [existingRatings, setExistingRatings] = useState<string[]>([]) // Array of property IDs that have been rated
   
   // Ratings
   const [overallPropertyRating, setOverallPropertyRating] = useState(0)
@@ -114,35 +116,74 @@ export default function TenantPropertyValuation() {
     try {
       setLoading(true)
       
-      const contractsResponse = await fetch(`/api/contracts?tenantUserId=${userId}`)
+      // Fetch contracts and existing ratings in parallel
+      const [contractsResponse, ratingsResponse] = await Promise.all([
+        fetch(`/api/contracts?tenantUserId=${userId}`),
+        fetch(`/api/ratings?tenantUserId=${userId}`)
+      ])
+      
       if (contractsResponse.ok) {
         const contractsData = await contractsResponse.json()
         setContracts(contractsData)
         
-        // Set first active contract as default
-        const activeContract = contractsData.find((c: Contract) => c.status === 'نشط') || contractsData[0]
-        if (activeContract) {
-          setSelectedContract(activeContract)
-          // Fetch full property details
-          if (activeContract.propertyId) {
-            const propertyResponse = await fetch(`/api/properties/${activeContract.propertyId}`)
-            if (propertyResponse.ok) {
-              const propertyData = await propertyResponse.json()
-              setSelectedContract({
-                ...activeContract,
-                property: {
-                  ...activeContract.property,
-                  ...propertyData,
-                },
-              })
-            }
-          }
+        // Get property IDs that have already been rated
+        let ratedPropertyIds: string[] = []
+        if (ratingsResponse.ok) {
+          const ratingsData = await ratingsResponse.json()
+          ratedPropertyIds = ratingsData.map((rating: any) => rating.propertyId)
+          setExistingRatings(ratedPropertyIds)
+        }
+        
+        // Filter out contracts for properties that have already been rated
+        const unratedContracts = contractsData.filter((contract: Contract) => {
+          return !ratedPropertyIds.includes(contract.propertyId)
+        })
+        
+        setAvailableContracts(unratedContracts)
+        
+        // Set first available contract as default
+        if (unratedContracts.length > 0) {
+          const firstContract = unratedContracts[0]
+          await loadContractDetails(firstContract)
         }
       }
     } catch (error) {
       console.error('Error fetching tenant data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadContractDetails = async (contract: Contract) => {
+    if (contract.propertyId) {
+      try {
+        const propertyResponse = await fetch(`/api/properties/${contract.propertyId}`)
+        if (propertyResponse.ok) {
+          const propertyData = await propertyResponse.json()
+          setSelectedContract({
+            ...contract,
+            property: {
+              ...contract.property,
+              ...propertyData,
+            },
+          })
+        } else {
+          // If property fetch fails, still set the contract
+          setSelectedContract(contract)
+        }
+      } catch (error) {
+        console.error('Error fetching property details:', error)
+        setSelectedContract(contract)
+      }
+    } else {
+      setSelectedContract(contract)
+    }
+  }
+
+  const handleContractChange = async (contractId: string) => {
+    const contract = availableContracts.find(c => c.id === contractId)
+    if (contract) {
+      await loadContractDetails(contract)
     }
   }
 
@@ -274,7 +315,18 @@ export default function TenantPropertyValuation() {
 
       if (response.ok) {
         alert('تم إرسال التقييم بنجاح')
-        router.push('/tenant/lease-records')
+        // Refresh the available contracts list to remove the rated property
+        if (userId) {
+          await fetchTenantData(userId)
+          // Reset form
+          setPropertyRatings({})
+          setOwnerRatings({})
+          setSatisfactionLevel('')
+          setPositives('')
+          setNegatives('')
+          setPhotos([])
+          setPhotoPreviews([])
+        }
       } else {
         const error = await response.json()
         alert(error.error || 'فشل إرسال التقييم')
@@ -314,13 +366,28 @@ export default function TenantPropertyValuation() {
     )
   }
 
-  if (!selectedContract || !selectedContract.property) {
+  if (availableContracts.length === 0 && !loading) {
     return (
       <div className={styles.page}>
         <TenantNavigation currentPage="property-valuation" />
         <div className={styles.noContract}>
           <p>لا توجد عقارات متاحة للتقييم</p>
+          <p className={styles.noContractSubtext}>
+            {contracts.length > 0 
+              ? 'لقد قمت بتقييم جميع العقارات المستأجرة لديك.' 
+              : 'لا توجد عقارات مستأجرة متاحة للتقييم.'}
+          </p>
         </div>
+        <Footer />
+      </div>
+    )
+  }
+
+  if (!selectedContract || !selectedContract.property) {
+    return (
+      <div className={styles.page}>
+        <TenantNavigation currentPage="property-valuation" />
+        <div className={styles.loading}>جاري التحميل...</div>
         <Footer />
       </div>
     )
@@ -347,6 +414,25 @@ export default function TenantPropertyValuation() {
               </div>
             </div>
           </div>
+
+          {/* Property Selection Dropdown */}
+          {availableContracts.length > 1 && (
+            <div className={styles.propertySelection}>
+              <label className={styles.selectionLabel}>اختر العقار المراد تقييمه</label>
+              <select
+                className={styles.propertySelect}
+                value={selectedContract.id}
+                onChange={(e) => handleContractChange(e.target.value)}
+              >
+                {availableContracts.map((contract) => (
+                  <option key={contract.id} value={contract.id}>
+                    {contract.property?.name || 'عقار'} - {contract.property?.address || ''}
+                    {contract.unit?.unitNumber ? ` - الوحدة ${contract.unit.unitNumber}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Property Information Card */}
           <div className={styles.propertyCard}>
