@@ -28,6 +28,7 @@ interface Contract {
     name: string
     address?: string
   } | null
+  status?: string
 }
 
 const PROBLEM_TYPES = [
