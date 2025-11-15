@@ -43,6 +43,9 @@ model Users {
   // Visit appointments requested by this user
   requested_visitAppointments PropertyVisitAppointment[] @relation("RequesterVisitAppointments")
 
+  // Ratings given by tenant
+  tenant_ratings PropertyRating[] @relation("TenantRatings")
+
   @@index([email])
   @@index([phone_number])
   @@index([national_id])
@@ -102,6 +105,7 @@ model Property {
   contracts           Contract[]
   maintenanceRequests MaintenanceRequest[]
   visitAppointments   PropertyVisitAppointment[]
+  ratings             PropertyRating[]
 
   @@index([ownerId])
   @@map("properties")
@@ -191,6 +195,7 @@ model Contract {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   payments Payment[]
+  ratings  PropertyRating[]
 
   @@index([propertyId])
   @@index([ownerId])
@@ -279,4 +284,49 @@ model PropertyVisitAppointment {
   @@index([requesterId])
   @@index([scheduledDate])
   @@map("property_visit_appointments")
+}
+
+model PropertyRating {
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  contractId String?  @map("contract_id")
+  contract   Contract? @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  tenantUserId BigInt? @map("tenant_user_id")
+  tenantUser   Users?  @relation("TenantRatings", fields: [tenantUserId], references: [id], onDelete: SetNull)
+
+  stayPeriodFrom DateTime? @map("stay_period_from")
+  stayPeriodTo   DateTime? @map("stay_period_to")
+
+  // Overall ratings
+  overallPropertyRating Float @map("overall_property_rating") // 0-5
+
+  // Property criteria ratings (stored as JSON)
+  propertyRatings String? @map("property_ratings") // JSON: {location: 5, cleanliness: 4, ...}
+
+  // Owner criteria ratings (stored as JSON)
+  ownerRatings String? @map("owner_ratings") // JSON: {responsiveness: 5, professionalism: 4, ...}
+
+  // Satisfaction level
+  satisfactionLevel String? @map("satisfaction_level") // excellent, good, neutral, bad, very-bad
+
+  // Feedback
+  positives String? // Positive feedback
+  negatives String? // Negative feedback
+  photos    String? // JSON array of base64 images
+
+  // AI options
+  improveComment Boolean @default(false) @map("improve_comment")
+  correctGrammar Boolean @default(false) @map("correct_grammar")
+
+  // Privacy
+  privacyOption String @default("public") @map("privacy_option") // public, anonymous, private
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([propertyId])
+  @@index([contractId])
+  @@index([tenantUserId])
+  @@map("property_ratings")
 }
