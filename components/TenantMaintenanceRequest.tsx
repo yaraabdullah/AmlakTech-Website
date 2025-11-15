@@ -503,17 +503,23 @@ export default function TenantMaintenanceRequest() {
                   </h3>
                   <div className={styles.helpCards}>
                     <div className={styles.helpCard}>
-                      <div className={styles.helpCardIcon}>▶️</div>
+                      <div className={styles.helpCardIcon}>
+                        <img src="/icons/explainVideo.svg" alt="فيديو توضيحي" />
+                      </div>
                       <h4>فيديو توضيحي</h4>
                       <p>شاهد كيفية تقديم طلب صيانة بالخطوات</p>
                     </div>
                     <div className={styles.helpCard}>
-                      <div className={styles.helpCardIcon}>🎧</div>
+                      <div className={styles.helpCardIcon}>
+                        <img src="/icons/CustomerService.svg" alt="تواصل معنا" />
+                      </div>
                       <h4>تواصل معنا</h4>
                       <p>فريق الدعم متاح على مدار الساعة لمساعدتك</p>
                     </div>
                     <div className={styles.helpCard}>
-                      <div className={styles.helpCardIcon}>📖</div>
+                      <div className={styles.helpCardIcon}>
+                        <img src="/icons/user%20guide.svg" alt="دليل المستخدم" />
+                      </div>
                       <h4>دليل المستخدم</h4>
                       <p>اطلع على دليل استخدام نظام طلبات الصيانة</p>
                     </div>
