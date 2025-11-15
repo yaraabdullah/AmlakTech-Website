@@ -633,6 +633,190 @@
   flex: 1;
 }
 
+/* Calendar Styles */
+.calendarContainer {
+  background: var(--color-background-primary);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-xl);
+  margin-top: var(--spacing-md);
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.calendarNavButton {
+  background: var(--color-background-secondary);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.calendarNavButton:hover {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border-color: var(--color-primary);
+}
+
+.calendarMonth {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+.calendarWeekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.calendarWeekday {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-sm);
+  font-family: var(--font-family-primary);
+}
+
+.calendarDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.calendarDay,
+.calendarDayEmpty {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-primary);
+  transition: all 0.3s ease;
+}
+
+.calendarDay {
+  background: var(--color-background-secondary);
+  border: 2px solid transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+}
+
+.calendarDay:hover:not(:disabled) {
+  background: var(--color-blue-light);
+  border-color: var(--color-primary);
+  transform: scale(1.05);
+}
+
+.calendarDaySelected {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.calendarDayPast {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--color-background-tertiary);
+}
+
+.calendarDayPast:hover {
+  transform: none;
+  background: var(--color-background-tertiary);
+  border-color: transparent;
+}
+
+.calendarDay:disabled {
+  cursor: not-allowed;
+}
+
+.calendarDayEmpty {
+  background: transparent;
+}
+
+.selectedDateInfo {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--color-blue-light);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  font-size: var(--font-size-base);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-primary);
+}
+
+/* Time Period Styles */
+.timePeriodGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+}
+
+.timePeriodCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-xl);
+  background: var(--color-background-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family-primary);
+}
+
+.timePeriodCard:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.timePeriodCard.timePeriodSelected {
+  border-color: var(--color-primary);
+  background: var(--color-blue-light);
+  box-shadow: var(--shadow-md);
+}
+
+.timePeriodLabel {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+}
+
+.timePeriodTime {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-primary);
+}
+
+.timePeriodCard.timePeriodSelected .timePeriodLabel {
+  color: var(--color-primary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .mainContent {
@@ -695,6 +879,38 @@
 
   .reviewItem strong {
     min-width: auto;
+  }
+
+  .calendarContainer {
+    padding: var(--spacing-md);
+  }
+
+  .calendarNavButton {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-base);
+  }
+
+  .calendarMonth {
+    font-size: var(--font-size-lg);
+  }
+
+  .calendarWeekday {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
+  }
+
+  .calendarDay {
+    font-size: var(--font-size-sm);
+  }
+
+  .timePeriodGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .timePeriodCard {
+    padding: var(--spacing-lg);
   }
 }
 

@@ -57,6 +57,9 @@ export default function TenantMaintenanceRequest() {
   const [aiAnalysis, setAiAnalysis] = useState<string>('')
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState<string>('')
+  const [calendarDate, setCalendarDate] = useState(new Date())
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -236,9 +239,94 @@ export default function TenantMaintenanceRequest() {
       }
       setCurrentStep(2)
     } else if (currentStep === 2) {
+      if (!selectedDate) {
+        alert('يرجى اختيار تاريخ الموعد')
+        return
+      }
+      if (!selectedTimePeriod) {
+        alert('يرجى اختيار وقت الموعد')
+        return
+      }
       setCurrentStep(3)
     }
   }
+
+  const handleDateSelect = (day: number) => {
+    const year = calendarDate.getFullYear()
+    const month = calendarDate.getMonth()
+    const selected = new Date(year, month, day)
+    const formattedDate = selected.toISOString().split('T')[0] // Format: YYYY-MM-DD
+    setSelectedDate(formattedDate)
+  }
+
+  const handlePrevMonth = () => {
+    setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1))
+  }
+
+  const handleNextMonth = () => {
+    setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1))
+  }
+
+  const generateCalendarDays = () => {
+    const year = calendarDate.getFullYear()
+    const month = calendarDate.getMonth()
+    const firstDay = new Date(year, month, 1).getDay()
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    
+    // Convert to Arabic week (Saturday = 0, Sunday = 1, etc.)
+    const arabicFirstDay = (firstDay + 1) % 7
+    
+    const days: (number | null)[] = []
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < arabicFirstDay; i++) {
+      days.push(null)
+    }
+    
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day)
+    }
+    
+    return days
+  }
+
+  const isDateSelected = (day: number) => {
+    if (!selectedDate) return false
+    const year = calendarDate.getFullYear()
+    const month = calendarDate.getMonth()
+    const date = new Date(year, month, day)
+    const formattedDate = date.toISOString().split('T')[0]
+    return formattedDate === selectedDate
+  }
+
+  const isDatePast = (day: number) => {
+    const year = calendarDate.getFullYear()
+    const month = calendarDate.getMonth()
+    const date = new Date(year, month, day)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return date < today
+  }
+
+  const getArabicMonthName = (month: number) => {
+    const months = [
+      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+    ]
+    return months[month]
+  }
+
+  const getArabicDayName = (dayIndex: number) => {
+    const days = ['سبت', 'أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة']
+    return days[dayIndex]
+  }
+
+  const TIME_PERIODS = [
+    { id: 'morning', label: 'صباحاً', time: '8:00 ص - 12:00 م' },
+    { id: 'afternoon', label: 'ظهراً', time: '12:00 م - 4:00 م' },
+    { id: 'evening', label: 'مساءً', time: '4:00 م - 8:00 م' },
+  ]
 
   const handleSubmit = async () => {
     try {
@@ -283,6 +371,8 @@ export default function TenantMaintenanceRequest() {
           problemDescription: problemDescription,
           contactName: contactName,
           contactPhone: contactPhone,
+          scheduledDate: selectedDate || null,
+          timePeriod: selectedTimePeriod || null,
         }),
       })
 
@@ -579,7 +669,83 @@ export default function TenantMaintenanceRequest() {
             {currentStep === 2 && (
               <div className={styles.stepContent}>
                 <h2 className={styles.stepTitle}>تحديد الموعد</h2>
-                <p className={styles.stepDescription}>سيتم إضافة محتوى تحديد الموعد هنا</p>
+                
+                {/* Date Selection */}
+                <div className={styles.formSection}>
+                  <label className={styles.label}>اختر التاريخ</label>
+                  <div className={styles.calendarContainer}>
+                    <div className={styles.calendarHeader}>
+                      <button
+                        type="button"
+                        className={styles.calendarNavButton}
+                        onClick={handlePrevMonth}
+                      >
+                        ←
+                      </button>
+                      <h3 className={styles.calendarMonth}>
+                        {getArabicMonthName(calendarDate.getMonth())} {calendarDate.getFullYear()}
+                      </h3>
+                      <button
+                        type="button"
+                        className={styles.calendarNavButton}
+                        onClick={handleNextMonth}
+                      >
+                        →
+                      </button>
+                    </div>
+                    <div className={styles.calendarWeekdays}>
+                      {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => (
+                        <div key={dayIndex} className={styles.calendarWeekday}>
+                          {getArabicDayName(dayIndex)}
+                        </div>
+                      ))}
+                    </div>
+                    <div className={styles.calendarDays}>
+                      {generateCalendarDays().map((day, index) => {
+                        if (day === null) {
+                          return <div key={index} className={styles.calendarDayEmpty}></div>
+                        }
+                        const isSelected = isDateSelected(day)
+                        const isPast = isDatePast(day)
+                        return (
+                          <button
+                            key={index}
+                            type="button"
+                            className={`${styles.calendarDay} ${isSelected ? styles.calendarDaySelected : ''} ${isPast ? styles.calendarDayPast : ''}`}
+                            onClick={() => !isPast && handleDateSelect(day)}
+                            disabled={isPast}
+                          >
+                            {day}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    {selectedDate && (
+                      <div className={styles.selectedDateInfo}>
+                        <span>✓ التاريخ المحدد: {new Date(selectedDate).toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Time Period Selection */}
+                <div className={styles.formSection}>
+                  <label className={styles.label}>اختر الوقت</label>
+                  <div className={styles.timePeriodGrid}>
+                    {TIME_PERIODS.map((period) => (
+                      <button
+                        key={period.id}
+                        type="button"
+                        className={`${styles.timePeriodCard} ${selectedTimePeriod === period.id ? styles.timePeriodSelected : ''}`}
+                        onClick={() => setSelectedTimePeriod(period.id)}
+                      >
+                        <div className={styles.timePeriodLabel}>{period.label}</div>
+                        <div className={styles.timePeriodTime}>{period.time}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className={styles.actionButtons}>
                   <button
                     type="button"
@@ -622,6 +788,22 @@ export default function TenantMaintenanceRequest() {
                       {priority === 'normal' ? 'عادي' : priority === 'medium' ? 'متوسط' : 'عاجل'}
                     </span>
                   </div>
+                  {selectedDate && (
+                    <div className={styles.reviewItem}>
+                      <strong>تاريخ الموعد:</strong>
+                      <span>
+                        {new Date(selectedDate).toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                      </span>
+                    </div>
+                  )}
+                  {selectedTimePeriod && (
+                    <div className={styles.reviewItem}>
+                      <strong>وقت الموعد:</strong>
+                      <span>
+                        {TIME_PERIODS.find(t => t.id === selectedTimePeriod)?.label} ({TIME_PERIODS.find(t => t.id === selectedTimePeriod)?.time})
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className={styles.actionButtons}>
                   <button
