@@ -8,6 +8,8 @@ interface Contract {
   id: string
   propertyId: string
   unitId?: string | null
+  startDate?: string | Date
+  endDate?: string | Date
   unit?: {
     id: string
     unitNumber: string
